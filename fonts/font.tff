@@ -10,4 +10,58 @@
 
 
 
-getgenv().OKAY = true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+getgenv().AntiCheatBypassed = true
