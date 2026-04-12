@@ -64,4 +64,4 @@
 
 
 
-getgenv().AntiCheatBypassed = true
+getgenv().OKAY = true
