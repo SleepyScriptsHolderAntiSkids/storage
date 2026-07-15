@@ -275,7 +275,7 @@ end)
 
 
 -- Config
-local DefaultPlayerSettings = {}
+getgenv().DefaultPlayerSettings = {}
 
 getgenv().Config = {
     ["Legit"] = {
@@ -8428,7 +8428,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 items[ "notification" ]:Destroy() 
             end)
         end
-	end
+    end
     --end)()
 
 
