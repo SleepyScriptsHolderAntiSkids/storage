@@ -149,15 +149,14 @@ for Index, Value in Images do
     end
 end
 
-GetImage = LPH_JIT_MAX(function(Name)
+getgenv().GetImage = LPH_JIT_MAX(function(Name)
     local Location = library.directory.."/assets/"..Name
     if isfile(Location) then
         return getcustomasset(Location)
     end
 end)
 
-
-HideUI = LPH_JIT_MAX(function(Title, Timing)
+getgenv().HideUI = LPH_JIT_MAX(function(Title, Timing)
     getgenv().HideScreenGUI = Instance.new("ScreenGui")
     getgenv().HideScreenGUI.Name = "\n\n\n\n\n"
     getgenv().HideScreenGUI.Parent = gethui and gethui() or cloneref(game:GetService("CoreGui"))
@@ -207,7 +206,7 @@ HideUI = LPH_JIT_MAX(function(Title, Timing)
     return textLabel
 end) 
 
-DeleteSecretUI = LPH_JIT_MAX(function(Title)
+getgenv().DeleteSecretUI = LPH_JIT_MAX(function(Title)
     if getgenv().HideScreenGUI then
         getgenv().HideScreenGUI:Destroy()
         getgenv().HideScreenGUI = nil
@@ -215,7 +214,7 @@ DeleteSecretUI = LPH_JIT_MAX(function(Title)
 end)
 
 
-local Fonts = {}; do
+getgenv().Fonts = {}; do
     local RegisterFont = LPH_JIT_MAX(function(Name, Weight, Style, Asset)
         if isfile(library.directory.."/assets/"..Asset.Id) then
             delfile(library.directory.."/assets/"..Asset.Id)
@@ -240,22 +239,22 @@ local Fonts = {}; do
         return getcustomasset(library.directory.."/fonts/"..Name .. ".font")    
 end)
     
-    local Tahoma = RegisterFont("Tahoma", 400, "Normal", {
+    getgenv().Tahoma = RegisterFont("Tahoma", 400, "Normal", {
         Id = "Tahoma.ttf",
         Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/OctoHook-UI/raw/refs/heads/main/fs-tahoma-8px%20(3).ttf"),
     })
 
-    local Pixel = RegisterFont("Pixel", 400, "Normal", {
+    getgenv().Pixel = RegisterFont("Pixel", 400, "Normal", {
         Id = "Pixel.ttf",
         Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/vaderpaste.luau/raw/refs/heads/main/Pixel.ttf"),
     })
 
-    local Minecraftia = RegisterFont("Minecraftia", 400, "Normal", {
+    getgenv().Minecraftia = RegisterFont("Minecraftia", 400, "Normal", {
         Id = "Minecraftia.ttf",
         Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Minecraftia-Regular.ttf"),
     }) 
 
-    local Verdana = RegisterFont("Verdana", 400, "Normal", {
+    getgenv().Verdana = RegisterFont("Verdana", 400, "Normal", {
         Id = "Verdana.ttf",
         Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Verdana-Font.ttf"),
     })
@@ -267,7 +266,7 @@ end)
 end
 
 
-local SafeDisconnect = LPH_JIT_MAX(function(conn)
+getgenv().SafeDisconnect = LPH_JIT_MAX(function(conn)
     if conn and typeof(conn) == "RBXScriptConnection" then
         conn:Disconnect()
     end
@@ -676,7 +675,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
     local config_flags = library.config_flags
     local notifications = library.notifications 
 
-    local fonts = {}; do
+    getgenv().fonts = {}; do
         local Register_Font = LPH_JIT_MAX(function(Name, Weight, Style, Asset)
             if not isfile(Asset.Id) then
                 writefile(Asset.Id, Asset.Font)
