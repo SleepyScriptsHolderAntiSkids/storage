@@ -8428,6 +8428,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 items[ "notification" ]:Destroy() 
             end)
         end
+	end
     --end)()
 
 
