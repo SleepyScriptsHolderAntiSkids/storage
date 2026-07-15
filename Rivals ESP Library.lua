@@ -65,6 +65,9 @@ local collection_service = cloneref(game.GetService(game, "CollectionService"));
 local log_service = cloneref(game.GetService(game, "LogService"));
 local game_settings = cloneref(UserSettings().GetService(UserSettings(), "UserGameSettings"));
 
+local DuelLibrary = require(replicated_storage:FindFirstChild("DuelLibrary", true))
+
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/SleepyScriptsHolderAntiSkids/storage/refs/heads/main/luraphsdk"))();
 
 
