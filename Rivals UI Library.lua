@@ -134,7 +134,7 @@ getgenv().library = {
     current_open; 
 }
 
-local Images = {"Rust.mp3", "TF2.mp3", "Quake.mp3", "Dyssodia.mp3", "Bubble.mp3", "MW2019.mp3", "WhiteBeam.png", "ESP.png", "World.png", "Wrench.png", "Settings.png", "Node.png", "cursor.png", "Bullet.png", "Snapline.png", "Pistol.png", "folder.png", "UZI.png", "FieldOfView2.png", "Lock.png", "Aimlock.png", "Cash.png", "Wheatt.png", "Pickkaxe.png", "unlocked.png"}
+getgenv().Images = {"Rust.mp3", "TF2.mp3", "Quake.mp3", "Dyssodia.mp3", "Bubble.mp3", "MW2019.mp3", "WhiteBeam.png", "ESP.png", "World.png", "Wrench.png", "Settings.png", "Node.png", "cursor.png", "Bullet.png", "Snapline.png", "Pistol.png", "folder.png", "UZI.png", "FieldOfView2.png", "Lock.png", "Aimlock.png", "Cash.png", "Wheatt.png", "Pickkaxe.png", "unlocked.png"}
 
 for _, path in next, library.folders do 
     makefolder(library.directory .. path)
