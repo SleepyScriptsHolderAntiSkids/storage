@@ -677,12 +677,15 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
     getgenv().fonts = {}; do
         local Register_Font = LPH_JIT_MAX(function(Name, Weight, Style, Asset)
-            if not isfile(Asset.Id) then
-                writefile(Asset.Id, Asset.Font)
+            local AssetPath = library.directory .. "/fonts/" .. Asset.Id
+            local FontPath = library.directory .. "/fonts/" .. Name .. ".font"
+
+            if not isfile(AssetPath) then
+                writefile(AssetPath, Asset.Font)
             end
 
-            if isfile(Name .. ".font") then
-                delfile(Name .. ".font")
+            if isfile(FontPath) then
+                delfile(FontPath)
             end
 
             local Data = {
@@ -692,14 +695,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         name = "Normal",
                         weight = Weight,
                         style = Style,
-                        assetId = getcustomasset(Asset.Id),
+                        assetId = getcustomasset(AssetPath),
                     },
                 },
             }
 
-            writefile(Name .. ".font", http_service:JSONEncode(Data))
+            writefile(FontPath, http_service:JSONEncode(Data))
 
-            return getcustomasset(Name .. ".font");
+            return getcustomasset(FontPath);
         end)
         
         local Medium = Register_Font("Medium", 200, "Normal", {
@@ -4741,12 +4744,15 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
     local fonts = {}; do
         function Register_Font(Name, Weight, Style, Asset)
-            if not isfile(Asset.Id) then
-                writefile(Asset.Id, Asset.Font)
+            local AssetPath = library.directory .. "/fonts/" .. Asset.Id
+            local FontPath = library.directory .. "/fonts/" .. Name .. ".font"
+
+            if not isfile(AssetPath) then
+                writefile(AssetPath, Asset.Font)
             end
 
-            if isfile(Name .. ".font") then
-                delfile(Name .. ".font")
+            if isfile(FontPath) then
+                delfile(FontPath)
             end
 
             local Data = {
@@ -4756,14 +4762,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         name = "Normal",
                         weight = Weight,
                         style = Style,
-                        assetId = getcustomasset(Asset.Id),
+                        assetId = getcustomasset(AssetPath),
                     },
                 },
             }
 
-            writefile(Name .. ".font", http_service:JSONEncode(Data))
+            writefile(FontPath, http_service:JSONEncode(Data))
 
-            return getcustomasset(Name .. ".font");
+            return getcustomasset(FontPath);
         end
         
         local Medium = Register_Font("Meawdawdawddium", 200, "Normal", {
