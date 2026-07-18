@@ -945,9 +945,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         local AUTOLOAD_ENABLED = false
 
 
-        task.defer(LPH_NO_VIRTUALIZE(function()
-            if not AUTOLOAD_ENABLED then
-                return
+        task.spawn(LPH_NO_VIRTUALIZE(function()
+            local last = -1
+            while true do
+                task.wait(0.5)
+                local count = 0
+                for _ in next, library.config_flags do count += 1 end
+                if count > 0 and count == last then break end
+                last = count
             end
 
             if isfile(AUTOLOAD_PATH) then
