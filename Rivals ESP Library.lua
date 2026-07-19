@@ -458,26 +458,31 @@ do
 
             local Updater = function()
                 local esp_key = plr.Name;
+                local esp_hidden = false;
+                local hb_c1, hb_c2;
                 local HideESP = LPH_NO_VIRTUALIZE(function()
-                    Box.Visible = false;
-                    Name.Visible = false;
-                    Distance.Visible = false;
-                    Weapon.Visible = false;
-                    Healthbar.Visible = false;
-                    BehindHealthbar.Visible = false;
-                    HealthText.Visible = false;
-                    WeaponIcon.Visible = false;
-                    LeftTop.Visible = false;
-                    LeftSide.Visible = false;
-                    BottomSide.Visible = false;
-                    BottomDown.Visible = false;
-                    RightTop.Visible = false;
-                    RightSide.Visible = false;
-                    BottomRightSide.Visible = false;
-                    BottomRightDown.Visible = false;
-                    Flag1.Visible = false;
-                    Chams.Enabled = false;
-                    Flag2.Visible = false;
+                    if not esp_hidden then
+                        Box.Visible = false;
+                        Name.Visible = false;
+                        Distance.Visible = false;
+                        Weapon.Visible = false;
+                        Healthbar.Visible = false;
+                        BehindHealthbar.Visible = false;
+                        HealthText.Visible = false;
+                        WeaponIcon.Visible = false;
+                        LeftTop.Visible = false;
+                        LeftSide.Visible = false;
+                        BottomSide.Visible = false;
+                        BottomDown.Visible = false;
+                        RightTop.Visible = false;
+                        RightSide.Visible = false;
+                        BottomRightSide.Visible = false;
+                        BottomRightDown.Visible = false;
+                        Flag1.Visible = false;
+                        Chams.Enabled = false;
+                        Flag2.Visible = false;
+                        esp_hidden = true;
+                    end
                     if not plr then
                         ScreenGui:Destroy();
                         ESP_UPDATERS[esp_key] = nil;
@@ -485,6 +490,8 @@ do
                 end)
                 --
                 ESP_UPDATERS[esp_key] = LPH_NO_VIRTUALIZE(function()
+                    local cfg = Config.ESP
+                    local Drawing = cfg.Drawing
                     -- Player gone: hide everything FIRST, then remove self. This
                     -- guarantees no box can ever be left frozen on screen.
                     if not plr or not plr.Parent then
@@ -492,12 +499,12 @@ do
                         ESP_UPDATERS[esp_key] = nil
                         return
                     end
-                    if plr.Character and lplayer.Character and Config.ESP.Enabled then
+                    if plr.Character and lplayer.Character and cfg.Enabled then
                         if Humanoid and HRP then
                             Pos, OnScreen = Cam:WorldToScreenPoint(HRP.Position)
                             Dist = (Cam.CFrame.Position - HRP.Position).Magnitude
                             
-                            if OnScreen and Dist <= Config.ESP.MaxDistance then
+                            if OnScreen and Dist <= cfg.MaxDistance then
                                 -- Accurate, monitor-independent box: project the character's
                                 -- head-top and feet-bottom to the screen and size the box from
                                 -- those real world points. WorldToViewportPoint handles FOV/
@@ -510,7 +517,7 @@ do
                                 w = h * 0.5
 
                                 -- Fade-out effect --
-                                if Config.ESP.FadeOut.OnDistance then
+                                if cfg.FadeOut.OnDistance then
                                     Functions.FadeOutOnDist(Box, Dist)
                                     Functions.FadeOutOnDist(Outline, Dist)
                                     Functions.FadeOutOnDist(Name, Dist)
@@ -536,7 +543,7 @@ do
                                 -- Teamcheck
                                 local hideForTeam = false
 
-                                if Config.ESP.TeamCheck then
+                                if cfg.TeamCheck then
                                     local local_team_id = lplayer:GetAttribute("TeamID")
                                     local target_team_id = plr:GetAttribute("TeamID")
 
@@ -553,73 +560,74 @@ do
                                 if hideForTeam then
                                     HideESP()
                                 elseif HRP and Humanoid then
+                                    esp_hidden = false
                                     do -- Chams
                                         Chams.Adornee = plr.Character
-                                        Chams.Enabled = Config.ESP.Drawing.Chams.Enabled
+                                        Chams.Enabled = Drawing.Chams.Enabled
                                         do -- Breathe
-                                            if Config.ESP.Drawing.Chams.Thermal then
+                                            if Drawing.Chams.Thermal then
                                                 local breathe_effect = math.atan(math.sin(tick() * 2)) * 2 / math.pi
-                                                Chams.FillTransparency = Config.ESP.Drawing.Chams.Fill_Transparency * breathe_effect * 0.01
-                                                Chams.OutlineTransparency = Config.ESP.Drawing.Chams.Outline_Transparency * breathe_effect * 0.01
+                                                Chams.FillTransparency = Drawing.Chams.Fill_Transparency * breathe_effect * 0.01
+                                                Chams.OutlineTransparency = Drawing.Chams.Outline_Transparency * breathe_effect * 0.01
                                             end
                                         end
                                     end;
 
                                     do -- Corner Boxes
-                                        if not Config.ESP.Drawing.Boxes.Bounding.Enabled or (Config.ESP.Drawing.Boxes.Corner.Enabled and Config.ESP.Drawing.Boxes.Bounding.Enabled) then
-                                            LeftTop.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                        if not Drawing.Boxes.Bounding.Enabled or (Drawing.Boxes.Corner.Enabled and Drawing.Boxes.Bounding.Enabled) then
+                                            LeftTop.Visible = Drawing.Boxes.Corner.Enabled
                                             LeftTop.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                             LeftTop.Size = UDim2.new(0, w / 5, 0, 1)
 
-                                            LeftSide.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            LeftSide.Visible = Drawing.Boxes.Corner.Enabled
                                             LeftSide.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                             LeftSide.Size = UDim2.new(0, 1, 0, h / 5)
 
-                                            BottomSide.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            BottomSide.Visible = Drawing.Boxes.Corner.Enabled
                                             BottomSide.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y + h / 2)
                                             BottomSide.Size = UDim2.new(0, 1, 0, h / 5)
 
-                                            BottomDown.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            BottomDown.Visible = Drawing.Boxes.Corner.Enabled
                                             BottomDown.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y + h / 2)
                                             BottomDown.Size = UDim2.new(0, w / 5, 0, 1)
 
 
-                                            RightTop.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            RightTop.Visible = Drawing.Boxes.Corner.Enabled
                                             RightTop.Position = UDim2.new(0, Pos.X + w / 2, 0, Pos.Y - h / 2)
                                             RightTop.Size = UDim2.new(0, w / 5, 0, 1)
 
-                                            RightSide.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            RightSide.Visible = Drawing.Boxes.Corner.Enabled
                                             RightSide.Position = UDim2.new(0, Pos.X + w / 2 - 1, 0, Pos.Y - h / 2)
                                             RightSide.Size = UDim2.new(0, 1, 0, h / 5)
 
-                                            BottomRightSide.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            BottomRightSide.Visible = Drawing.Boxes.Corner.Enabled
                                             BottomRightSide.Position = UDim2.new(0, Pos.X + w / 2, 0, Pos.Y + h / 2)
                                             BottomRightSide.Size = UDim2.new(0, 1, 0, h / 5)
 
-                                            BottomRightDown.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            BottomRightDown.Visible = Drawing.Boxes.Corner.Enabled
                                             BottomRightDown.Position = UDim2.new(0, Pos.X + w / 2, 0, Pos.Y + h / 2)
                                             BottomRightDown.Size = UDim2.new(0, w / 5, 0, 1)
                                         end
                                     end
 
                                     do -- // Bounding Boxes
-                                        if not Config.ESP.Drawing.Boxes.Corner.Enabled then
-                                            LeftTop.Visible = Config.ESP.Drawing.Boxes.Bounding.Enabled
+                                        if not Drawing.Boxes.Corner.Enabled then
+                                            LeftTop.Visible = Drawing.Boxes.Bounding.Enabled
                                             LeftTop.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                             LeftTop.Size = UDim2.new(0, w, 0, 1)
 
 
-                                            LeftSide.Visible = Config.ESP.Drawing.Boxes.Bounding.Enabled
+                                            LeftSide.Visible = Drawing.Boxes.Bounding.Enabled
                                             LeftSide.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                             LeftSide.Size = UDim2.new(0, 1, 0, h)
 
 
-                                            BottomSide.Visible = Config.ESP.Drawing.Boxes.Bounding.Enabled
+                                            BottomSide.Visible = Drawing.Boxes.Bounding.Enabled
                                             BottomSide.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y + h / 2)
                                             BottomSide.Size = UDim2.new(0, w, 0, 1) 
 
 
-                                            RightSide.Visible = Config.ESP.Drawing.Boxes.Bounding.Enabled 
+                                            RightSide.Visible = Drawing.Boxes.Bounding.Enabled 
                                             RightSide.Position = UDim2.new(0, Pos.X + w / 2 - 1, 0, Pos.Y - h / 2)
                                             RightSide.Size = UDim2.new(0, 1, 0, h) 
 
@@ -633,11 +641,11 @@ do
                                     do -- Boxes
                                         Box.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                         Box.Size = UDim2.new(0, w, 0, h)
-                                        Box.Visible = Config.ESP.Drawing.Boxes.Full.Enabled
+                                        Box.Visible = Drawing.Boxes.Full.Enabled
 
                                         -- Animation
-                                        if Config.ESP.Drawing.Boxes.Animate then
-                                            RotationAngle = RotationAngle + (tick() - Tick) * Config.ESP.Drawing.Boxes.RotationSpeed * math.cos(math.pi / 4 * tick() - math.pi / 2)
+                                        if Drawing.Boxes.Animate then
+                                            RotationAngle = RotationAngle + (tick() - Tick) * Drawing.Boxes.RotationSpeed * math.cos(math.pi / 4 * tick() - math.pi / 2)
                                             Gradient1.Rotation = RotationAngle
                                             Gradient2.Rotation = RotationAngle
                                         end
@@ -658,20 +666,25 @@ do
                                             end
 
                                             Healthbar.Position = UDim2.new(0, Pos.X - w / 2 - 6, 0, Pos.Y - h / 2 + h * (1 - health))
-                                            Healthbar.Size = UDim2.new(0, Config.ESP.Drawing.Healthbar.Width, 0, h * health)
+                                            Healthbar.Size = UDim2.new(0, Drawing.Healthbar.Width, 0, h * health)
 
-                                            Healthbar.BackgroundTransparency = Config.ESP.Drawing.Healthbar.Transparency
+                                            Healthbar.BackgroundTransparency = Drawing.Healthbar.Transparency
 
                                             BehindHealthbar.Position = UDim2.new(0, Pos.X - w / 2 - 6, 0, Pos.Y - h / 2) 
-                                            BehindHealthbar.Size = UDim2.new(0, Config.ESP.Drawing.Healthbar.Width, 0, h) 
-                                            BehindHealthbar.BackgroundTransparency = Config.ESP.Drawing.Healthbar.Transparency
+                                            BehindHealthbar.Size = UDim2.new(0, Drawing.Healthbar.Width, 0, h) 
+                                            BehindHealthbar.BackgroundTransparency = Drawing.Healthbar.Transparency
 
 
-                                            HealthbarGradient.Enabled = Config.ESP.Drawing.Healthbar.Gradient
-                                            HealthbarGradient.Color = ColorSequence.new{
-                                                ColorSequenceKeypoint.new(0, Config.ESP.Drawing.Healthbar.GradientRGB1),
-                                                ColorSequenceKeypoint.new(1, Config.ESP.Drawing.Healthbar.GradientRGB2)
-                                            }
+                                            HealthbarGradient.Enabled = Drawing.Healthbar.Gradient
+                                            local _hbc1 = Drawing.Healthbar.GradientRGB1
+                                            local _hbc2 = Drawing.Healthbar.GradientRGB2
+                                            if _hbc1 ~= hb_c1 or _hbc2 ~= hb_c2 then
+                                                hb_c1, hb_c2 = _hbc1, _hbc2
+                                                HealthbarGradient.Color = ColorSequence.new{
+                                                    ColorSequenceKeypoint.new(0, _hbc1),
+                                                    ColorSequenceKeypoint.new(1, _hbc2)
+                                                }
+                                            end
 
                                             HealthbarGradient.Offset = Vector2.new(0, health - 1)
 
@@ -684,14 +697,14 @@ do
                                                 color = getHealthColor(Humanoid.MaxHealth, Humanoid.MaxHealth)
                                             end
 
-                                            Healthbar.BackgroundColor3 = not Config.ESP.Drawing.Healthbar.Gradient and color or Color3.new(1,1,1)
+                                            Healthbar.BackgroundColor3 = not Drawing.Healthbar.Gradient and color or Color3.new(1,1,1)
                                             -- Health Text
 
-                                            Healthbar.Visible = Config.ESP.Drawing.Healthbar.Enabled
-                                            BehindHealthbar.Visible = Config.ESP.Drawing.Healthbar.Enabled
+                                            Healthbar.Visible = Drawing.Healthbar.Enabled
+                                            BehindHealthbar.Visible = Drawing.Healthbar.Enabled
 
                                             do
-                                                if Config.ESP.Drawing.Healthbar.HealthText then
+                                                if Drawing.Healthbar.HealthText then
                                                     local healthPercentage = math.floor(health_clamped / Humanoid.MaxHealth * 100)
 
                                                     if is_inf then
@@ -700,14 +713,14 @@ do
 
                                                     HealthText.Position = UDim2.new(0, Pos.X - w / 2 - 18 --[[6]], 0, Pos.Y - h / 2 + h * (1 - healthPercentage / 100) + 3)
                                                     HealthText.Text = healthtexttext
-                                                    HealthText.TextSize = Config.ESP.FontSize
-                                                    --HealthText.Font = Config.ESP.Font
-                                                    HealthText.Visible = Config.ESP.Drawing.Healthbar.HealthText
-                                                    HealthText.TextStrokeTransparency = Config.ESP.Drawing.Healthbar.HealthTextTransparency
-                                                    if Config.ESP.Drawing.Healthbar.Lerp then
+                                                    HealthText.TextSize = cfg.FontSize
+                                                    --HealthText.Font = cfg.Font
+                                                    HealthText.Visible = Drawing.Healthbar.HealthText
+                                                    HealthText.TextStrokeTransparency = Drawing.Healthbar.HealthTextTransparency
+                                                    if Drawing.Healthbar.Lerp then
                                                         HealthText.TextColor3 = color
                                                     else
-                                                        HealthText.TextColor3 = Config.ESP.Drawing.Healthbar.HealthTextRGB
+                                                        HealthText.TextColor3 = Drawing.Healthbar.HealthTextRGB
                                                     end
                                                 else
                                                     HealthText.Visible = false
@@ -716,16 +729,16 @@ do
                                     end
 
                                     do -- Names
-                                            Name.Visible = Config.ESP.Drawing.Names.Enabled
+                                            Name.Visible = Drawing.Names.Enabled
                                             Name.Text = plr.Name
-                                            if Config.ESP.Options.Friendcheck and lplayer:IsFriendsWith(plr.UserId) then
-                                                Name.Text = string.format('(<font color="rgb(%d, %d, %d)">F</font>) %s', Config.ESP.Options.FriendcheckRGB.R * 255, Config.ESP.Options.FriendcheckRGB.G * 255, Config.ESP.Options.FriendcheckRGB.B * 255, plr.Name)
+                                            if cfg.Options.Friendcheck and lplayer:IsFriendsWith(plr.UserId) then
+                                                Name.Text = string.format('(<font color="rgb(%d, %d, %d)">F</font>) %s', cfg.Options.FriendcheckRGB.R * 255, cfg.Options.FriendcheckRGB.G * 255, cfg.Options.FriendcheckRGB.B * 255, plr.Name)
                                             end
                                             Name.Position = UDim2.new(0, Pos.X, 0, Pos.Y - h / 2 - 9)
                                     end
                                     
                                     do -- Distance
-                                            if Config.ESP.Drawing.Distances.Enabled then
+                                            if Drawing.Distances.Enabled then
                                                 Weapon.Position = UDim2.new(0, Pos.X, 0, Pos.Y + h / 2 + 7)
 
                                                 --WeaponIcon.Position = UDim2.new(0, Pos.X - 21, 0, Pos.Y + h / 2 + 15);
@@ -733,7 +746,7 @@ do
                                                 Distance.Text = string.format("%d Studs", math.floor(Dist))
 
                                                 Distance.Visible = true
-                                                --Distance.Font = Config.ESP.Font
+                                                --Distance.Font = cfg.Font
                                             else
                                                 Weapon.Position = UDim2.new(0, Pos.X, 0, Pos.Y + h / 2 + 8)
                                                 Distance.Visible = false;
@@ -741,7 +754,7 @@ do
                                     end
 
                                     do -- Weapons
-                                        Weapon.Visible = Config.ESP.Drawing.Weapons.Enabled
+                                        Weapon.Visible = Drawing.Weapons.Enabled
                                         if Weapon.Visible then
                                             Weapon.Text = GetPlayerWeaponName(plr)
                                         end
