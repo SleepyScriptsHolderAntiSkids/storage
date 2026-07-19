@@ -498,15 +498,16 @@ do
                             Dist = (Cam.CFrame.Position - HRP.Position).Magnitude
                             
                             if OnScreen and Dist <= Config.ESP.MaxDistance then
-                                Size = HRP.Size.Y
-
-                                if DefaultPlayerSettings[plr.Name] and DefaultPlayerSettings[plr.Name].RootSettings and DefaultPlayerSettings[plr.Name].RootSettings.Size then
-                                    Size = DefaultPlayerSettings[plr.Name].RootSettings.Size.Y
-                                end
-                                
-                                scaleFactor = (Size * Cam.ViewportSize.Y) / (Pos.Z * 2)
-                                
-                                w, h = 3 * scaleFactor, 4.5 * scaleFactor
+                                -- Accurate, monitor-independent box: project the character's
+                                -- head-top and feet-bottom to the screen and size the box from
+                                -- those real world points. WorldToViewportPoint handles FOV/
+                                -- aspect/resolution, so the box always hugs the body the same
+                                -- on any monitor. Tune the 2.9 half-height / 0.5 width ratio.
+                                local root_pos = HRP.Position
+                                local top_screen = Cam:WorldToViewportPoint(root_pos + Vector3.new(0, 2.9, 0))
+                                local bottom_screen = Cam:WorldToViewportPoint(root_pos - Vector3.new(0, 2.9, 0))
+                                h = math.abs(top_screen.Y - bottom_screen.Y)
+                                w = h * 0.5
 
                                 -- Fade-out effect --
                                 if Config.ESP.FadeOut.OnDistance then
