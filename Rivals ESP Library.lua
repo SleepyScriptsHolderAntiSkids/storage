@@ -485,6 +485,13 @@ do
                 end)
                 --
                 ESP_UPDATERS[esp_key] = LPH_NO_VIRTUALIZE(function()
+                    -- Player gone: hide everything FIRST, then remove self. This
+                    -- guarantees no box can ever be left frozen on screen.
+                    if not plr or not plr.Parent then
+                        HideESP()
+                        ESP_UPDATERS[esp_key] = nil
+                        return
+                    end
                     if plr.Character and lplayer.Character and Config.ESP.Enabled then
                         if Humanoid and HRP then
                             Pos, OnScreen = Cam:WorldToScreenPoint(HRP.Position)
@@ -768,7 +775,6 @@ do
 
             Players.PlayerRemoving:Connect(function(v)
                 if Players_ESP[v.Name] then
-                    ESP_UPDATERS[v.Name] = nil
                     Players_ESP[v.Name].RefreshElements = nil
                     Players_ESP[v.Name].CharacterAdded:Disconnect()
                     Players_ESP[v.Name].CharacterAdded = nil
