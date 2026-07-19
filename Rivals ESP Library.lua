@@ -138,6 +138,17 @@ do
     local Cam = Workspace.CurrentCamera;
     local RotationAngle, Tick = -45, tick();
 
+    -- Single shared render loop for ALL entities (replaces one RenderStepped
+    -- connection per player). Each entity registers its updater by name; the
+    -- loop iterates them once per frame. pcall keeps one bad entity from
+    -- killing ESP for the rest, matching the old per-connection isolation.
+    local ESP_UPDATERS = {}
+    Euphoria.RunService.RenderStepped:Connect(LPH_NO_VIRTUALIZE(function()
+        for _, updater in pairs(ESP_UPDATERS) do
+            pcall(updater)
+        end
+    end))
+
     local Functions = {}
     do
         function Functions:Create(Class, Properties)
@@ -446,7 +457,7 @@ do
             end
 
             local Updater = function()
-                local Connection;
+                local esp_key = plr.Name;
                 local HideESP = LPH_NO_VIRTUALIZE(function()
                     Box.Visible = false;
                     Name.Visible = false;
@@ -469,11 +480,11 @@ do
                     Flag2.Visible = false;
                     if not plr then
                         ScreenGui:Destroy();
-                        Connection:Disconnect();
+                        ESP_UPDATERS[esp_key] = nil;
                     end
                 end)
                 --
-                Connection = Euphoria.RunService.RenderStepped:Connect(LPH_NO_VIRTUALIZE(function()
+                ESP_UPDATERS[esp_key] = LPH_NO_VIRTUALIZE(function()
                     if plr.Character and lplayer.Character and Config.ESP.Enabled then
                         if Humanoid and HRP then
                             Pos, OnScreen = Cam:WorldToScreenPoint(HRP.Position)
@@ -739,7 +750,7 @@ do
                     else
                         HideESP();
                     end
-                end))
+                end)
             end
             coroutine.wrap(Updater)();
             end))
@@ -757,6 +768,7 @@ do
 
             Players.PlayerRemoving:Connect(function(v)
                 if Players_ESP[v.Name] then
+                    ESP_UPDATERS[v.Name] = nil
                     Players_ESP[v.Name].RefreshElements = nil
                     Players_ESP[v.Name].CharacterAdded:Disconnect()
                     Players_ESP[v.Name].CharacterAdded = nil
@@ -765,7 +777,7 @@ do
                     Players_ESP[v.Name].ToolConnection_Removed = nil
                     Players_ESP[v.Name].ToolConnection_Added = nil
                     Players_ESP[v.Name] = nil
-                end 
+                end
             end)
         end;
     end;
