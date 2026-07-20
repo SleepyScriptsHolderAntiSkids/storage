@@ -459,6 +459,8 @@ do
             local Updater = function()
                 local esp_key = plr.Name;
                 local hb_c1, hb_c2;
+                local is_friend;
+                local wep_next = 0;
                 local HideESP = LPH_NO_VIRTUALIZE(function()
                     Box.Visible = false;
                     Name.Visible = false;
@@ -723,9 +725,11 @@ do
 
                                     do -- Names
                                             Name.Visible = Config.ESP.Drawing.Names.Enabled
-                                            Name.Text = plr.Name
-                                            if Config.ESP.Options.Friendcheck and lplayer:IsFriendsWith(plr.UserId) then
+                                            if is_friend == nil then is_friend = lplayer:IsFriendsWith(plr.UserId) end
+                                            if Config.ESP.Options.Friendcheck and is_friend then
                                                 Name.Text = string.format('(<font color="rgb(%d, %d, %d)">F</font>) %s', Config.ESP.Options.FriendcheckRGB.R * 255, Config.ESP.Options.FriendcheckRGB.G * 255, Config.ESP.Options.FriendcheckRGB.B * 255, plr.Name)
+                                            else
+                                                Name.Text = plr.Name
                                             end
                                             Name.Position = UDim2.new(0, Pos.X, 0, Pos.Y - h / 2 - 9)
                                     end
@@ -749,7 +753,11 @@ do
                                     do -- Weapons
                                         Weapon.Visible = Config.ESP.Drawing.Weapons.Enabled
                                         if Weapon.Visible then
-                                            Weapon.Text = GetPlayerWeaponName(plr)
+                                            local now = tick()
+                                            if now >= wep_next then
+                                                wep_next = now + 0.4
+                                                Weapon.Text = GetPlayerWeaponName(plr)
+                                            end
                                         end
                                     end
                                 else
