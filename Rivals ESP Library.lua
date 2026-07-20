@@ -458,6 +458,7 @@ do
 
             local Updater = function()
                 local esp_key = plr.Name;
+                local hb_c1, hb_c2;
                 local HideESP = LPH_NO_VIRTUALIZE(function()
                     Box.Visible = false;
                     Name.Visible = false;
@@ -668,10 +669,15 @@ do
 
 
                                             HealthbarGradient.Enabled = Config.ESP.Drawing.Healthbar.Gradient
-                                            HealthbarGradient.Color = ColorSequence.new{
-                                                ColorSequenceKeypoint.new(0, Config.ESP.Drawing.Healthbar.GradientRGB1),
-                                                ColorSequenceKeypoint.new(1, Config.ESP.Drawing.Healthbar.GradientRGB2)
-                                            }
+                                            local _hbc1 = Config.ESP.Drawing.Healthbar.GradientRGB1
+                                            local _hbc2 = Config.ESP.Drawing.Healthbar.GradientRGB2
+                                            if _hbc1 ~= hb_c1 or _hbc2 ~= hb_c2 then
+                                                hb_c1, hb_c2 = _hbc1, _hbc2
+                                                HealthbarGradient.Color = ColorSequence.new{
+                                                    ColorSequenceKeypoint.new(0, _hbc1),
+                                                    ColorSequenceKeypoint.new(1, _hbc2)
+                                                }
+                                            end
 
                                             HealthbarGradient.Offset = Vector2.new(0, health - 1)
 
