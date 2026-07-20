@@ -117,7 +117,7 @@ print("Character Loaded")
 ------------------------------------------------------
 
 getgenv().library = {
-    directory = "volt.gg",
+    directory = "Sleepy.gg",
     folders = {
         "/fonts",
         "/configs",
@@ -170,11 +170,11 @@ getgenv().HideUI = LPH_JIT_MAX(function(Title, Timing)
     frame.Parent = getgenv().HideScreenGUI
 
     local textLabel = Instance.new("TextLabel")
-    textLabel.Name = "\nhideuivoltgg"
+    textLabel.Name = "\nhideuisleepygg"
     textLabel.Size = UDim2.new(0, 400, 0, 100)
     textLabel.Font = Enum.Font.SourceSansBold
     textLabel.RichText = true
-    textLabel.Text = '<font color="rgb(0,163,224)">volt.</font>gg\n' .. Title
+    textLabel.Text = '<font color="rgb(0,163,224)">Sleepy.</font>gg\n' .. Title
     textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     textLabel.BackgroundTransparency = 1
     textLabel.TextSize = 36
@@ -194,7 +194,7 @@ getgenv().HideUI = LPH_JIT_MAX(function(Title, Timing)
                 local timeLeft = endTime - tick()
 
                 textLabel.Text = string.format(
-                    '<font color="rgb(0,163,224)">volt.</font>gg\n%s\nplease wait : <font color="rgb(0,163,224)">%.2f</font> seconds',
+                    '<font color="rgb(0,163,224)">Sleepy.</font>gg\n%s\nplease wait : <font color="rgb(0,163,224)">%.2f</font> seconds',
                     Title, math.max(timeLeft, 0)
                 )
 
@@ -384,13 +384,6 @@ getgenv().Config = {
             ["ClockTime"] = 14;
             ["Technology"] = "ShadowMap";
         };
-        ["Weather"] = {
-            ["Mode"] = "Snow";
-        };
-        ["Ambience"] = {
-            ["Mode"] = "Rain";
-            ["Volume"] = 5;
-        };
         ["DarkMode"] = {
             ["Color"] = Color3.fromRGB(30, 30, 40);
         };
@@ -519,7 +512,7 @@ getgenv().crosshair = {
     scale_min = 1,
     scale_max = 1,
 
-    text = "volt.gg",
+    text = "Sleepy.gg",
     text_size = 13,
     show_text = true,
     fade_speed = 5
@@ -4311,7 +4304,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         
                 if Server.id == game.JobId then
                     library.notifications:create_notification({
-                        name = "volt.gg",
+                        name = "Sleepy.gg",
                         info = `You are currently in the smallest server!`,
                         lifetime = 10
                     })
