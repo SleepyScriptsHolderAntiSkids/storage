@@ -125,8 +125,6 @@ getgenv().library = {
         "/autoload",
         "/unlockall"
     },
-    priority = {},
-    whitelist = {},
     flags = {},
     config_flags = {},
     connections = {},   
@@ -947,6 +945,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 if count > 0 and count == last then break end
                 last = count
             end
+
+            -- Every control has written its default into flags by now, so this snapshot is
+            -- the untouched state. Taken before autoload so a saved config can't poison it.
+            -- Panic replays it through load_config, which already knows how to feed every
+            -- control type back through its own setter.
+            library.default_config = library:get_config()
 
             if isfile(AUTOLOAD_PATH) then
                 local name = readfile(AUTOLOAD_PATH)
@@ -4162,7 +4166,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
         function library:init_config(window) 
             window:seperator({name = "Settings"})
-            local main, playerlist = window:tab({name = "Configs", tabs = {"Main", "Playerlist"}})
+            local main = window:tab({name = "Configs", tabs = {"Main"}})
             
             local column = main:column({})
             local section = column:section({name = "Configs", size = 1, default = false, icon = "rbxassetid://139628202576511"})
@@ -4337,102 +4341,18 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(
                 game.PlaceId,
                 game.JobId
-            )         
-            end})
-                        
-            local _column = playerlist:column({})
-            local _section = _column:section({name = "Players", size = 1, default = false})
-
-            local plr_list = _section:list({options = {}, flag = "player_list"});
-
-            _column = playerlist:column({})
-
-            _section = _column:section({name = "Player Options", size = 1, default = false, side = 'right'})
-
-            local _playerlabel = _section:label({name = "Selected Player : None"})
-
-            task.spawn(LPH_NO_VIRTUALIZE(function()
-                while task.wait(0.5) do
-                    _playerlabel.set(string.format("Selected Player : %s", library.flags["player_list"] or "None"))
-                end
-            end))
-
-            local _statuslabel = _section:label({name = "Status : None"})
-
-            task.spawn(LPH_NO_VIRTUALIZE(function()
-                while task.wait(0.5) do
-                    local playervalue = library.flags["player_list"]
-                    local status
-
-                    if playervalue ~= nil then
-                        if table.find(library.priority, playervalue) then
-                            status = "<font color='rgb(255,0,0)'>Priority</font>"
-                        elseif table.find(library.whitelist, playervalue) then
-                            status = "<font color='rgb(0,255,0)'>Whitelisted</font>"
-                        else
-                            status = "None"
-                        end
-                    else
-                        status = "None"
-                    end
-
-                    _statuslabel.set(string.format("Status : %s", status))
-                end
-            end))
-
-            _section:button({name = "Prioritise", callback = function()
-                if not library.flags["player_list"] then return end
-                if table.find(library.whitelist, library.flags["player_list"]) then
-                    table.remove(library.whitelist, table.find(library.whitelist, library.flags["player_list"]))
-                end
-
-                if table.find(library.priority, library.flags["player_list"]) then
-                    table.remove(library.priority, table.find(library.priority, library.flags["player_list"]))
-
-                    return
-                end
-
-                if not table.find(library.priority, library.flags["player_list"]) then
-                    table.insert(library.priority, library.flags["player_list"])
-                end
+            )
             end})
 
-            _section:button({name = "Whitelist", callback = function()
-                if not library.flags["player_list"] then return end
-                if table.find(library.priority, library.flags["player_list"]) then
-                    table.remove(library.priority, table.find(library.priority, library.flags["player_list"]))
-                end
+            section:button({name = "Panic", callback = function()
+                if not library.default_config then return end
 
-                if table.find(library.whitelist, library.flags["player_list"]) then
-                    table.remove(library.whitelist, table.find(library.whitelist, library.flags["player_list"]))
-
-                    return
-                end
-
-                if not table.find(library.whitelist, library.flags["player_list"]) then
-                    table.insert(library.whitelist, library.flags["player_list"])
-                end
+                library:load_config(library.default_config)
+                notifications:create_notification({
+                    name = "Sleepy.gg",
+                    info = "Everything reset to default"
+                })
             end})
-
-            local refreshplrs = LPH_NO_VIRTUALIZE(function()
-                local cache = {}
-
-                for i,v in players:GetPlayers() do
-                    if v==lp then continue end
-
-                    table.insert(cache, v.Name)
-                end
-
-                table.sort(cache)
-
-                plr_list.refresh_options(cache)
-            end)
-
-            task.spawn(refreshplrs)
-
-            players.PlayerAdded:Connect(refreshplrs)
-
-            players.PlayerRemoving:Connect(refreshplrs)
         end
     --
 
