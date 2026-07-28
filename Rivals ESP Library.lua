@@ -144,6 +144,13 @@ do
     -- killing ESP for the rest, matching the old per-connection isolation.
     local ESP_UPDATERS = {}
 
+    -- Every updater registers its hide function here. Two things depend on it: the master
+    -- gate below, and the error path in the loop. An updater that throws partway through
+    -- drawing has already made elements visible, so without a hide on failure its box stays
+    -- frozen on screen for the rest of the session - that is the freeze.
+    local ESP_HIDERS = {}
+    local esp_drawing = false
+
     -- Round Players Only. Every player in the server gets an updater, so without this the
     -- loop was drawing for a whole lobby. The duel is walked once per frame here rather than
     -- inside each updater, producing a set they hash into. Outside a live round the set is
@@ -151,7 +158,25 @@ do
     local ESP_ROUND_PLAYERS = {}
     local DuelController = require(lplayer:FindFirstChild("DuelController", true))
 
+    local function hide_all_esp()
+        for _, hide in pairs(ESP_HIDERS) do
+            pcall(hide)
+        end
+    end
+
     Euphoria.RunService.RenderStepped:Connect(LPH_NO_VIRTUALIZE(function()
+        -- Master gate. Disabled means everything hides, no matter what state an individual
+        -- updater managed to get stuck in. This is what makes the toggle authoritative
+        -- instead of depending on each updater reaching its own else-branch.
+        if not Config.ESP.Enabled then
+            if esp_drawing then
+                esp_drawing = false
+                hide_all_esp()
+            end
+            return
+        end
+        esp_drawing = true
+
         if Config.ESP.RoundOnly then
             table.clear(ESP_ROUND_PLAYERS)
 
@@ -169,8 +194,11 @@ do
             end
         end
 
-        for _, updater in pairs(ESP_UPDATERS) do
-            pcall(updater)
+        for key, updater in pairs(ESP_UPDATERS) do
+            if not pcall(updater) then
+                local hide = ESP_HIDERS[key]
+                if hide then pcall(hide) end
+            end
         end
     end))
 
@@ -263,6 +291,13 @@ do
         local ESP = function(plr)
             task.spawn(LPH_JIT_MAX(function()
             if plr == lplayer then return end
+
+            -- Bail before building anything if this player is already set up. Every element
+            -- below is created unconditionally, ahead of the Players_ESP guard further down,
+            -- so a second call for the same player would leave a whole orphaned set of
+            -- frames parented to the ScreenGui with no updater driving them. Orphans are
+            -- precisely the boxes that sit on screen and never move or clear again.
+            if Players_ESP[plr.Name] then return end
 
             coroutine.wrap(DupeCheck)(plr)
             local Name = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, Position = UDim2.new(0.5, 0, 0, -11), Size = UDim2.new(0, 100, 0, 20), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0), RichText = true})
@@ -454,8 +489,14 @@ do
                 Players_ESP[plr.Name].HumanoidConnection = Humanoid.HealthChanged:Connect(Players_ESP[plr.Name].Health_Changed)
 
                 Players_ESP[plr.Name].CharacterAdded = plr.CharacterAdded:Connect(LPH_JIT_MAX(function(Character)
-                    Humanoid = Character:WaitForChild("Humanoid")
-                    HRP = Character:WaitForChild("HumanoidRootPart")
+                    -- Clear before waiting. These are the refs the updater draws from, and
+                    -- the old ones point at a destroyed rig whose Position never changes
+                    -- again - so leaving them set paints a frozen box at the death spot for
+                    -- as long as the wait takes. Nil makes the updater hide instead, and the
+                    -- timeout stops a character that never finishes loading from hanging it.
+                    Humanoid, HRP = nil, nil
+                    Humanoid = Character:WaitForChild("Humanoid", 10)
+                    HRP = Character:WaitForChild("HumanoidRootPart", 10)
                     if Players_ESP[plr.Name] and Players_ESP[plr.Name].ToolConnection_Added then
                         SafeDisconnect(Players_ESP[plr.Name].ToolConnection_Added)
                     end
@@ -484,9 +525,20 @@ do
             local Updater = function()
                 local esp_key = plr.Name;
                 local hb_c1, hb_c2;
-                local is_friend;
                 local wep_next = 0;
                 local round_hidden = false;
+
+                -- IsFriendsWith is a web call: it yields, and it throws when the endpoint
+                -- rate limits. It used to sit in the middle of the draw, guarded by
+                -- `if is_friend == nil`, so a failed lookup left it nil and it retried every
+                -- single frame - a request per player per frame, thrown from inside the
+                -- render loop, aborting the draw after elements had already been made
+                -- visible. That is what froze the ESP. Resolved once, off the render path.
+                local is_friend = false;
+                task.spawn(function()
+                    local ok, result = pcall(lplayer.IsFriendsWith, lplayer, plr.UserId)
+                    is_friend = ok and result == true
+                end)
                 local HideESP = LPH_NO_VIRTUALIZE(function()
                     Box.Visible = false;
                     Name.Visible = false;
@@ -510,8 +562,11 @@ do
                     if not plr then
                         ScreenGui:Destroy();
                         ESP_UPDATERS[esp_key] = nil;
+                        ESP_HIDERS[esp_key] = nil;
                     end
                 end)
+                --
+                ESP_HIDERS[esp_key] = HideESP
                 --
                 ESP_UPDATERS[esp_key] = LPH_NO_VIRTUALIZE(function()
                     -- Player gone: hide everything FIRST, then remove self. This
@@ -519,15 +574,18 @@ do
                     if not plr or not plr.Parent then
                         HideESP()
                         ESP_UPDATERS[esp_key] = nil
+                        ESP_HIDERS[esp_key] = nil
                         return
                     end
 
                     -- Not in our round (or no round running): hide once, then this player
                     -- costs one hash lookup a frame instead of a full box rebuild.
                     if Config.ESP.RoundOnly and not ESP_ROUND_PLAYERS[plr] then
+                        -- Hide first, latch after. Latching first would mean a hide that
+                        -- threw could never be retried, leaving the box up permanently.
                         if not round_hidden then
-                            round_hidden = true
                             HideESP()
+                            round_hidden = true
                         end
                         return
                     end
@@ -763,7 +821,6 @@ do
 
                                     do -- Names
                                             Name.Visible = Config.ESP.Drawing.Names.Enabled
-                                            if is_friend == nil then is_friend = lplayer:IsFriendsWith(plr.UserId) end
                                             if Config.ESP.Options.Friendcheck and is_friend then
                                                 Name.Text = string.format('(<font color="rgb(%d, %d, %d)">F</font>) %s', Config.ESP.Options.FriendcheckRGB.R * 255, Config.ESP.Options.FriendcheckRGB.G * 255, Config.ESP.Options.FriendcheckRGB.B * 255, plr.Name)
                                             else
