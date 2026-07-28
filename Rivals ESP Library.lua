@@ -143,7 +143,32 @@ do
     -- loop iterates them once per frame. pcall keeps one bad entity from
     -- killing ESP for the rest, matching the old per-connection isolation.
     local ESP_UPDATERS = {}
+
+    -- Round Players Only. Every player in the server gets an updater, so without this the
+    -- loop was drawing for a whole lobby. The duel is walked once per frame here rather than
+    -- inside each updater, producing a set they hash into. Outside a live round the set is
+    -- empty, so every updater hides itself once and then costs a single lookup per frame.
+    local ESP_ROUND_PLAYERS = {}
+    local DuelController = require(lplayer:FindFirstChild("DuelController", true))
+
     Euphoria.RunService.RenderStepped:Connect(LPH_NO_VIRTUALIZE(function()
+        if Config.ESP.RoundOnly then
+            table.clear(ESP_ROUND_PLAYERS)
+
+            local duel = DuelController:GetDuel(lplayer)
+            local client_duel = duel and duel.DuelInterface and duel.DuelInterface.ClientDuel
+
+            -- Being in a duel is not enough - the rest of the server is still loaded and
+            -- would otherwise be drawn, so only the duelers of our own round go in.
+            if client_duel and client_duel:Get("Status") == "RoundStarted" then
+                for _, dueler in pairs(duel.Duelers) do
+                    if dueler.Player then
+                        ESP_ROUND_PLAYERS[dueler.Player] = true
+                    end
+                end
+            end
+        end
+
         for _, updater in pairs(ESP_UPDATERS) do
             pcall(updater)
         end
@@ -461,6 +486,7 @@ do
                 local hb_c1, hb_c2;
                 local is_friend;
                 local wep_next = 0;
+                local round_hidden = false;
                 local HideESP = LPH_NO_VIRTUALIZE(function()
                     Box.Visible = false;
                     Name.Visible = false;
@@ -495,6 +521,18 @@ do
                         ESP_UPDATERS[esp_key] = nil
                         return
                     end
+
+                    -- Not in our round (or no round running): hide once, then this player
+                    -- costs one hash lookup a frame instead of a full box rebuild.
+                    if Config.ESP.RoundOnly and not ESP_ROUND_PLAYERS[plr] then
+                        if not round_hidden then
+                            round_hidden = true
+                            HideESP()
+                        end
+                        return
+                    end
+                    round_hidden = false
+
                     if plr.Character and lplayer.Character and Config.ESP.Enabled then
                         if Humanoid and HRP then
                             Pos, OnScreen = Cam:WorldToScreenPoint(HRP.Position)
