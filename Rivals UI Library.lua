@@ -390,6 +390,7 @@ getgenv().Config = {
     ESP = {
     Enabled = false,
     TeamCheck = false,
+    RoundOnly = true,
     MaxDistance = 500,
     FontSize = 12,
     Font = Enum.Font.Code,
