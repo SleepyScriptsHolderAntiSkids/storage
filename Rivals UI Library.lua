@@ -4277,7 +4277,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         queue_on_teleport([[
                             repeat task.wait() until game:IsLoaded()
                             script_key = "]] .. script_key .. [["
-                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/a2ae14a61a62eef9526f33782e25a396.lua"))()
+                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/762ad8f03141246e400859bcf6f9bc28.lua"))()
                         ]])
                     end
                 else
