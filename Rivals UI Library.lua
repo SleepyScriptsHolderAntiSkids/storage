@@ -6736,6 +6736,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 return button
             end
             
+             function cfg.changetext(text)
+                 items[ "name" ].Text = text
+             end
+
             function cfg.set_visible(bool)
                 local a = bool and cfg.y_size or 0
                 library:tween(items[ "dropdown_holder" ], {Size = dim_offset(items[ "dropdown" ].AbsoluteSize.X, a)})
@@ -6928,6 +6932,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     BackgroundColor3 = rgb(36, 36, 37)
                 });
             end 
+            function cfg.set(text)
+                cfg.items[ "name" ].Text = text
+            end
+
 
             return setmetatable(cfg, library)
         end 
