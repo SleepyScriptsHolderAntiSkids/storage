@@ -370,7 +370,6 @@ do
                         end
 
                         do -- \\ Boxes
-                            Box.Visible = Config.ESP.Drawing.Boxes.Full.Enabled
                             if Config.ESP.Drawing.Boxes.Filled.Enabled then
                                 Box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                                 if Config.ESP.Drawing.Boxes.GradientFill then
@@ -566,6 +565,9 @@ do
                     end
                 end)
                 --
+                local superseded = ESP_HIDERS[esp_key]
+                if superseded then pcall(superseded) end
+
                 ESP_HIDERS[esp_key] = HideESP
                 --
                 ESP_UPDATERS[esp_key] = LPH_NO_VIRTUALIZE(function()
