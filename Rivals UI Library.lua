@@ -4277,7 +4277,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         queue_on_teleport([[
                             repeat task.wait() until game:IsLoaded()
                             script_key = "]] .. script_key .. [["
-                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/762ad8f03141246e400859bcf6f9bc28.lua"))()
+                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/a2ae14a61a62eef9526f33782e25a396.lua"))()
                         ]])
                     end
                 else
@@ -4918,15 +4918,20 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         end 
 
 
-          local AUTOLOAD_PATH = library.directory .. "/autoload/autoload.cfg"
-
-          local AUTOLOAD_ENABLED = false
+        local AUTOLOAD_PATH = library.directory .. "/autoload/autoload.cfg"
 
 
-        task.defer(function()
-            if not AUTOLOAD_ENABLED then
-                return
+        task.spawn(LPH_NO_VIRTUALIZE(function()
+            local last = -1
+            while true do
+                task.wait(0.5)
+                local count = 0
+                for _ in next, library.config_flags do count += 1 end
+                if count > 0 and count == last then break end
+                last = count
             end
+
+            library.default_config = library:get_config()
 
             if isfile(AUTOLOAD_PATH) then
                 local name = readfile(AUTOLOAD_PATH)
@@ -4938,10 +4943,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     end)
                 end
             end
-        end)
+        end))
 
-        
-        function library:round(number, float) 
+
+        function library:round(number, float)
             local multiplier = 1 / (float or 1)
 
             return floor(number * multiplier + 0.5) / multiplier
@@ -8184,8 +8189,77 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local section = column:section({name = "Settings", side = "right", size = 1, default = true, icon = "rbxassetid://129380150574313"})
             text = section:textbox({name = "Config name:", flag = "config_name_text"})
             section:button({name = "Save", callback = function() writefile(library.directory .. "/configs/" .. flags["config_name_text"] .. ".cfg", library:get_config()) library:update_config_list() notifications:create_notification({name = "Configs", info = "Saved config to:\n" .. flags["config_name_text"] or flags["config_name_text"]}) end}) 
-            section:button({name = "Load", callback = function() library:load_config(readfile(library.directory .. "/configs/" .. flags["config_name_text"] .. ".cfg"))  library:update_config_list() notifications:create_notification({name = "Configs", info = "Loaded config:\n" .. flags["config_name_text"]}) end})
-            section:button({name = "Delete", callback = function() delfile(library.directory .. "/configs/" .. flags["config_name_text"] .. ".cfg")  library:update_config_list() notifications:create_notification({name = "Configs", info = "Deleted config:\n" .. flags["config_name_text"]}) end})
+            section:button({name = "Overwrite", callback = function()
+                pcall(function()
+                    local config_name = flags["config_name_list"]
+                    writefile(library.directory .. "/configs/" .. config_name .. ".cfg", library:get_config())
+                    library:update_config_list()
+                    notifications:create_notification({name = "Configs", info = "Overwrote config :\n" .. config_name})
+                end)
+            end})
+
+            section:button({name = "Load", callback = function()
+                pcall(function()
+                    local config_name = flags["config_name_list"]
+                    library:load_config(readfile(library.directory .. "/configs/" .. config_name .. ".cfg"))
+                    library:update_config_list()
+                    notifications:create_notification({name = "Configs", info = "Loaded config:\n" .. config_name})
+                end)
+            end})
+
+            section:button({name = "Delete", callback = function()
+                pcall(function()
+                    local config_name = flags["config_name_list"]
+                    delfile(library.directory .. "/configs/" .. config_name .. ".cfg")
+                    library:update_config_list()
+                    notifications:create_notification({name = "Configs", info = "Deleted config:\n" .. config_name})
+                end)
+            end})
+            local autoload_label = section:label({name = "Auto Load: None"})
+
+            if isfile(AUTOLOAD_PATH) then
+                autoload_label.set("Auto Load: " .. readfile(AUTOLOAD_PATH))
+            else
+                autoload_label.set("Auto Load: None")
+            end
+
+            section:toggle({
+                name = "Auto Load Config",
+                flag = "autoload_config",
+                default = isfile(AUTOLOAD_PATH),
+                callback = function(state)
+                    if state then
+                        local name = flags["config_name_list"]
+                        if name and name ~= "" then
+                            writefile(AUTOLOAD_PATH, name)
+                            autoload_label.set("Auto Load: " .. name)
+                        end
+                    else
+                        if isfile(AUTOLOAD_PATH) then
+                            delfile(AUTOLOAD_PATH)
+                        end
+                        autoload_label.set("Auto Load: None")
+                    end
+                end
+            })
+
+            section:button({name = "Rejoin", callback = function()
+                cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(
+                    game.PlaceId,
+                    game.JobId
+                )
+            end})
+
+            section:button({name = "Panic", callback = function()
+                if not library.default_config then return end
+
+                library:load_config(library.default_config)
+                notifications:create_notification({
+                    name = "Sleepy.gg",
+                    info = "Everything reset to default"
+                })
+            end})
+
             section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
             section:keybind({name = "Menu Bind", callback = function(bool) window.toggle_menu(bool) end, default = true})
         end
