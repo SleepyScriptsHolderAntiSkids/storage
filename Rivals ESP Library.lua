@@ -591,7 +591,19 @@ do
                     end
                     round_hidden = false
 
-                    if plr.Character and lplayer.Character and Config.ESP.Enabled then
+                    local live_character = plr.Character
+
+                    if live_character ~= character then
+                        character = live_character
+                        Humanoid = live_character and live_character:FindFirstChildOfClass("Humanoid")
+                        HRP = live_character and live_character:FindFirstChild("HumanoidRootPart")
+                    end
+
+                    if HRP and not HRP:IsDescendantOf(Workspace) then
+                        Humanoid, HRP = nil, nil
+                    end
+
+                    if live_character and lplayer.Character and Config.ESP.Enabled then
                         if Humanoid and HRP then
                             Pos, OnScreen = Cam:WorldToScreenPoint(HRP.Position)
                             Dist = (Cam.CFrame.Position - HRP.Position).Magnitude
