@@ -603,6 +603,10 @@ do
                         Humanoid, HRP = nil, nil
                     end
 
+                    if Humanoid and Humanoid.Health <= 0 then
+                        Humanoid, HRP = nil, nil
+                    end
+
                     if live_character and lplayer.Character and Config.ESP.Enabled then
                         if Humanoid and HRP then
                             Pos, OnScreen = Cam:WorldToScreenPoint(HRP.Position)
