@@ -886,7 +886,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local list = {}
             
             for idx, file in listfiles(library.directory .. "/configs") do
-                local name = file:gsub(library.directory .. "/configs\\", ""):gsub(".cfg", ""):gsub(library.directory .. "\\configs\\", "")
+                local name = (file:match("[^/\\]+$") or file):gsub("%.cfg$", "")
                 list[#list + 1] = name
             end
 
@@ -4872,7 +4872,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local list = {}
             
             for idx, file in listfiles(library.directory .. "/configs") do
-                local name = file:gsub(library.directory .. "/configs\\", ""):gsub(".cfg", ""):gsub(library.directory .. "\\configs\\", "")
+                local name = (file:match("[^/\\]+$") or file):gsub("%.cfg$", "")
                 list[#list + 1] = name
             end
 
@@ -4898,23 +4898,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         function library:load_config(config_json) 
             local config = http_service:JSONDecode(config_json)
 
-            local registered = 0
-            for _ in next, library.config_flags do registered += 1 end
-
-            local seen, applied, missing = 0, 0, {}
-            print("[Cfg] load_config: registered setters = " .. registered)
-
-            for _, v in config do 
+            for _, v in config do
                 local function_set = library.config_flags[_]
-                
-                if _ == "config_name_list" then 
-                    continue 
+
+                if _ == "config_name_list" then
+                    continue
                 end
 
-                seen += 1
-                if function_set then applied += 1 elseif #missing < 12 then missing[#missing + 1] = tostring(_) end
-
-                if function_set then 
+                if function_set then
                     if type(v) == "table" and v["Transparency"] and v["Color"] then
                         function_set(hex(v["Color"]), v["Transparency"])
                     elseif type(v) == "table" and v["active"] then 
@@ -4925,9 +4916,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end 
             end 
 
-            print("[Cfg] load_config: keys=" .. seen .. " applied=" .. applied .. " missing=" .. (seen - applied))
-            if #missing > 0 then print("[Cfg] missing flags: " .. table.concat(missing, ", ")) end
-        end 
+        end
 
 
         local AUTOLOAD_PATH = library.directory .. "/autoload/autoload.cfg"
@@ -8220,35 +8209,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             section:button({name = "Load", callback = function()
                 local config_name = flags["config_name_list"]
-                local typed_name = flags["config_name_text"]
-
-                print("[Cfg] Load pressed")
-                print("[Cfg] list flag  = " .. tostring(config_name) .. " (" .. typeof(config_name) .. ")")
-                print("[Cfg] text flag  = " .. tostring(typed_name))
-                print("[Cfg] directory  = " .. tostring(library.directory))
-
-                if type(config_name) ~= "string" or config_name == "" then
-                    print("[Cfg] ABORT: list flag is not a usable string")
-                    return
-                end
-
-                local path = library.directory .. "/configs/" .. config_name .. ".cfg"
-                print("[Cfg] path       = " .. path)
-                print("[Cfg] isfile     = " .. tostring(isfile(path)))
-
-                local read_ok, contents = pcall(readfile, path)
-                print("[Cfg] readfile   = " .. tostring(read_ok) .. " len=" .. tostring(read_ok and #contents or contents))
-
-                if not read_ok then return end
-
-                local load_ok, load_err = pcall(function()
-                    library:load_config(contents)
-                end)
-
-                print("[Cfg] load_config = " .. tostring(load_ok) .. " " .. tostring(load_err))
-
-                if not load_ok then return end
-
+                library:load_config(readfile(library.directory .. "/configs/" .. config_name .. ".cfg"))
                 library:update_config_list()
                 notifications:create_notification({name = "Configs", info = "Loaded config:\n" .. config_name})
             end})
