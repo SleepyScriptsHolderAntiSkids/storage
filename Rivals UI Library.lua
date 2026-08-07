@@ -1102,12 +1102,17 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     BorderSizePixel = 0;
                     BackgroundColor3 = rgb(14, 14, 16),
                 }); items[ "main" ].Position = dim2(0, items[ "main" ].AbsolutePosition.X, 0, items[ "main" ].AbsolutePosition.Y)
-                
+
+                library.ui_scale = library:create( "UIScale" , {
+                    Parent = items[ "main" ];
+                    Scale = 1;
+                });
+
                 library:create( "UICorner" , {
                     Parent = items[ "main" ];
                     CornerRadius = dim(0, 10)
                 });
-                
+
                 library:create( "UIStroke" , {
                     Color = rgb(23, 23, 29);
                     Parent = items[ "main" ];
@@ -4288,6 +4293,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
              
 
+            section:slider({name = "Menu Size", flag = "menu_size", min = 50, max = 150, default = 100, suffix = "%", callback = function(value)
+                if library.ui_scale then library.ui_scale.Scale = value / 100 end
+            end})
+
             section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
             section:keybind({name = "Menu Bind", key = Enum.KeyCode.Insert, callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
 
@@ -5059,7 +5068,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     BackgroundColor3 = rgb(14, 14, 16)
                 }); items[ "main" ].Position = dim2(0, items[ "main" ].AbsolutePosition.X, 0, items[ "main" ].AbsolutePosition.Y)
 
-                library:create( "UIScale" , {
+                library.ui_scale = library:create( "UIScale" , {
                     Parent = items[ "main" ];
                     Scale = scale;
                 });
@@ -8265,6 +8274,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     name = "Sleepy.gg",
                     info = "Everything reset to default"
                 })
+            end})
+
+            section:slider({name = "Menu Size", flag = "menu_size", min = 25, max = 100, default = 50, suffix = "%", callback = function(value)
+                if library.ui_scale then library.ui_scale.Scale = value / 100 end
             end})
 
             section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
