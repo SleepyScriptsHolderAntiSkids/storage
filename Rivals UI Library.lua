@@ -4293,8 +4293,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
              
 
-            section:slider({name = "Menu Size", flag = "menu_size", min = 50, max = 150, default = 100, suffix = "%", callback = function(value)
-                if library.ui_scale then library.ui_scale.Scale = value / 100 end
+            section:textbox({name = "Menu Size %", flag = "menu_size", default = "100", placeholder = "100", callback = function(text)
+                local value = tonumber(text)
+                if not value or not library.ui_scale then return end
+                library.ui_scale.Scale = math.clamp(value, 50, 150) / 100
             end})
 
             section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
@@ -8276,8 +8278,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 })
             end})
 
-            section:slider({name = "Menu Size", flag = "menu_size", min = 25, max = 100, default = 50, suffix = "%", callback = function(value)
-                if library.ui_scale then library.ui_scale.Scale = value / 100 end
+            section:textbox({name = "Menu Size %", flag = "menu_size", default = "50", placeholder = "50", callback = function(text)
+                local value = tonumber(text)
+                if not value or not library.ui_scale then return end
+                library.ui_scale.Scale = math.clamp(value, 25, 100) / 100
             end})
 
             section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
