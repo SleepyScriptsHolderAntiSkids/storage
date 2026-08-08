@@ -1,3 +1,4 @@
+
 if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
@@ -4282,7 +4283,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         queue_on_teleport([[
                             repeat task.wait() until game:IsLoaded()
                             script_key = "]] .. script_key .. [["
-                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/762ad8f03141246e400859bcf6f9bc28.lua"))()
+                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/a462cc3ca7e0c3747808a34e71946652.lua"))()
                         ]])
                     end
                 else
