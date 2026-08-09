@@ -1,4 +1,3 @@
-
 if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
@@ -4242,6 +4241,20 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
             })
 
+            section:button({
+                name = "Refresh Config List",
+                callback = function()
+                    local ok, err = pcall(function()
+                        library:update_config_list()
+                    end)
+
+                    notifications:create_notification({
+                        name = "Configs",
+                        info = ok and "Config list refreshed" or ("Refresh failed:\n" .. tostring(err))
+                    })
+                end
+            })
+
             local autoload_label = section:label({
                 name = "Auto Load: None"
             })
@@ -4283,7 +4296,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         queue_on_teleport([[
                             repeat task.wait() until game:IsLoaded()
                             script_key = "]] .. script_key .. [["
-                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/a462cc3ca7e0c3747808a34e71946652.lua"))()
+                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/762ad8f03141246e400859bcf6f9bc28.lua"))()
                         ]])
                     end
                 else
@@ -8234,6 +8247,18 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     notifications:create_notification({name = "Configs", info = "Deleted config:\n" .. config_name})
                 end)
             end})
+
+            section:button({name = "Refresh Config List", callback = function()
+                local ok, err = pcall(function()
+                    library:update_config_list()
+                end)
+
+                notifications:create_notification({
+                    name = "Configs",
+                    info = ok and "Config list refreshed" or ("Refresh failed:\n" .. tostring(err))
+                })
+            end})
+
             local autoload_label = section:label({name = "Auto Load: None"})
 
             if isfile(AUTOLOAD_PATH) then
