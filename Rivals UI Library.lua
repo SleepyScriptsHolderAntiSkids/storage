@@ -2459,9 +2459,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 cfg.callback(flags[cfg.flag])
             end)
 
-            items[ "slider" ].MouseButton1Down:Connect(LPH_NO_VIRTUALIZE(function()
-                cfg.dragging = true 
+            items[ "slider" ].MouseButton1Down:Connect(LPH_NO_VIRTUALIZE(function(x)
+                cfg.dragging = true
                 library:tween(items[ "value" ], {TextColor3 = rgb(255, 255, 255)}, Enum.EasingStyle.Quad, 0.2)
+
+                local size_x = (x - items[ "slider" ].AbsolutePosition.X) / items[ "slider" ].AbsoluteSize.X
+                cfg.set(((cfg.max - cfg.min) * size_x) + cfg.min)
             end))
 
             library:connection(uis.InputChanged, function(input)
@@ -4296,7 +4299,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         queue_on_teleport([[
                             repeat task.wait() until game:IsLoaded()
                             script_key = "]] .. script_key .. [["
-                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/e18a1d76bcc68efec407c3f7ee36935d.lua"))()
+                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/762ad8f03141246e400859bcf6f9bc28.lua"))()
                         ]])
                     end
                 else
@@ -6491,24 +6494,27 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end
 
             items[ "slider" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
-                            if Input.UserInputType ~= Enum.UserInputType.Touch then return end
-                cfg.dragging = true 
+                if Input.UserInputType ~= Enum.UserInputType.Touch then return end
+
+                cfg.drag_input = Input
                 library:tween(items[ "value" ], {TextColor3 = rgb(255, 255, 255)}, Enum.EasingStyle.Quad, 0.2)
+
+                local size_x = (Input.Position.X - items[ "slider" ].AbsolutePosition.X) / items[ "slider" ].AbsoluteSize.X
+                cfg.set(((cfg.max - cfg.min) * size_x) + cfg.min)
             end))
 
             library:connection(uis.InputChanged, function(input)
-                if cfg.dragging and input.UserInputType == Enum.UserInputType.Touch then 
+                if cfg.drag_input == input then
                     local size_x = (input.Position.X - items[ "slider" ].AbsolutePosition.X) / items[ "slider" ].AbsoluteSize.X
-                    local value = ((cfg.max - cfg.min) * size_x) + cfg.min
-                    cfg.set(value)
+                    cfg.set(((cfg.max - cfg.min) * size_x) + cfg.min)
                 end
             end)
 
             library:connection(uis.InputEnded, function(input)
-                if input.UserInputType == Enum.UserInputType.Touch then
-                    cfg.dragging = false
-                    library:tween(items[ "value" ], {TextColor3 = rgb(72, 72, 73)}, Enum.EasingStyle.Quad, 0.2) 
-                end 
+                if cfg.drag_input == input then
+                    cfg.drag_input = nil
+                    library:tween(items[ "value" ], {TextColor3 = rgb(72, 72, 73)}, Enum.EasingStyle.Quad, 0.2)
+                end
             end)
 
             if cfg.seperator then 
