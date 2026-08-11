@@ -5347,13 +5347,43 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             });
 
-            local open = true 
-            items[ "close button" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
-                if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
-                    open = not open 
+            local open = true
+            local btn = items[ "close button" ]
+            local btn_input, btn_start, btn_origin, btn_moved
 
+            btn.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if input.UserInputType ~= Enum.UserInputType.Touch then return end
+
+                btn_input = input
+                btn_start = input.Position
+                btn_origin = btn.Position
+                btn_moved = false
+            end))
+
+            uis.InputChanged:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if btn_input ~= input then return end
+
+                local dx = input.Position.X - btn_start.X
+                local dy = input.Position.Y - btn_start.Y
+
+                if not btn_moved and (dx * dx + dy * dy) > 100 then
+                    btn_moved = true
+                end
+
+                if btn_moved then
+                    btn.Position = dim2(btn_origin.X.Scale, btn_origin.X.Offset + dx, btn_origin.Y.Scale, btn_origin.Y.Offset + dy)
+                end
+            end))
+
+            uis.InputEnded:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if btn_input ~= input then return end
+
+                btn_input = nil
+
+                if not btn_moved then
+                    open = not open
                     cfg.toggle_menu(open)
-                end 
+                end
             end))
 
                 
