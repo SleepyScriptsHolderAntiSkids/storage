@@ -740,7 +740,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             Frame.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    resizing = true
+                    resizing = input
                     start = input.Position
                     start_size = frame.Size
                 end
@@ -808,7 +808,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             frame.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    dragging = true
+                    dragging = input
                     start = input.Position
                     start_size = frame.Position
                 end
@@ -4299,7 +4299,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         queue_on_teleport([[
                             repeat task.wait() until game:IsLoaded()
                             script_key = "]] .. script_key .. [["
-                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/762ad8f03141246e400859bcf6f9bc28.lua"))()
+                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/e18a1d76bcc68efec407c3f7ee36935d.lua"))()
                         ]])
                     end
                 else
@@ -4762,20 +4762,20 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             Frame.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.Touch then
-                    resizing = true
+                    resizing = input
                     start = input.Position
                     start_size = frame.Size
                 end
             end))
 
             Frame.InputEnded:Connect(LPH_NO_VIRTUALIZE(function(input)
-                if input.UserInputType == Enum.UserInputType.Touch then
-                    resizing = false
+                if resizing == input then
+                    resizing = nil
                 end
             end))
 
             library:connection(uis.InputChanged, function(input, game_event) 
-                if resizing and input.UserInputType == Enum.UserInputType.Touch then
+                if resizing == input then
                     local viewport_x = camera.ViewportSize.X
                     local viewport_y = camera.ViewportSize.Y
 
@@ -4830,20 +4830,20 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             frame.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.Touch then
-                    dragging = true
+                    dragging = input
                     start = input.Position
                     start_size = frame.Position
                 end
             end))
 
             frame.InputEnded:Connect(LPH_NO_VIRTUALIZE(function(input)
-                if input.UserInputType == Enum.UserInputType.Touch then
-                    dragging = false
+                if dragging == input then
+                    dragging = nil
                 end
             end))
 
             library:connection(uis.InputChanged, function(input, game_event) 
-                if dragging and input.UserInputType == Enum.UserInputType.Touch then
+                if dragging == input then
                     local viewport_x = camera.ViewportSize.X
                     local viewport_y = camera.ViewportSize.Y
 
@@ -5350,14 +5350,47 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             });
 
-            local open = true 
-            items[ "close button" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
-                if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
-                    open = not open 
+            local open = true
+            local button = items[ "close button" ]
+            local press_input, press_pos, press_origin, moved
 
-                    cfg.toggle_menu(open)
-                end 
+            button.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if input.UserInputType ~= Enum.UserInputType.Touch then return end
+
+                press_input = input
+                press_pos = input.Position
+                press_origin = button.Position
+                moved = false
             end))
+
+            library:connection(uis.InputChanged, function(input)
+                if press_input ~= input then return end
+
+                local dx = input.Position.X - press_pos.X
+                local dy = input.Position.Y - press_pos.Y
+
+                if not moved and (dx * dx + dy * dy) > 100 then
+                    moved = true
+                end
+
+                if moved then
+                    button.Position = dim2(
+                        press_origin.X.Scale, press_origin.X.Offset + dx,
+                        press_origin.Y.Scale, press_origin.Y.Offset + dy
+                    )
+                end
+            end)
+
+            library:connection(uis.InputEnded, function(input)
+                if press_input ~= input then return end
+
+                press_input = nil
+
+                if not moved then
+                    open = not open
+                    cfg.toggle_menu(open)
+                end
+            end)
 
                 
             return setmetatable(cfg, library)
@@ -7410,32 +7443,30 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end))
 
             uis.InputChanged:Connect(LPH_NO_VIRTUALIZE(function(input)
-                if (dragging_sat or dragging_hue or dragging_alpha) and input.UserInputType == Enum.UserInputType.Touch then
+                if dragging_sat == input or dragging_hue == input or dragging_alpha == input then
                     cfg.update_color() 
                 end
             end))
 
             library:connection(uis.InputEnded, function(input)
-                if input.UserInputType == Enum.UserInputType.Touch then
-                    dragging_sat = false
-                    dragging_hue = false
-                    dragging_alpha = false
-                end
+                if dragging_sat == input then dragging_sat = nil end
+                if dragging_hue == input then dragging_hue = nil end
+                if dragging_alpha == input then dragging_alpha = nil end
             end)    
 
             items[ "alpha_gradient" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
                             if Input.UserInputType ~= Enum.UserInputType.Touch then return end
-                dragging_alpha = true 
+                dragging_alpha = Input
             end))
             
             items[ "hue_gradient" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
                             if Input.UserInputType ~= Enum.UserInputType.Touch then return end
-                dragging_hue = true 
+                dragging_hue = Input
             end))
             
             items[ "sat" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
                             if Input.UserInputType ~= Enum.UserInputType.Touch then return end
-                dragging_sat = true  
+                dragging_sat = Input
             end))
 
             items[ "input" ].FocusLost:Connect(LPH_NO_VIRTUALIZE(function()
