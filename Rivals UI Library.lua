@@ -6303,17 +6303,40 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 flags[cfg.flag] = bool
             end 
             
-            items[ "toggle" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
-                if Input.UserInputType ~= Enum.UserInputType.Touch then return end
-                cfg.enabled = not cfg.enabled 
-                cfg.set(cfg.enabled)
-            end))
+            local tap_input, tap_pos, tap_moved
 
-            items[ "toggle_button" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
+            local function begin_tap(Input)
                 if Input.UserInputType ~= Enum.UserInputType.Touch then return end
-                cfg.enabled = not cfg.enabled 
-                cfg.set(cfg.enabled)
-            end))
+
+                tap_input = Input
+                tap_pos = Input.Position
+                tap_moved = false
+            end
+
+            items[ "toggle" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(begin_tap))
+            items[ "toggle_button" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(begin_tap))
+
+            library:connection(uis.InputChanged, function(input)
+                if tap_input ~= input or tap_moved then return end
+
+                local dx = input.Position.X - tap_pos.X
+                local dy = input.Position.Y - tap_pos.Y
+
+                if (dx * dx + dy * dy) > 100 then
+                    tap_moved = true
+                end
+            end)
+
+            library:connection(uis.InputEnded, function(input)
+                if tap_input ~= input then return end
+
+                tap_input = nil
+
+                if not tap_moved then
+                    cfg.enabled = not cfg.enabled
+                    cfg.set(cfg.enabled)
+                end
+            end)
             
             if cfg.seperator then -- ok bro my lua either sucks or this was a pain in the ass to make (simple if statement aswell 💔)
                 library:create( "Frame" , {
