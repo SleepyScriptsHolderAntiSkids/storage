@@ -1,3 +1,4 @@
+print("hi lol")
 if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
