@@ -967,6 +967,41 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         
+        function library:depends(parent, children)
+            local roots = {"toggle", "slider", "dropdown", "colorpicker", "textbox", "keybind", "label", "button"}
+
+            local function apply(state)
+                for i = 1, #children do
+                    local child = children[i]
+                    local items = child and child.items
+
+                    if items then
+                        for r = 1, #roots do
+                            local element = items[roots[r]]
+
+                            if typeof(element) == "Instance" then
+                                element.Visible = state and true or false
+                                break
+                            end
+                        end
+
+                        if not state and child.set_visible then pcall(child.set_visible, false) end
+                    end
+                end
+            end
+
+            local previous = parent.callback
+
+            parent.callback = function(...)
+                if previous then previous(...) end
+                apply(flags[parent.flag])
+            end
+
+            apply(flags[parent.flag])
+
+            return parent
+        end
+
         function library:round(number, float) 
             local multiplier = 1 / (float or 1)
 
@@ -4971,6 +5006,41 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end
         end))
 
+
+        function library:depends(parent, children)
+            local roots = {"toggle", "slider", "dropdown", "colorpicker", "textbox", "keybind", "label", "button"}
+
+            local function apply(state)
+                for i = 1, #children do
+                    local child = children[i]
+                    local items = child and child.items
+
+                    if items then
+                        for r = 1, #roots do
+                            local element = items[roots[r]]
+
+                            if typeof(element) == "Instance" then
+                                element.Visible = state and true or false
+                                break
+                            end
+                        end
+
+                        if not state and child.set_visible then pcall(child.set_visible, false) end
+                    end
+                end
+            end
+
+            local previous = parent.callback
+
+            parent.callback = function(...)
+                if previous then previous(...) end
+                apply(flags[parent.flag])
+            end
+
+            apply(flags[parent.flag])
+
+            return parent
+        end
 
         function library:round(number, float)
             local multiplier = 1 / (float or 1)
