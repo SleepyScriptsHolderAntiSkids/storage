@@ -977,18 +977,23 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     local child = children[i]
                     local items = child and child.items
 
+                    local hit = "NONE"
+
                     if items then
                         for r = 1, #roots do
                             local element = items[roots[r]]
 
                             if typeof(element) == "Instance" then
                                 element.Visible = shown
+                                hit = roots[r]
                                 break
                             end
                         end
 
                         if not shown and child.set_visible then pcall(child.set_visible, false) end
                     end
+
+                    print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
                 end
             end
 
@@ -5013,22 +5018,28 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local roots = {"toggle", "slider_object", "dropdown_object", "textbox", "keybind_element", "button_element", "list", "label"}
 
             local function apply(state)
+                local shown = state and true or false
+
                 for i = 1, #children do
                     local child = children[i]
                     local items = child and child.items
+                    local hit = "NONE"
 
                     if items then
                         for r = 1, #roots do
                             local element = items[roots[r]]
 
                             if typeof(element) == "Instance" then
-                                element.Visible = state and true or false
+                                element.Visible = shown
+                                hit = roots[r]
                                 break
                             end
                         end
 
-                        if not state and child.set_visible then pcall(child.set_visible, false) end
+                        if not shown and child.set_visible then pcall(child.set_visible, false) end
                     end
+
+                    print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
                 end
             end
 
