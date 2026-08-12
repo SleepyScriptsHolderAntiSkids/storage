@@ -970,46 +970,36 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         function library:depends(parent, children)
             local roots = {"toggle", "slider", "dropdown", "colorpicker", "textbox", "keybind", "label", "button"}
 
-            print("[Dep] setup parent flag=" .. tostring(parent.flag)
-                .. " flagval=" .. tostring(flags[parent.flag])
-                .. " enabled=" .. tostring(parent.enabled)
-                .. " children=" .. #children)
-
-            local function apply(state, why)
-                print("[Dep] apply from=" .. why .. " state=" .. tostring(state) .. " flag=" .. tostring(parent.flag))
+            local function apply(state)
+                local shown = state and true or false
 
                 for i = 1, #children do
                     local child = children[i]
                     local items = child and child.items
-                    local found = "NONE"
 
                     if items then
                         for r = 1, #roots do
                             local element = items[roots[r]]
 
                             if typeof(element) == "Instance" then
-                                found = roots[r] .. "/" .. element.ClassName .. "/parent=" .. tostring(element.Parent and element.Parent.Name)
-                                element.Visible = state and true or false
+                                element.Visible = shown
                                 break
                             end
                         end
 
-                        if not state and child.set_visible then pcall(child.set_visible, false) end
+                        if not shown and child.set_visible then pcall(child.set_visible, false) end
                     end
-
-                    print("[Dep]   child " .. i .. " flag=" .. tostring(child and child.flag) .. " root=" .. found)
                 end
             end
 
             local previous = parent.callback
 
-            parent.callback = function(...)
-                print("[Dep] callback fired args1=" .. tostring((...)) .. " flagval=" .. tostring(flags[parent.flag]))
-                if previous then previous(...) end
-                apply(flags[parent.flag], "callback")
+            parent.callback = function(state, ...)
+                if previous then previous(state, ...) end
+                apply(state)
             end
 
-            apply(flags[parent.flag], "setup")
+            apply(parent.enabled)
 
             return parent
         end
@@ -5044,12 +5034,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             local previous = parent.callback
 
-            parent.callback = function(...)
-                if previous then previous(...) end
-                apply(flags[parent.flag])
+            parent.callback = function(state, ...)
+                if previous then previous(state, ...) end
+                apply(state)
             end
 
-            apply(flags[parent.flag])
+            apply(parent.enabled)
 
             return parent
         end
