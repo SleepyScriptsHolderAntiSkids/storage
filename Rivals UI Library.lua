@@ -968,7 +968,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         end))
 
         function library:depends(parent, children)
-            local roots = {"toggle", "slider", "dropdown", "colorpicker", "textbox", "keybind", "label", "button"}
+            local roots = {"toggle", "slider_object", "dropdown_object", "textbox", "keybind_element", "button_element", "list", "label"}
 
             local function apply(state)
                 local shown = state and true or false
@@ -5010,7 +5010,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         function library:depends(parent, children)
-            local roots = {"toggle", "slider", "dropdown", "colorpicker", "textbox", "keybind", "label", "button"}
+            local roots = {"toggle", "slider_object", "dropdown_object", "textbox", "keybind_element", "button_element", "list", "label"}
 
             local function apply(state)
                 for i = 1, #children do
