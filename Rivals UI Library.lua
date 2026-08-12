@@ -967,42 +967,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         
-
-        local DEPENDS_ROOTS = {"toggle", "slider", "dropdown", "colorpicker", "textbox", "keybind", "label", "button"}
-
-        function library:depends(parent, children)
-            local function root_of(child)
-                local items = child and child.items
-                if not items then return nil end
-
-                for i = 1, #DEPENDS_ROOTS do
-                    local element = items[DEPENDS_ROOTS[i]]
-                    if typeof(element) == "Instance" then return element end
-                end
-            end
-
-            local function apply(state)
-                for i = 1, #children do
-                    local child = children[i]
-                    local root = root_of(child)
-
-                    if root then root.Visible = state and true or false end
-                    if not state and child.set_visible then pcall(child.set_visible, false) end
-                end
-            end
-
-            local previous = parent.callback
-
-            parent.callback = function(...)
-                if previous then previous(...) end
-                apply(flags[parent.flag])
-            end
-
-            apply(flags[parent.flag])
-
-            return parent
-        end
-
         function library:round(number, float) 
             local multiplier = 1 / (float or 1)
 
@@ -5007,42 +4971,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end
         end))
 
-
-
-        local DEPENDS_ROOTS = {"toggle", "slider", "dropdown", "colorpicker", "textbox", "keybind", "label", "button"}
-
-        function library:depends(parent, children)
-            local function root_of(child)
-                local items = child and child.items
-                if not items then return nil end
-
-                for i = 1, #DEPENDS_ROOTS do
-                    local element = items[DEPENDS_ROOTS[i]]
-                    if typeof(element) == "Instance" then return element end
-                end
-            end
-
-            local function apply(state)
-                for i = 1, #children do
-                    local child = children[i]
-                    local root = root_of(child)
-
-                    if root then root.Visible = state and true or false end
-                    if not state and child.set_visible then pcall(child.set_visible, false) end
-                end
-            end
-
-            local previous = parent.callback
-
-            parent.callback = function(...)
-                if previous then previous(...) end
-                apply(flags[parent.flag])
-            end
-
-            apply(flags[parent.flag])
-
-            return parent
-        end
 
         function library:round(number, float)
             local multiplier = 1 / (float or 1)
