@@ -116,6 +116,8 @@ print("Character Loaded")
 
 ------------------------------------------------------
 
+getgenv().LIB_BUILD = "depends-v1"
+
 getgenv().library = {
     directory = "Sleepy.gg",
     folders = {
