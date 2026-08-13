@@ -1805,7 +1805,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 name = properties.name or properties.Name or "section"; 
                 side = properties.side or properties.Side or "left";
                 default = properties.default or properties.Default or false;
-                size = properties.size or properties.Size or self.size or 0.5; 
+                size = properties.size or properties.Size or self.size or 0.5;
+                autosize = (properties.autosize ~= false and properties.AutoSize ~= false);
                 icon = properties.icon or properties.Icon or "http://www.roblox.com/asset/?id=6022668898";
                 fading_toggle = properties.fading or properties.Fading or false;
                 items = {};
@@ -1879,6 +1880,30 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     PaddingBottom = dim(0, 15);
                     Parent = items[ "elements" ]
                 });
+
+                if cfg.autosize then
+                    local layout = items[ "elements" ]:FindFirstChildOfClass("UIListLayout")
+
+                    local function fit()
+                        local column = self.items[ "column" ]
+                        if not (layout and column) then return end
+
+                        local available = column.AbsoluteSize.Y
+                        if available <= 0 then return end
+
+                        local needed = layout.AbsoluteContentSize.Y + 55
+                        local scale = needed / available
+
+                        if scale > cfg.size then scale = cfg.size end
+                        if scale < 0.08 then scale = 0.08 end
+
+                        items[ "section" ].Size = dim2(0, 0, scale, -3)
+                    end
+
+                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(fit)
+                    self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
+                    task.defer(fit)
+                end
                 
                 items[ "button" ] = library:create( "TextButton" , {
                     FontFace = fonts.font;
@@ -5904,7 +5929,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 name = properties.name or properties.Name or "section"; 
                 side = properties.side or properties.Side or "left";
                 default = properties.default or properties.Default or false;
-                size = properties.size or properties.Size or self.size or 0.5; 
+                size = properties.size or properties.Size or self.size or 0.5;
+                autosize = (properties.autosize ~= false and properties.AutoSize ~= false);
                 icon = properties.icon or properties.Icon or "http://www.roblox.com/asset/?id=6022668898";
                 fading_toggle = properties.fading or properties.Fading or false;
                 items = {};
@@ -5978,6 +6004,30 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     PaddingBottom = dim(0, 15);
                     Parent = items[ "elements" ]
                 });
+
+                if cfg.autosize then
+                    local layout = items[ "elements" ]:FindFirstChildOfClass("UIListLayout")
+
+                    local function fit()
+                        local column = self.items[ "column" ]
+                        if not (layout and column) then return end
+
+                        local available = column.AbsoluteSize.Y
+                        if available <= 0 then return end
+
+                        local needed = layout.AbsoluteContentSize.Y + 55
+                        local scale = needed / available
+
+                        if scale > cfg.size then scale = cfg.size end
+                        if scale < 0.08 then scale = 0.08 end
+
+                        items[ "section" ].Size = dim2(0, 0, scale, -3)
+                    end
+
+                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(fit)
+                    self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
+                    task.defer(fit)
+                end
                 
                 items[ "button" ] = library:create( "TextButton" , {
                     FontFace = fonts.font;
