@@ -1891,7 +1891,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         local available = column.AbsoluteSize.Y
                         if available <= 0 then return end
 
-                        local needed = layout.AbsoluteContentSize.Y + 55
+                        local needed = layout.AbsoluteContentSize.Y + 72
                         local scale = needed / available
 
                         if scale > cfg.size then scale = cfg.size end
@@ -6015,7 +6015,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         local available = column.AbsoluteSize.Y
                         if available <= 0 then return end
 
-                        local needed = layout.AbsoluteContentSize.Y + 55
+                        local needed = layout.AbsoluteContentSize.Y + 72
                         local scale = needed / available
 
                         if scale > cfg.size then scale = cfg.size end
