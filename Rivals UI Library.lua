@@ -116,6 +116,8 @@ print("Character Loaded")
 
 ------------------------------------------------------
 
+getgenv().LIB_BUILD = "depends-v1"
+
 getgenv().library = {
     directory = "Sleepy.gg",
     folders = {
@@ -965,8 +967,49 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end
         end))
 
+        function library:depends(parent, children, invert)
+            local roots = {"toggle", "slider_object", "dropdown_object", "textbox", "keybind_element", "button_element", "list", "label"}
 
-        
+            local function apply(state)
+                local shown = state and true or false
+                if invert then shown = not shown end
+
+                for i = 1, #children do
+                    local child = children[i]
+                    local items = child and child.items
+
+                    local hit = "NONE"
+
+                    if items then
+                        for r = 1, #roots do
+                            local element = items[roots[r]]
+
+                            if typeof(element) == "Instance" then
+                                element.Visible = shown
+                                hit = roots[r]
+                                break
+                            end
+                        end
+
+                        if not shown and child.set_visible then pcall(child.set_visible, false) end
+                    end
+
+                    -- print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
+                end
+            end
+
+            local previous = parent.callback
+
+            parent.callback = function(state, ...)
+                if previous then previous(state, ...) end
+                apply(state)
+            end
+
+            apply(parent.enabled)
+
+            return parent
+        end
+
         function library:round(number, float) 
             local multiplier = 1 / (float or 1)
 
@@ -1762,7 +1805,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 name = properties.name or properties.Name or "section"; 
                 side = properties.side or properties.Side or "left";
                 default = properties.default or properties.Default or false;
-                size = properties.size or properties.Size or self.size or 0.5; 
+                size = properties.size or properties.Size or self.size or 0.5;
+                autosize = (properties.autosize ~= false and properties.AutoSize ~= false);
                 icon = properties.icon or properties.Icon or "http://www.roblox.com/asset/?id=6022668898";
                 fading_toggle = properties.fading or properties.Fading or false;
                 items = {};
@@ -1836,6 +1880,42 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     PaddingBottom = dim(0, 15);
                     Parent = items[ "elements" ]
                 });
+
+                if cfg.autosize then
+                    local layout = items[ "elements" ]:FindFirstChildOfClass("UIListLayout")
+
+                    local function fit()
+                        local column = self.items[ "column" ]
+                        if not (layout and column) then return end
+
+                        local available = column.AbsoluteSize.Y
+                        if available <= 0 then return end
+
+                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
+
+                        local frames, total = {}, 0
+
+                        for _, child in column:GetChildren() do
+                            local wanted = child:IsA("GuiObject") and child:GetAttribute("FitScale")
+
+                            if wanted then
+                                total = total + wanted
+                                frames[#frames + 1] = child
+                            end
+                        end
+
+                        local factor = (total > 0.98) and (0.98 / total) or 1
+
+
+                        for i = 1, #frames do
+                            frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
+                        end
+                    end
+                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() task.defer(fit) end)
+                    items[ "elements" ].ChildAdded:Connect(function() task.defer(fit) end)
+                    self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
+                    task.defer(fit)
+                end
                 
                 items[ "button" ] = library:create( "TextButton" , {
                     FontFace = fonts.font;
@@ -4972,6 +5052,48 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         end))
 
 
+        function library:depends(parent, children, invert)
+            local roots = {"toggle", "slider_object", "dropdown_object", "textbox", "keybind_element", "button_element", "list", "label"}
+
+            local function apply(state)
+                local shown = state and true or false
+                if invert then shown = not shown end
+
+                for i = 1, #children do
+                    local child = children[i]
+                    local items = child and child.items
+                    local hit = "NONE"
+
+                    if items then
+                        for r = 1, #roots do
+                            local element = items[roots[r]]
+
+                            if typeof(element) == "Instance" then
+                                element.Visible = shown
+                                hit = roots[r]
+                                break
+                            end
+                        end
+
+                        if not shown and child.set_visible then pcall(child.set_visible, false) end
+                    end
+
+                    -- print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
+                end
+            end
+
+            local previous = parent.callback
+
+            parent.callback = function(state, ...)
+                if previous then previous(state, ...) end
+                apply(state)
+            end
+
+            apply(parent.enabled)
+
+            return parent
+        end
+
         function library:round(number, float)
             local multiplier = 1 / (float or 1)
 
@@ -5819,7 +5941,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 name = properties.name or properties.Name or "section"; 
                 side = properties.side or properties.Side or "left";
                 default = properties.default or properties.Default or false;
-                size = properties.size or properties.Size or self.size or 0.5; 
+                size = properties.size or properties.Size or self.size or 0.5;
+                autosize = (properties.autosize ~= false and properties.AutoSize ~= false);
                 icon = properties.icon or properties.Icon or "http://www.roblox.com/asset/?id=6022668898";
                 fading_toggle = properties.fading or properties.Fading or false;
                 items = {};
@@ -5893,6 +6016,42 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     PaddingBottom = dim(0, 15);
                     Parent = items[ "elements" ]
                 });
+
+                if cfg.autosize then
+                    local layout = items[ "elements" ]:FindFirstChildOfClass("UIListLayout")
+
+                    local function fit()
+                        local column = self.items[ "column" ]
+                        if not (layout and column) then return end
+
+                        local available = column.AbsoluteSize.Y
+                        if available <= 0 then return end
+
+                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
+
+                        local frames, total = {}, 0
+
+                        for _, child in column:GetChildren() do
+                            local wanted = child:IsA("GuiObject") and child:GetAttribute("FitScale")
+
+                            if wanted then
+                                total = total + wanted
+                                frames[#frames + 1] = child
+                            end
+                        end
+
+                        local factor = (total > 0.98) and (0.98 / total) or 1
+
+
+                        for i = 1, #frames do
+                            frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
+                        end
+                    end
+                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() task.defer(fit) end)
+                    items[ "elements" ].ChildAdded:Connect(function() task.defer(fit) end)
+                    self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
+                    task.defer(fit)
+                end
                 
                 items[ "button" ] = library:create( "TextButton" , {
                     FontFace = fonts.font;
