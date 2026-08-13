@@ -1891,18 +1891,29 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         local available = column.AbsoluteSize.Y
                         if available <= 0 then return end
 
-                        local needed = layout.AbsoluteContentSize.Y + 72
-                        local scale = needed / available
+                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
 
-                        if scale > cfg.size then scale = cfg.size end
-                        if scale < 0.08 then scale = 0.08 end
+                        local frames, total = {}, 0
 
-                        items[ "outline" ].Size = dim2(0, 0, scale, -3)
+                        for _, child in column:GetChildren() do
+                            local wanted = child:IsA("GuiObject") and child:GetAttribute("FitScale")
+
+                            if wanted then
+                                total = total + wanted
+                                frames[#frames + 1] = child
+                            end
+                        end
+
+                        local factor = (total > 1) and (1 / total) or 1
+
+                        for i = 1, #frames do
+                            frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
+                        end
                     end
-
                     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(fit)
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
                     task.defer(fit)
+                end
                 end
                 
                 items[ "button" ] = library:create( "TextButton" , {
@@ -6015,18 +6026,29 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         local available = column.AbsoluteSize.Y
                         if available <= 0 then return end
 
-                        local needed = layout.AbsoluteContentSize.Y + 72
-                        local scale = needed / available
+                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
 
-                        if scale > cfg.size then scale = cfg.size end
-                        if scale < 0.08 then scale = 0.08 end
+                        local frames, total = {}, 0
 
-                        items[ "outline" ].Size = dim2(0, 0, scale, -3)
+                        for _, child in column:GetChildren() do
+                            local wanted = child:IsA("GuiObject") and child:GetAttribute("FitScale")
+
+                            if wanted then
+                                total = total + wanted
+                                frames[#frames + 1] = child
+                            end
+                        end
+
+                        local factor = (total > 1) and (1 / total) or 1
+
+                        for i = 1, #frames do
+                            frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
+                        end
                     end
-
                     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(fit)
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
                     task.defer(fit)
+                end
                 end
                 
                 items[ "button" ] = library:create( "TextButton" , {
