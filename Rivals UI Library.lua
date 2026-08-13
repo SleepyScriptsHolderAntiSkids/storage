@@ -1904,13 +1904,13 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                             end
                         end
 
-                        local factor = (total > 1) and (1 / total) or 1
+                        local factor = (total > 0.98) and (0.98 / total) or 1
 
                         for i = 1, #frames do
                             frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
                         end
                     end
-                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(fit)
+                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() task.defer(fit) end)
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
                     task.defer(fit)
                 end
@@ -6039,13 +6039,13 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                             end
                         end
 
-                        local factor = (total > 1) and (1 / total) or 1
+                        local factor = (total > 0.98) and (0.98 / total) or 1
 
                         for i = 1, #frames do
                             frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
                         end
                     end
-                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(fit)
+                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() task.defer(fit) end)
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
                     task.defer(fit)
                 end
