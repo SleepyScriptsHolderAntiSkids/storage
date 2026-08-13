@@ -1897,7 +1897,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         if scale > cfg.size then scale = cfg.size end
                         if scale < 0.08 then scale = 0.08 end
 
-                        items[ "section" ].Size = dim2(0, 0, scale, -3)
+                        items[ "outline" ].Size = dim2(0, 0, scale, -3)
                     end
 
                     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(fit)
@@ -6021,7 +6021,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         if scale > cfg.size then scale = cfg.size end
                         if scale < 0.08 then scale = 0.08 end
 
-                        items[ "section" ].Size = dim2(0, 0, scale, -3)
+                        items[ "outline" ].Size = dim2(0, 0, scale, -3)
                     end
 
                     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(fit)
