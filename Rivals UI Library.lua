@@ -1914,7 +1914,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
                     task.defer(fit)
                 end
-                end
                 
                 items[ "button" ] = library:create( "TextButton" , {
                     FontFace = fonts.font;
@@ -6048,7 +6047,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() task.defer(fit) end)
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
                     task.defer(fit)
-                end
                 end
                 
                 items[ "button" ] = library:create( "TextButton" , {
