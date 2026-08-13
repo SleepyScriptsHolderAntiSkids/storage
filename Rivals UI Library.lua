@@ -994,7 +994,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         if not shown and child.set_visible then pcall(child.set_visible, false) end
                     end
 
-                    print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
+                    -- print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
                 end
             end
 
@@ -1906,11 +1906,13 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                         local factor = (total > 0.98) and (0.98 / total) or 1
 
+
                         for i = 1, #frames do
                             frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
                         end
                     end
                     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() task.defer(fit) end)
+                    items[ "elements" ].ChildAdded:Connect(function() task.defer(fit) end)
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
                     task.defer(fit)
                 end
@@ -5076,7 +5078,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         if not shown and child.set_visible then pcall(child.set_visible, false) end
                     end
 
-                    print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
+                    -- print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
                 end
             end
 
@@ -6040,11 +6042,13 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                         local factor = (total > 0.98) and (0.98 / total) or 1
 
+
                         for i = 1, #frames do
                             frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
                         end
                     end
                     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() task.defer(fit) end)
+                    items[ "elements" ].ChildAdded:Connect(function() task.defer(fit) end)
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
                     task.defer(fit)
                 end
