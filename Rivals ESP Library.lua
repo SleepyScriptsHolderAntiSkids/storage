@@ -97,22 +97,22 @@ Camera = cloneref(Workspace.CurrentCamera)
 
 
 
-local GetPlayerWeaponName = function(player)
-    if not fighter_controller then
-        return "None"
-    end
+local STATE_SWIMMING = Enum.HumanoidStateType.Swimming
+local STATE_FREEFALL = Enum.HumanoidStateType.Freefall
+local STATE_JUMPING = Enum.HumanoidStateType.Jumping
 
-    local fighter = fighter_controller:GetFighter(player)
-    if not fighter then
-        return "None"
-    end
+local GetPlayerWeaponInfo = function(player)
+    if not fighter_controller then return end
 
-    local item = fighter.EquippedItem
-    if item and item.Name then
-        return item.Name
-    end
+    local ok, fighter = pcall(fighter_controller.GetFighter, fighter_controller, player)
+    if not ok or not fighter then return end
 
-    return "None"
+    local item = fighter.EquippedItem or fighter.Item
+    local info = item and item.Info
+
+    if type(info) == "table" and type(info.Name) == "string" and info.Name ~= "" then
+        return info
+    end
 end
 
 
@@ -303,6 +303,7 @@ do
             local Name = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, Position = UDim2.new(0.5, 0, 0, -11), Size = UDim2.new(0, 100, 0, 20), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0), RichText = true})
             local Distance = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, Position = UDim2.new(0.5, 0, 0, 11), Size = UDim2.new(0, 100, 0, 20), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0), RichText = true})
             local Weapon = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, Position = UDim2.new(0.5, 0, 0, 31), Size = UDim2.new(0, 100, 0, 20), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0), RichText = true, Text = "None"})
+            local StateFlag = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, Position = UDim2.new(0.5, 0, 0, 41), Size = UDim2.new(0, 100, 0, 20), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0), RichText = true, Text = ""})
             local Box = Functions:Create("Frame", {Parent = ScreenGui, BackgroundColor3 = Color3.fromRGB(0, 0, 0), BackgroundTransparency = 0.75, BorderSizePixel = 0})
             local Gradient1 = Functions:Create("UIGradient", {Parent = Box, Enabled = Config.ESP.Drawing.Boxes.GradientFill, Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Config.ESP.Drawing.Boxes.GradientFillRGB1), ColorSequenceKeypoint.new(1, Config.ESP.Drawing.Boxes.GradientFillRGB2)}})
             local Outline = Functions:Create("UIStroke", {Parent = Box, Enabled = Config.ESP.Drawing.Boxes.Gradient, Transparency = 0, Color = Color3.fromRGB(255, 255, 255), LineJoinMode = Enum.LineJoinMode.Miter})
@@ -478,7 +479,8 @@ do
                 Players_ESP[plr.Name].Health_Changed()
 
                 Players_ESP[plr.Name].Child_Added = LPH_NO_VIRTUALIZE(function()
-                    Weapon.Text = GetPlayerWeaponName(plr)
+                    local info = GetPlayerWeaponInfo(plr)
+                    Weapon.Text = info and info.Name or "None"
                 end)
 
 
@@ -525,6 +527,7 @@ do
                 local esp_key = plr.Name;
                 local hb_c1, hb_c2;
                 local wep_next = 0;
+                local state_next, state_label, state_color = 0, nil, nil;
                 local round_hidden = false;
 
                 -- IsFriendsWith is a web call: it yields, and it throws when the endpoint
@@ -543,6 +546,7 @@ do
                     Name.Visible = false;
                     Distance.Visible = false;
                     Weapon.Visible = false;
+                    StateFlag.Visible = false;
                     Healthbar.Visible = false;
                     BehindHealthbar.Visible = false;
                     HealthText.Visible = false;
@@ -874,13 +878,86 @@ do
                                             end
                                     end
 
+                                    local now = tick()
+
+                                    do -- State Flags
+                                        local state_config = Config.ESP.Drawing.StateFlags
+
+                                        if not (state_config and state_config.Enabled) then
+                                            if StateFlag.Visible then StateFlag.Visible = false end
+                                        else
+                                            if now >= state_next then
+                                                state_next = now + 0.1
+
+                                                local state = Humanoid:GetState()
+                                                local label
+
+                                                if state == STATE_SWIMMING then
+                                                    label = "swimming"
+                                                elseif state == STATE_FREEFALL or state == STATE_JUMPING then
+                                                    label = "jumping"
+                                                elseif Humanoid.MoveDirection.Magnitude > 0.15 then
+                                                    label = "walking"
+                                                end
+
+                                                if label ~= state_label then
+                                                    state_label = label
+                                                    StateFlag.Text = label or ""
+                                                    StateFlag.Visible = label ~= nil
+                                                end
+
+                                                if state_color ~= state_config.Color then
+                                                    state_color = state_config.Color
+                                                    StateFlag.TextColor3 = state_color
+                                                end
+
+                                                if StateFlag.TextSize ~= Config.ESP.FontSize then
+                                                    StateFlag.TextSize = Config.ESP.FontSize
+                                                end
+                                            end
+
+                                            if StateFlag.Visible then
+                                                StateFlag.Position = UDim2.new(0, Pos.X, 0, Pos.Y + h / 2 + (Weapon.Visible and 29 or 18))
+                                            end
+                                        end
+                                    end
+
                                     do -- Weapons
-                                        Weapon.Visible = Config.ESP.Drawing.Weapons.Enabled
-                                        if Weapon.Visible then
-                                            local now = tick()
+                                        local weapons_cfg = Config.ESP.Drawing.Weapons
+                                        local weapons_on = weapons_cfg.Enabled
+                                        local icon_mode = weapons_on and weapons_cfg.Mode == "Image"
+                                        local want_text = weapons_on and not icon_mode
+
+                                        if Weapon.Visible ~= want_text then Weapon.Visible = want_text end
+                                        if not icon_mode and WeaponIcon.Visible then WeaponIcon.Visible = false end
+
+                                        if weapons_on then
                                             if now >= wep_next then
                                                 wep_next = now + 0.4
-                                                Weapon.Text = GetPlayerWeaponName(plr)
+
+                                                local info = GetPlayerWeaponInfo(plr)
+
+                                                if icon_mode then
+                                                    local icon = info and info.Image or ""
+
+                                                    if WeaponIcon.Image ~= icon then WeaponIcon.Image = icon end
+                                                    WeaponIcon.Visible = icon ~= ""
+                                                    WeaponIcon.ImageColor3 = weapons_cfg.WeaponTextRGB
+                                                else
+                                                    local name = info and info.Name or "None"
+                                                    if Weapon.Text ~= name then Weapon.Text = name end
+                                                end
+                                            end
+
+                                            if icon_mode and WeaponIcon.Visible then
+                                                local size = weapons_cfg.IconSize or 28
+
+                                                if WeaponIcon.Size.X.Offset ~= size then
+                                                    WeaponIcon.Size = UDim2.new(0, size, 0, size)
+                                                    WeaponIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+                                                end
+
+                                                WeaponIcon.Position = Weapon.Position
                                             end
                                         end
                                     end
