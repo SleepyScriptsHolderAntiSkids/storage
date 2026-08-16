@@ -101,17 +101,47 @@ local STATE_SWIMMING = Enum.HumanoidStateType.Swimming
 local STATE_FREEFALL = Enum.HumanoidStateType.Freefall
 local STATE_JUMPING = Enum.HumanoidStateType.Jumping
 
-local GetPlayerWeaponInfo = function(player)
-    if not fighter_controller then return end
-
-    local ok, fighter = pcall(fighter_controller.GetFighter, fighter_controller, player)
-    if not ok or not fighter then return end
-
-    local item = fighter.EquippedItem or fighter.Item
+local function read_item_info(item)
     local info = item and item.Info
 
     if type(info) == "table" and type(info.Name) == "string" and info.Name ~= "" then
         return info
+    end
+end
+
+local esp_fighter_controller = nil
+
+local function get_fighter_controller()
+    if esp_fighter_controller then return esp_fighter_controller end
+
+    local ok, controller = pcall(function()
+        return require(LocalPlayer:FindFirstChild("FighterController", true))
+    end)
+
+    if ok and type(controller) == "table" then
+        esp_fighter_controller = controller
+    end
+
+    return esp_fighter_controller
+end
+
+local GetPlayerWeaponInfo = function(player)
+    local controller = get_fighter_controller()
+    if not controller then return end
+
+    local ok, fighter = pcall(controller.GetFighter, controller, player)
+    if not ok or not fighter then return end
+
+    local info = read_item_info(fighter.EquippedItem)
+    if info then return info end
+
+    local got, equipped = pcall(fighter.GetEquippedItems, fighter)
+
+    if got and type(equipped) == "table" then
+        for item in pairs(equipped) do
+            info = read_item_info(item)
+            if info then return info end
+        end
     end
 end
 
