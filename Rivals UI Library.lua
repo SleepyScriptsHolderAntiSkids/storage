@@ -1922,14 +1922,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
 
                         local frames = {}
-                        local total = 0
 
                         for _, child in column:GetChildren() do
                             local wanted = child:IsA("GuiObject") and child:GetAttribute("FitScale")
 
                             if wanted and wanted > 0 then
                                 frames[#frames + 1] = { frame = child, need = wanted }
-                                total = total + wanted
                             end
                         end
 
@@ -1937,34 +1935,20 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         if count == 0 then return end
 
                         local budget = 0.98
-                        local floor = math.min(56 / available, budget / count)
-                        local scale = total > budget and (budget / total) or 1
-                        local locked, free = 0, 0
+
+                        table.sort(frames, function(a, b) return a.need < b.need end)
+
+                        local remaining = budget
+                        local unassigned = count
 
                         for i = 1, count do
-                            local grant = frames[i].need * scale
+                            local share = remaining / unassigned
+                            local grant = math.min(frames[i].need, share)
 
-                            if grant <= floor then
-                                frames[i].grant = floor
-                                locked = locked + floor
-                            else
-                                frames[i].grant = grant
-                                free = free + grant
-                            end
-                        end
+                            frames[i].frame.Size = dim2(0, 0, grant, -3)
 
-                        if locked + free > budget and free > 0 then
-                            local squeeze = (budget - locked) / free
-
-                            for i = 1, count do
-                                if frames[i].grant > floor then
-                                    frames[i].grant = math.max(frames[i].grant * squeeze, floor)
-                                end
-                            end
-                        end
-
-                        for i = 1, count do
-                            frames[i].frame.Size = dim2(0, 0, frames[i].grant, -3)
+                            remaining = remaining - grant
+                            unassigned = unassigned - 1
                         end
                     end
 
@@ -6119,14 +6103,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
 
                         local frames = {}
-                        local total = 0
 
                         for _, child in column:GetChildren() do
                             local wanted = child:IsA("GuiObject") and child:GetAttribute("FitScale")
 
                             if wanted and wanted > 0 then
                                 frames[#frames + 1] = { frame = child, need = wanted }
-                                total = total + wanted
                             end
                         end
 
@@ -6134,34 +6116,20 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         if count == 0 then return end
 
                         local budget = 0.98
-                        local floor = math.min(56 / available, budget / count)
-                        local scale = total > budget and (budget / total) or 1
-                        local locked, free = 0, 0
+
+                        table.sort(frames, function(a, b) return a.need < b.need end)
+
+                        local remaining = budget
+                        local unassigned = count
 
                         for i = 1, count do
-                            local grant = frames[i].need * scale
+                            local share = remaining / unassigned
+                            local grant = math.min(frames[i].need, share)
 
-                            if grant <= floor then
-                                frames[i].grant = floor
-                                locked = locked + floor
-                            else
-                                frames[i].grant = grant
-                                free = free + grant
-                            end
-                        end
+                            frames[i].frame.Size = dim2(0, 0, grant, -3)
 
-                        if locked + free > budget and free > 0 then
-                            local squeeze = (budget - locked) / free
-
-                            for i = 1, count do
-                                if frames[i].grant > floor then
-                                    frames[i].grant = math.max(frames[i].grant * squeeze, floor)
-                                end
-                            end
-                        end
-
-                        for i = 1, count do
-                            frames[i].frame.Size = dim2(0, 0, frames[i].grant, -3)
+                            remaining = remaining - grant
+                            unassigned = unassigned - 1
                         end
                     end
 
