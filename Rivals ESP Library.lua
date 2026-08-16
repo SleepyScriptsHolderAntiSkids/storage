@@ -558,6 +558,7 @@ do
                 local hb_c1, hb_c2;
                 local wep_next = 0;
                 local state_next, state_label, state_color = 0, nil, nil;
+                local icon_row = 28;
                 local round_hidden = false;
 
                 -- IsFriendsWith is a web call: it yields, and it throws when the endpoint
@@ -893,19 +894,14 @@ do
                                     end
                                     
                                     do -- Distance
-                                            if Config.ESP.Drawing.Distances.Enabled then
-                                                Weapon.Position = UDim2.new(0, Pos.X, 0, Pos.Y + h / 2 + 7)
+                                        if Config.ESP.Drawing.Distances.Enabled then
+                                            local text = string.format("%d studs", math.floor(Dist))
 
-                                                --WeaponIcon.Position = UDim2.new(0, Pos.X - 21, 0, Pos.Y + h / 2 + 15);
-                                                Distance.Position = UDim2.new(0, Pos.X, 0, Pos.Y + h / 2 + (Weapon.Visible and 18 or 7))
-                                                Distance.Text = string.format("%d Studs", math.floor(Dist))
-
-                                                Distance.Visible = true
-                                                --Distance.Font = Config.ESP.Font
-                                            else
-                                                Weapon.Position = UDim2.new(0, Pos.X, 0, Pos.Y + h / 2 + 8)
-                                                Distance.Visible = false;
-                                            end
+                                            if Distance.Text ~= text then Distance.Text = text end
+                                            Distance.Visible = true
+                                        else
+                                            Distance.Visible = false
+                                        end
                                     end
 
                                     local now = tick()
@@ -946,9 +942,6 @@ do
                                                 end
                                             end
 
-                                            if StateFlag.Visible then
-                                                StateFlag.Position = UDim2.new(0, Pos.X, 0, Pos.Y + h / 2 + (Weapon.Visible and 29 or 18))
-                                            end
                                         end
                                     end
 
@@ -982,13 +975,40 @@ do
                                             if icon_mode and WeaponIcon.Visible then
                                                 local size = weapons_cfg.IconSize or 28
 
+                                                if weapons_cfg.IconAutoScale ~= false then
+                                                    size = math.clamp(size * (60 / math.max(Dist, 20)), size * 0.45, size * 1.6)
+                                                end
+
+                                                size = math.floor(size)
+                                                icon_row = size
+
                                                 if WeaponIcon.Size.X.Offset ~= size then
                                                     WeaponIcon.Size = UDim2.new(0, size, 0, size)
                                                     WeaponIcon.AnchorPoint = Vector2.new(0.5, 0.5)
                                                 end
-
-                                                WeaponIcon.Position = Weapon.Position
                                             end
+                                        end
+                                    end
+
+                                    do -- Bottom stack
+                                        local step = Config.ESP.FontSize + 3
+                                        local row = Pos.Y + h / 2 + 7
+
+                                        if WeaponIcon.Visible then
+                                            WeaponIcon.Position = UDim2.new(0, Pos.X, 0, row + icon_row * 0.5)
+                                            row = row + icon_row + 2
+                                        elseif Weapon.Visible then
+                                            Weapon.Position = UDim2.new(0, Pos.X, 0, row)
+                                            row = row + step
+                                        end
+
+                                        if Distance.Visible then
+                                            Distance.Position = UDim2.new(0, Pos.X, 0, row)
+                                            row = row + step
+                                        end
+
+                                        if StateFlag.Visible then
+                                            StateFlag.Position = UDim2.new(0, Pos.X, 0, row)
                                         end
                                     end
                                 else
