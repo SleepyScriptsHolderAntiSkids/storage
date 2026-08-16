@@ -985,6 +985,28 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end
         end))
 
+        function library:relayout_sections()
+            local refreshers = library.autosize_refresh
+            if not refreshers then return end
+
+            if library._relayout_queued then return end
+            library._relayout_queued = true
+
+            task.defer(function()
+                library._relayout_queued = false
+
+                for i = 1, #refreshers do
+                    pcall(refreshers[i])
+                end
+
+                task.delay(0.12, function()
+                    for i = 1, #refreshers do
+                        pcall(refreshers[i])
+                    end
+                end)
+            end)
+        end
+
         function library:depends(parent, children, invert)
             local roots = {"toggle", "slider_object", "dropdown_object", "textbox", "keybind_element", "button_element", "list", "label"}
 
@@ -1012,6 +1034,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     end
 
                 end
+
+                library:relayout_sections()
             end
 
             local previous = parent.callback
@@ -1919,7 +1943,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                         fit_retry = 0
 
-                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
+                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 86) / available)
 
                         local frames = {}
 
@@ -1967,6 +1991,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(queue_fit)
                     items[ "elements" ].ChildAdded:Connect(queue_fit)
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(queue_fit)
+
+                    library.autosize_refresh = library.autosize_refresh or {}
+                    library.autosize_refresh[#library.autosize_refresh + 1] = queue_fit
+
                     queue_fit()
                 end
                 
@@ -5115,6 +5143,28 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         end))
 
 
+        function library:relayout_sections()
+            local refreshers = library.autosize_refresh
+            if not refreshers then return end
+
+            if library._relayout_queued then return end
+            library._relayout_queued = true
+
+            task.defer(function()
+                library._relayout_queued = false
+
+                for i = 1, #refreshers do
+                    pcall(refreshers[i])
+                end
+
+                task.delay(0.12, function()
+                    for i = 1, #refreshers do
+                        pcall(refreshers[i])
+                    end
+                end)
+            end)
+        end
+
         function library:depends(parent, children, invert)
             local roots = {"toggle", "slider_object", "dropdown_object", "textbox", "keybind_element", "button_element", "list", "label"}
 
@@ -5141,6 +5191,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     end
 
                 end
+
+                library:relayout_sections()
             end
 
             local previous = parent.callback
@@ -6100,7 +6152,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                         fit_retry = 0
 
-                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
+                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 86) / available)
 
                         local frames = {}
 
@@ -6148,6 +6200,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(queue_fit)
                     items[ "elements" ].ChildAdded:Connect(queue_fit)
                     self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(queue_fit)
+
+                    library.autosize_refresh = library.autosize_refresh or {}
+                    library.autosize_refresh[#library.autosize_refresh + 1] = queue_fit
+
                     queue_fit()
                 end
                 
