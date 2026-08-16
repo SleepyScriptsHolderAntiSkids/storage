@@ -913,7 +913,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
         function library:load_config(config_json) 
             local config = http_service:JSONDecode(config_json)
-            
+            local applied = 0
+
             for _, v in config do 
                 local function_set = library.config_flags[_]
                 
@@ -922,13 +923,21 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
 
                 if function_set then 
-                    if type(v) == "table" and v["Transparency"] and v["Color"] then
-                        function_set(hex(v["Color"]), v["Transparency"])
-                    elseif type(v) == "table" and v["active"] then 
-                        function_set(v)
-                    else
-                        function_set(v)
+                    applied = applied + 1
+
+                    if applied % 20 == 0 then
+                        task.wait()
                     end
+
+                    pcall(function()
+                        if type(v) == "table" and v["Transparency"] and v["Color"] then
+                            function_set(hex(v["Color"]), v["Transparency"])
+                        elseif type(v) == "table" and v["active"] then 
+                            function_set(v)
+                        else
+                            function_set(v)
+                        end
+                    end)
                 end 
             end 
         end 
@@ -978,7 +987,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     local child = children[i]
                     local items = child and child.items
 
-                    local hit = "NONE"
 
                     if items then
                         for r = 1, #roots do
@@ -986,7 +994,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                             if typeof(element) == "Instance" then
                                 element.Visible = shown
-                                hit = roots[r]
+
                                 break
                             end
                         end
@@ -994,7 +1002,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         if not shown and child.set_visible then pcall(child.set_visible, false) end
                     end
 
-                    -- print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
                 end
             end
 
@@ -1893,28 +1900,45 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                         items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
 
-                        local frames, total = {}, 0
+                        local frames = {}
 
                         for _, child in column:GetChildren() do
                             local wanted = child:IsA("GuiObject") and child:GetAttribute("FitScale")
 
                             if wanted then
-                                total = total + wanted
-                                frames[#frames + 1] = child
+                                frames[#frames + 1] = { frame = child, need = wanted }
                             end
                         end
 
-                        local factor = (total > 0.98) and (0.98 / total) or 1
+                        table.sort(frames, function(a, b) return a.need < b.need end)
 
+                        local remaining = 0.98
 
                         for i = 1, #frames do
-                            frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
+                            local reserve = 0.06 * (#frames - i)
+                            local grant = math.min(frames[i].need, math.max(remaining - reserve, 0.06))
+
+                            remaining = remaining - grant
+                            frames[i].frame.Size = dim2(0, 0, grant, -3)
                         end
                     end
-                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() task.defer(fit) end)
-                    items[ "elements" ].ChildAdded:Connect(function() task.defer(fit) end)
-                    self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
-                    task.defer(fit)
+
+                    local fit_queued = false
+
+                    local function queue_fit()
+                        if fit_queued then return end
+                        fit_queued = true
+
+                        task.defer(function()
+                            fit_queued = false
+                            fit()
+                        end)
+                    end
+
+                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(queue_fit)
+                    items[ "elements" ].ChildAdded:Connect(queue_fit)
+                    self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(queue_fit)
+                    queue_fit()
                 end
                 
                 items[ "button" ] = library:create( "TextButton" , {
@@ -5003,6 +5027,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         function library:load_config(config_json) 
             local config = http_service:JSONDecode(config_json)
 
+            local applied = 0
+
             for _, v in config do
                 local function_set = library.config_flags[_]
 
@@ -5011,15 +5037,23 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
 
                 if function_set then
-                    if type(v) == "table" and v["Transparency"] and v["Color"] then
-                        function_set(hex(v["Color"]), v["Transparency"])
-                    elseif type(v) == "table" and v["active"] then 
-                        function_set(v)
-                    else
-                        function_set(v)
+                    applied = applied + 1
+
+                    if applied % 20 == 0 then
+                        task.wait()
                     end
-                end 
-            end 
+
+                    pcall(function()
+                        if type(v) == "table" and v["Transparency"] and v["Color"] then
+                            function_set(hex(v["Color"]), v["Transparency"])
+                        elseif type(v) == "table" and v["active"] then
+                            function_set(v)
+                        else
+                            function_set(v)
+                        end
+                    end)
+                end
+            end
 
         end
 
@@ -5062,7 +5096,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 for i = 1, #children do
                     local child = children[i]
                     local items = child and child.items
-                    local hit = "NONE"
 
                     if items then
                         for r = 1, #roots do
@@ -5070,7 +5103,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                             if typeof(element) == "Instance" then
                                 element.Visible = shown
-                                hit = roots[r]
+
                                 break
                             end
                         end
@@ -5078,7 +5111,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         if not shown and child.set_visible then pcall(child.set_visible, false) end
                     end
 
-                    -- print("[Dep] child " .. i .. " flag=" .. tostring(child and child.flag) .. " key=" .. hit .. " shown=" .. tostring(shown))
                 end
             end
 
@@ -6029,28 +6061,45 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                         items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 72) / available)
 
-                        local frames, total = {}, 0
+                        local frames = {}
 
                         for _, child in column:GetChildren() do
                             local wanted = child:IsA("GuiObject") and child:GetAttribute("FitScale")
 
                             if wanted then
-                                total = total + wanted
-                                frames[#frames + 1] = child
+                                frames[#frames + 1] = { frame = child, need = wanted }
                             end
                         end
 
-                        local factor = (total > 0.98) and (0.98 / total) or 1
+                        table.sort(frames, function(a, b) return a.need < b.need end)
 
+                        local remaining = 0.98
 
                         for i = 1, #frames do
-                            frames[i].Size = dim2(0, 0, frames[i]:GetAttribute("FitScale") * factor, -3)
+                            local reserve = 0.06 * (#frames - i)
+                            local grant = math.min(frames[i].need, math.max(remaining - reserve, 0.06))
+
+                            remaining = remaining - grant
+                            frames[i].frame.Size = dim2(0, 0, grant, -3)
                         end
                     end
-                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() task.defer(fit) end)
-                    items[ "elements" ].ChildAdded:Connect(function() task.defer(fit) end)
-                    self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
-                    task.defer(fit)
+
+                    local fit_queued = false
+
+                    local function queue_fit()
+                        if fit_queued then return end
+                        fit_queued = true
+
+                        task.defer(function()
+                            fit_queued = false
+                            fit()
+                        end)
+                    end
+
+                    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(queue_fit)
+                    items[ "elements" ].ChildAdded:Connect(queue_fit)
+                    self.items[ "column" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(queue_fit)
+                    queue_fit()
                 end
                 
                 items[ "button" ] = library:create( "TextButton" , {
