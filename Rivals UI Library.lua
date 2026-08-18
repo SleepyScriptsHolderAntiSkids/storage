@@ -4671,7 +4671,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.XY;
                     TextXAlignment = Enum.TextXAlignment.Left;
-                    TextSize = 12;
+                    TextSize = 11;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
@@ -4687,18 +4687,18 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     Text = cfg.info;
                     Parent = items[ "notification" ];
                     Name = "\0";
-                    Position = dim2(0, 0, 0, 13);
+                    Position = dim2(0, 0, 0, 11);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
                     TextXAlignment = Enum.TextXAlignment.Left;
                     TextWrapped = false;
                     AutomaticSize = Enum.AutomaticSize.XY;
-                    TextSize = 11;
+                    TextSize = 10;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingBottom = dim(0, 4);
+                    PaddingBottom = dim(0, 2);
                     Parent = items[ "info" ]
                 });
                 
@@ -4720,10 +4720,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingTop = dim(0, 5);
-                    PaddingBottom = dim(0, 7);
-                    PaddingLeft = dim(0, 18);
-                    PaddingRight = dim(0, 20);
+                    PaddingTop = dim(0, 3);
+                    PaddingBottom = dim(0, 4);
+                    PaddingLeft = dim(0, 22);
+                    PaddingRight = dim(0, 24);
                     Parent = items[ "notification" ]
                 });
             end
@@ -8843,7 +8843,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.XY;
                     TextXAlignment = Enum.TextXAlignment.Left;
-                    TextSize = 12;
+                    TextSize = 11;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
@@ -8859,18 +8859,18 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     Text = cfg.info;
                     Parent = items[ "notification" ];
                     Name = "\0";
-                    Position = dim2(0, 0, 0, 13);
+                    Position = dim2(0, 0, 0, 11);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
                     TextXAlignment = Enum.TextXAlignment.Left;
                     TextWrapped = false;
                     AutomaticSize = Enum.AutomaticSize.XY;
-                    TextSize = 11;
+                    TextSize = 10;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingBottom = dim(0, 4);
+                    PaddingBottom = dim(0, 2);
                     Parent = items[ "info" ]
                 });
                 
@@ -8892,10 +8892,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingTop = dim(0, 5);
-                    PaddingBottom = dim(0, 7);
-                    PaddingLeft = dim(0, 18);
-                    PaddingRight = dim(0, 20);
+                    PaddingTop = dim(0, 3);
+                    PaddingBottom = dim(0, 4);
+                    PaddingLeft = dim(0, 22);
+                    PaddingRight = dim(0, 24);
                     Parent = items[ "notification" ]
                 });
             end
