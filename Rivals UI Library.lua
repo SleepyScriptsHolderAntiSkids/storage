@@ -4590,24 +4590,42 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return offset
         end
         
-        function notifications:fade(path, is_fading)
-            local fading = is_fading and 1 or 0 
-            
-            library:tween(path, {BackgroundTransparency = fading}, Enum.EasingStyle.Quad, 1)
+        function notifications:fade(path, is_fading, instant)
+            local fading = is_fading and 1 or 0
 
-            for _, instance in path:GetDescendants() do 
-                if not instance:IsA("GuiObject") then 
+            if instant then
+                path.BackgroundTransparency = fading
+            else
+                library:tween(path, {BackgroundTransparency = fading}, Enum.EasingStyle.Quad, 1)
+            end
+
+            for _, instance in path:GetDescendants() do
+                if not instance:IsA("GuiObject") then
                     if instance:IsA("UIStroke") then
-                        library:tween(instance, {Transparency = fading}, Enum.EasingStyle.Quad, 1)
+                        if instant then
+                            instance.Transparency = fading
+                        else
+                            library:tween(instance, {Transparency = fading}, Enum.EasingStyle.Quad, 1)
+                        end
                     end
-        
+
                     continue
-                end 
-        
+                end
+
                 if instance:IsA("TextLabel") then
-                    library:tween(instance, {TextTransparency = fading})
+                    if instant then
+                        instance.TextTransparency = fading
+                    else
+                        library:tween(instance, {TextTransparency = fading})
+                    end
                 elseif instance:IsA("Frame") then
-                    library:tween(instance, {BackgroundTransparency = instance.Transparency and 0.6 and is_fading and 1 or 0.6}, Enum.EasingStyle.Quad, 1)
+                    local target = is_fading and 1 or 0.6
+
+                    if instant then
+                        instance.BackgroundTransparency = target
+                    else
+                        library:tween(instance, {BackgroundTransparency = target}, Enum.EasingStyle.Quad, 1)
+                    end
                 end
             end
         end 
@@ -4653,7 +4671,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.XY;
                     TextXAlignment = Enum.TextXAlignment.Left;
-                    TextSize = 13;
+                    TextSize = 12;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
@@ -4669,18 +4687,18 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     Text = cfg.info;
                     Parent = items[ "notification" ];
                     Name = "\0";
-                    Position = dim2(0, 0, 0, 15);
+                    Position = dim2(0, 0, 0, 13);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
                     TextXAlignment = Enum.TextXAlignment.Left;
                     TextWrapped = false;
                     AutomaticSize = Enum.AutomaticSize.XY;
-                    TextSize = 12;
+                    TextSize = 11;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingBottom = dim(0, 6);
+                    PaddingBottom = dim(0, 4);
                     Parent = items[ "info" ]
                 });
                 
@@ -4702,10 +4720,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingTop = dim(0, 8);
-                    PaddingBottom = dim(0, 10);
-                    PaddingLeft = dim(0, 12);
-                    PaddingRight = dim(0, 14);
+                    PaddingTop = dim(0, 5);
+                    PaddingBottom = dim(0, 7);
+                    PaddingLeft = dim(0, 18);
+                    PaddingRight = dim(0, 20);
                     Parent = items[ "notification" ]
                 });
             end
@@ -4713,7 +4731,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local index = #notifications.notifs + 1
             notifications.notifs[index] = items[ "notification" ]
 
-            notifications:fade(items[ "notification" ], false)
+            notifications:fade(items[ "notification" ], false, true)
 
             task.defer(function()
                 notifications:refresh_notifs(items[ "notification" ])
@@ -8739,24 +8757,42 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return offset
         end
         
-        function notifications:fade(path, is_fading)
-            local fading = is_fading and 1 or 0 
-            
-            library:tween(path, {BackgroundTransparency = fading}, Enum.EasingStyle.Quad, 1)
+        function notifications:fade(path, is_fading, instant)
+            local fading = is_fading and 1 or 0
 
-            for _, instance in path:GetDescendants() do 
-                if not instance:IsA("GuiObject") then 
+            if instant then
+                path.BackgroundTransparency = fading
+            else
+                library:tween(path, {BackgroundTransparency = fading}, Enum.EasingStyle.Quad, 1)
+            end
+
+            for _, instance in path:GetDescendants() do
+                if not instance:IsA("GuiObject") then
                     if instance:IsA("UIStroke") then
-                        library:tween(instance, {Transparency = fading}, Enum.EasingStyle.Quad, 1)
+                        if instant then
+                            instance.Transparency = fading
+                        else
+                            library:tween(instance, {Transparency = fading}, Enum.EasingStyle.Quad, 1)
+                        end
                     end
-        
+
                     continue
-                end 
-        
+                end
+
                 if instance:IsA("TextLabel") then
-                    library:tween(instance, {TextTransparency = fading})
+                    if instant then
+                        instance.TextTransparency = fading
+                    else
+                        library:tween(instance, {TextTransparency = fading})
+                    end
                 elseif instance:IsA("Frame") then
-                    library:tween(instance, {BackgroundTransparency = instance.Transparency and 0.6 and is_fading and 1 or 0.6}, Enum.EasingStyle.Quad, 1)
+                    local target = is_fading and 1 or 0.6
+
+                    if instant then
+                        instance.BackgroundTransparency = target
+                    else
+                        library:tween(instance, {BackgroundTransparency = target}, Enum.EasingStyle.Quad, 1)
+                    end
                 end
             end
         end 
@@ -8807,7 +8843,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.XY;
                     TextXAlignment = Enum.TextXAlignment.Left;
-                    TextSize = 13;
+                    TextSize = 12;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
@@ -8823,18 +8859,18 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     Text = cfg.info;
                     Parent = items[ "notification" ];
                     Name = "\0";
-                    Position = dim2(0, 0, 0, 15);
+                    Position = dim2(0, 0, 0, 13);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
                     TextXAlignment = Enum.TextXAlignment.Left;
                     TextWrapped = false;
                     AutomaticSize = Enum.AutomaticSize.XY;
-                    TextSize = 12;
+                    TextSize = 11;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingBottom = dim(0, 6);
+                    PaddingBottom = dim(0, 4);
                     Parent = items[ "info" ]
                 });
                 
@@ -8856,10 +8892,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingTop = dim(0, 8);
-                    PaddingBottom = dim(0, 10);
-                    PaddingLeft = dim(0, 12);
-                    PaddingRight = dim(0, 14);
+                    PaddingTop = dim(0, 5);
+                    PaddingBottom = dim(0, 7);
+                    PaddingLeft = dim(0, 18);
+                    PaddingRight = dim(0, 20);
                     Parent = items[ "notification" ]
                 });
             end
@@ -8867,7 +8903,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local index = #notifications.notifs + 1
             notifications.notifs[index] = items[ "notification" ]
 
-            notifications:fade(items[ "notification" ], false)
+            notifications:fade(items[ "notification" ], false, true)
 
             task.defer(function()
                 notifications:refresh_notifs(items[ "notification" ])
