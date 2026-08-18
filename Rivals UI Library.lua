@@ -4568,17 +4568,21 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return vec2(0.5, 1), 0, -20, -1
         end
 
-        function notifications:refresh_notifs()
+        function notifications:refresh_notifs(instant)
             local mode = library.notif_position or "Center"
             local anchor, pad_x, pad_y, direction = notifications:anchor_for(mode)
             local offset = pad_y
 
             for _, v in notifications.notifs do
+                local goal = dim2(anchor.X, pad_x, anchor.Y, offset)
+
                 v.AnchorPoint = anchor
 
-                library:tween(v, {
-                    Position = dim2(anchor.X, pad_x, anchor.Y, offset)
-                }, Enum.EasingStyle.Quad, 0.25)
+                if v == instant then
+                    v.Position = goal
+                else
+                    library:tween(v, {Position = goal}, Enum.EasingStyle.Quad, 0.22)
+                end
 
                 offset += direction * (v.AbsoluteSize.Y + 8)
             end
@@ -4620,14 +4624,13 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local items = cfg.items; do 
                 items[ "notification" ] = library:create( "Frame" , {
                     Parent = library[ "notifs" ] or library[ "items" ];
-                    Size = dim2(0, 0, 0, 30);
-                    AutomaticSize = Enum.AutomaticSize.X;
+                    Size = dim2(0, 0, 0, 0);
                     Name = "\0";
                     BorderColor3 = rgb(0, 0, 0);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
-                    AnchorPoint = vec2(1, 0);
-                    AutomaticSize = Enum.AutomaticSize.Y;
+                    AnchorPoint = vec2(0.5, 1);
+                    AutomaticSize = Enum.AutomaticSize.XY;
                     BackgroundColor3 = rgb(14, 14, 16)
                 });
                 
@@ -4646,9 +4649,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     Parent = items[ "notification" ];
                     Name = "\0";
                     BackgroundTransparency = 1;
-                    Position = dim2(0, 10, 0, 6);
+                    Position = dim2(0, 0, 0, 0);
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.XY;
+                    TextXAlignment = Enum.TextXAlignment.Left;
                     TextSize = 13;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
@@ -4665,7 +4669,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     Text = cfg.info;
                     Parent = items[ "notification" ];
                     Name = "\0";
-                    Position = dim2(0, 10, 0, 20);
+                    Position = dim2(0, 0, 0, 15);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
                     TextXAlignment = Enum.TextXAlignment.Left;
@@ -4676,8 +4680,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingBottom = dim(0, 12);
-                    PaddingRight = dim(0, 12);
+                    PaddingBottom = dim(0, 6);
                     Parent = items[ "info" ]
                 });
                 
@@ -4685,9 +4688,9 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     AnchorPoint = vec2(0, 1);
                     Parent = items[ "notification" ];
                     Name = "\0";
-                    Position = dim2(0, 8, 1, -4);
+                    Position = dim2(0, 0, 1, 0);
                     BorderColor3 = rgb(0, 0, 0);
-                    Size = dim2(0, 0, 0, 3);
+                    Size = dim2(0, 0, 0, 2);
                     BackgroundTransparency = 1;
                     BorderSizePixel = 0;
                     BackgroundColor3 = themes.preset.accent
@@ -4699,7 +4702,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingRight = dim(0, 8);
+                    PaddingTop = dim(0, 8);
+                    PaddingBottom = dim(0, 10);
+                    PaddingLeft = dim(0, 12);
+                    PaddingRight = dim(0, 14);
                     Parent = items[ "notification" ]
                 });
             end
@@ -4708,9 +4714,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             notifications.notifs[index] = items[ "notification" ]
 
             notifications:fade(items[ "notification" ], false)
-            
-            notifications:refresh_notifs()
-            library:tween(items[ "bar" ], {Size = dim2(1, -16, 0, 3)}, Enum.EasingStyle.Quad, cfg.lifetime)
+
+            task.defer(function()
+                notifications:refresh_notifs(items[ "notification" ])
+            end)
+            library:tween(items[ "bar" ], {Size = dim2(1, 0, 0, 2)}, Enum.EasingStyle.Quad, cfg.lifetime)
 
             task.spawn(LPH_NO_VIRTUALIZE(function()
                 task.wait(cfg.lifetime)
@@ -8709,17 +8717,21 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return vec2(0.5, 1), 0, -20, -1
         end
 
-        function notifications:refresh_notifs()
+        function notifications:refresh_notifs(instant)
             local mode = library.notif_position or "Center"
             local anchor, pad_x, pad_y, direction = notifications:anchor_for(mode)
             local offset = pad_y
 
             for _, v in notifications.notifs do
+                local goal = dim2(anchor.X, pad_x, anchor.Y, offset)
+
                 v.AnchorPoint = anchor
 
-                library:tween(v, {
-                    Position = dim2(anchor.X, pad_x, anchor.Y, offset)
-                }, Enum.EasingStyle.Quad, 0.25)
+                if v == instant then
+                    v.Position = goal
+                else
+                    library:tween(v, {Position = goal}, Enum.EasingStyle.Quad, 0.22)
+                end
 
                 offset += direction * (v.AbsoluteSize.Y + 8)
             end
@@ -8761,14 +8773,13 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local items = cfg.items; do 
                 items[ "notification" ] = library:create( "Frame" , {
                     Parent = library[ "notifs" ] or library[ "items" ];
-                    Size = dim2(0, 0, 0, 30);
-                    AutomaticSize = Enum.AutomaticSize.X;
+                    Size = dim2(0, 0, 0, 0);
                     Name = "\0";
                     BorderColor3 = rgb(0, 0, 0);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
-                    AnchorPoint = vec2(1, 0);
-                    AutomaticSize = Enum.AutomaticSize.Y;
+                    AnchorPoint = vec2(0.5, 1);
+                    AutomaticSize = Enum.AutomaticSize.XY;
                     BackgroundColor3 = rgb(14, 14, 16)
                 });
 
@@ -8792,9 +8803,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     Parent = items[ "notification" ];
                     Name = "\0";
                     BackgroundTransparency = 1;
-                    Position = dim2(0, 10, 0, 6);
+                    Position = dim2(0, 0, 0, 0);
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.XY;
+                    TextXAlignment = Enum.TextXAlignment.Left;
                     TextSize = 13;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
@@ -8811,7 +8823,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     Text = cfg.info;
                     Parent = items[ "notification" ];
                     Name = "\0";
-                    Position = dim2(0, 10, 0, 20);
+                    Position = dim2(0, 0, 0, 15);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
                     TextXAlignment = Enum.TextXAlignment.Left;
@@ -8822,8 +8834,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingBottom = dim(0, 12);
-                    PaddingRight = dim(0, 12);
+                    PaddingBottom = dim(0, 6);
                     Parent = items[ "info" ]
                 });
                 
@@ -8831,9 +8842,9 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     AnchorPoint = vec2(0, 1);
                     Parent = items[ "notification" ];
                     Name = "\0";
-                    Position = dim2(0, 8, 1, -4);
+                    Position = dim2(0, 0, 1, 0);
                     BorderColor3 = rgb(0, 0, 0);
-                    Size = dim2(0, 0, 0, 3);
+                    Size = dim2(0, 0, 0, 2);
                     BackgroundTransparency = 1;
                     BorderSizePixel = 0;
                     BackgroundColor3 = themes.preset.accent
@@ -8845,7 +8856,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
                 
                 library:create( "UIPadding" , {
-                    PaddingRight = dim(0, 8);
+                    PaddingTop = dim(0, 8);
+                    PaddingBottom = dim(0, 10);
+                    PaddingLeft = dim(0, 12);
+                    PaddingRight = dim(0, 14);
                     Parent = items[ "notification" ]
                 });
             end
@@ -8854,9 +8868,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             notifications.notifs[index] = items[ "notification" ]
 
             notifications:fade(items[ "notification" ], false)
-            
-            notifications:refresh_notifs()
-            library:tween(items[ "bar" ], {Size = dim2(1, -16, 0, 3)}, Enum.EasingStyle.Quad, cfg.lifetime)
+
+            task.defer(function()
+                notifications:refresh_notifs(items[ "notification" ])
+            end)
+            library:tween(items[ "bar" ], {Size = dim2(1, 0, 0, 2)}, Enum.EasingStyle.Quad, cfg.lifetime)
 
             task.spawn(function()
                 task.wait(cfg.lifetime)
