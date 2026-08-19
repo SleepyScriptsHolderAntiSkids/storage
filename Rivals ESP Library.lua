@@ -97,11 +97,6 @@ Camera = cloneref(Workspace.CurrentCamera)
 
 
 
-local BOX_CORNERS = {
-    {-1,-1,-1}, {1,-1,-1}, {-1,1,-1}, {1,1,-1},
-    {-1,-1,1},  {1,-1,1},  {-1,1,1},  {1,1,1},
-}
-
 local STATE_SWIMMING = Enum.HumanoidStateType.Swimming
 local STATE_FREEFALL = Enum.HumanoidStateType.Freefall
 local STATE_JUMPING = Enum.HumanoidStateType.Jumping
@@ -672,48 +667,11 @@ do
                                 -- aspect/resolution, so the box always hugs the body the same
                                 -- on any monitor. Tune the 2.9 half-height / 0.5 width ratio.
                                 local root_pos = HRP.Position
+                                local top_screen = Cam:WorldToViewportPoint(root_pos + Vector3.new(0, 2.9, 0))
+                                local bottom_screen = Cam:WorldToViewportPoint(root_pos - Vector3.new(0, 2.9, 0))
 
-                                if Config.ESP.DynamicBounds then
-                                    local min_x, min_y = math.huge, math.huge
-                                    local max_x, max_y = -math.huge, -math.huge
-                                    local valid = false
-
-                                    for _, part in pairs(character:GetChildren()) do
-                                        if part:IsA("BasePart") then
-                                            local cf, size = part.CFrame, part.Size * 0.5
-
-                                            for i = 1, 8 do
-                                                local corner = BOX_CORNERS[i]
-                                                local world = (cf * CFrame.new(size.X * corner[1], size.Y * corner[2], size.Z * corner[3])).Position
-                                                local screen, on = Cam:WorldToViewportPoint(world)
-
-                                                if on then
-                                                    valid = true
-                                                    if screen.X < min_x then min_x = screen.X end
-                                                    if screen.X > max_x then max_x = screen.X end
-                                                    if screen.Y < min_y then min_y = screen.Y end
-                                                    if screen.Y > max_y then max_y = screen.Y end
-                                                end
-                                            end
-                                        end
-                                    end
-
-                                    if valid then
-                                        h = math.max(10, max_y - min_y)
-                                        w = math.max(10, max_x - min_x)
-                                        Pos = Vector3.new(min_x + (max_x - min_x) * 0.5, min_y + h * 0.5, Pos.Z)
-                                    else
-                                        local top_screen = Cam:WorldToViewportPoint(root_pos + Vector3.new(0, 2.9, 0))
-                                        local bottom_screen = Cam:WorldToViewportPoint(root_pos - Vector3.new(0, 2.9, 0))
-                                        h = math.abs(top_screen.Y - bottom_screen.Y)
-                                        w = h * 0.5
-                                    end
-                                else
-                                    local top_screen = Cam:WorldToViewportPoint(root_pos + Vector3.new(0, 2.9, 0))
-                                    local bottom_screen = Cam:WorldToViewportPoint(root_pos - Vector3.new(0, 2.9, 0))
-                                    h = math.abs(top_screen.Y - bottom_screen.Y)
-                                    w = h * 0.5
-                                end
+                                h = math.abs(top_screen.Y - bottom_screen.Y)
+                                w = h * 0.5
 
                                 -- Fade-out effect --
                                 if Config.ESP.FadeOut.OnDistance then
@@ -967,10 +925,6 @@ do
                                                     label = "jumping"
                                                 elseif Humanoid.MoveDirection.Magnitude > 0.15 then
                                                     label = "walking"
-                                                end
-
-                                                if Config.ESP.Drawing.StateFlags.Staring and Dist < 25 then
-                                                    label = label and (label .. " - staring") or "staring"
                                                 end
 
                                                 if label ~= state_label then
