@@ -53,7 +53,8 @@ if LPH_OBFUSCATED == nil then
     end
 end;
 
-
+Build = "EarlyAccess" 
+Build = Build or "Beta"
 
 local run_service = cloneref(game.GetService(game, "RunService"));
 local replicated_storage = cloneref(game.GetService(game, "ReplicatedStorage"));
@@ -532,9 +533,9 @@ getgenv().crosshair = {
 -- Ui Library Part --
 
 
-if Mobile == (Enum.PreferredInput.Gamepad) then 
-    return Players.LocalPlayer:Kick("Gamepad Device is not supported by the script")
-end
+-- if Mobile == (Enum.PreferredInput.Gamepad) then 
+--     return Players.LocalPlayer:Kick("Gamepad Device is not supported by the script")
+-- end
 
 if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
     print("Keyboard & Mouse")
@@ -4502,10 +4503,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             section:toggle({type="toggle",name="Auto Load Script",flag="autoload_enabled",default=false, callback = function(state)
                 if state then
                     if script_key then
+                        local loader = (Build == "EarlyAccess")
+                            and "a462cc3ca7e0c3747808a34e71946652"
+                            or "e18a1d76bcc68efec407c3f7ee36935d"
+
                         queue_on_teleport([[
                             repeat task.wait() until game:IsLoaded()
                             script_key = "]] .. script_key .. [["
-                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/e18a1d76bcc68efec407c3f7ee36935d.lua"))()
+                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/]] .. loader .. [[.lua"))()
                         ]])
                     end
                 else
