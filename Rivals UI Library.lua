@@ -53,9 +53,7 @@ if LPH_OBFUSCATED == nil then
     end
 end;
 
-Build = "Beta" 
-Build = Build or "Beta"
-
+print(Build)
 local run_service = cloneref(game.GetService(game, "RunService"));
 local replicated_storage = cloneref(game.GetService(game, "ReplicatedStorage"));
 local user_input_service = cloneref(game.GetService(game, "UserInputService"));
@@ -4503,7 +4501,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             section:toggle({type="toggle",name="Auto Load Script",flag="autoload_enabled",default=false, callback = function(state)
                 if state then
                     if script_key then
-                        local loader = (Build == "EarlyAccess")
+                        local loader = (getgenv().Build == "EarlyAccess")
                             and "a462cc3ca7e0c3747808a34e71946652"
                             or "e18a1d76bcc68efec407c3f7ee36935d"
 
