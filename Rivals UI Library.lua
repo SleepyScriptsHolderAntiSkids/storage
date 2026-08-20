@@ -53,7 +53,7 @@ if LPH_OBFUSCATED == nil then
     end
 end;
 
-Build = "EarlyAccess" 
+Build = "Beta" 
 Build = Build or "Beta"
 
 local run_service = cloneref(game.GetService(game, "RunService"));
