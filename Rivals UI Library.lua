@@ -2556,6 +2556,19 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     CornerRadius = dim(0, 999)
                 });
                 
+                items[ "slider_hitbox" ] = library:create( "TextButton" , {
+                    Text = "";
+                    AutoButtonColor = false;
+                    AnchorPoint = vec2(1, 0.5);
+                    Parent = items[ "right_components" ];
+                    Name = "\0";
+                    Position = dim2(1, 0, 0, 2);
+                    Size = dim2(1, -4, 0, 22);
+                    BorderSizePixel = 0;
+                    BackgroundTransparency = 1;
+                    ZIndex = 5;
+                });
+
                 items[ "fill" ] = library:create( "Frame" , {
                     Name = "\0";
                     Parent = items[ "slider" ];
@@ -2629,24 +2642,42 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 cfg.callback(flags[cfg.flag])
             end)
 
-            items[ "slider" ].MouseButton1Down:Connect(LPH_NO_VIRTUALIZE(function()
-                cfg.dragging = true 
+            local function slide_to(position)
+                local track = items[ "slider" ]
+                local size_x = (position.X - track.AbsolutePosition.X) / track.AbsoluteSize.X
+
+                cfg.set(((cfg.max - cfg.min) * math.clamp(size_x, 0, 1)) + cfg.min)
+            end
+
+            local function begin_slide(input)
+                cfg.dragging = true
                 library:tween(items[ "value" ], {TextColor3 = rgb(255, 255, 255)}, Enum.EasingStyle.Quad, 0.2)
+                slide_to(input.Position)
+            end
+
+            items[ "slider_hitbox" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    begin_slide(input)
+                end
+            end))
+
+            items[ "slider" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    begin_slide(input)
+                end
             end))
 
             library:connection(uis.InputChanged, function(input)
-                if cfg.dragging and input.UserInputType == Enum.UserInputType.MouseMovement then 
-                    local size_x = (input.Position.X - items[ "slider" ].AbsolutePosition.X) / items[ "slider" ].AbsoluteSize.X
-                    local value = ((cfg.max - cfg.min) * size_x) + cfg.min
-                    cfg.set(value)
+                if cfg.dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                    slide_to(input.Position)
                 end
             end)
 
             library:connection(uis.InputEnded, function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     cfg.dragging = false
-                    library:tween(items[ "value" ], {TextColor3 = rgb(72, 72, 73)}, Enum.EasingStyle.Quad, 0.2) 
-                end 
+                    library:tween(items[ "value" ], {TextColor3 = rgb(72, 72, 73)}, Enum.EasingStyle.Quad, 0.2)
+                end
             end)
 
             if cfg.seperator then 
@@ -2842,7 +2873,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         ZIndex = 10;
                     });
                     
-                    items[ "outline" ] = library:create( "Frame" , {
+                    items[ "outline" ] = library:create( "ScrollingFrame" , {
                         Parent = items[ "dropdown_holder" ];
                         Size = dim2(1, 0, 1, 0);
                         ClipsDescendants = true;
@@ -2850,6 +2881,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         BorderSizePixel = 0;
                         BackgroundColor3 = rgb(33, 33, 35);
                         ZIndex = 10;
+                        CanvasSize = dim2(0, 0, 0, 0);
+                        AutomaticCanvasSize = Enum.AutomaticSize.Y;
+                        ScrollBarThickness = 3;
+                        ScrollBarImageColor3 = themes.preset.accent;
+                        ScrollBarImageTransparency = 0.2;
+                        ScrollingDirection = Enum.ScrollingDirection.Y;
+                        ElasticBehavior = Enum.ElasticBehavior.Never;
+                        VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar;
                     });
                     
                     library:create( "UIPadding" , {
@@ -2901,7 +2940,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end
             
             function cfg.set_visible(bool)
-                local a = bool and cfg.y_size or 0
+                local a = bool and math.min(cfg.y_size, 220) or 0
                 library:tween(items[ "dropdown_holder" ], {Size = dim_offset(items[ "dropdown" ].AbsoluteSize.X, a)})
 
                 items[ "dropdown_holder" ].Position = dim2(0, items[ "dropdown" ].AbsolutePosition.X, 0, items[ "dropdown" ].AbsolutePosition.Y + 80)
@@ -5195,6 +5234,39 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         end))
 
 
+        function library:on_tap(instance, callback)
+            local tracked, origin, moved = nil, nil, false
+
+            instance.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if input.UserInputType ~= Enum.UserInputType.Touch
+                    and input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+                    return
+                end
+
+                tracked, origin, moved = input, input.Position, false
+            end))
+
+            instance.InputChanged:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if input ~= tracked or moved then return end
+
+                local delta = input.Position - origin
+
+                if math.abs(delta.X) > 8 or math.abs(delta.Y) > 8 then
+                    moved = true
+                end
+            end))
+
+            instance.InputEnded:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if input ~= tracked then return end
+
+                local was_tap = not moved
+
+                tracked, origin, moved = nil, nil, false
+
+                if was_tap then callback(input) end
+            end))
+        end
+
         function library:relayout_sections()
             local refreshers = library.autosize_refresh
             if not refreshers then return end
@@ -6417,7 +6489,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end;
 
             if cfg.fading_toggle then
-                items[ "button" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                library:on_tap(items[ "button" ], LPH_NO_VIRTUALIZE(function(input)
                     if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
                         cfg.default = not cfg.default 
                         cfg.toggle_section(cfg.default) 
@@ -6671,17 +6743,13 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 flags[cfg.flag] = bool
             end 
             
-            items[ "toggle" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
-                if Input.UserInputType ~= Enum.UserInputType.Touch then return end
-                cfg.enabled = not cfg.enabled 
+            local function flip_toggle()
+                cfg.enabled = not cfg.enabled
                 cfg.set(cfg.enabled)
-            end))
+            end
 
-            items[ "toggle_button" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
-                if Input.UserInputType ~= Enum.UserInputType.Touch then return end
-                cfg.enabled = not cfg.enabled 
-                cfg.set(cfg.enabled)
-            end))
+            library:on_tap(items[ "toggle" ], flip_toggle)
+            library:on_tap(items[ "toggle_button" ], flip_toggle)
             
             if cfg.seperator then -- ok bro my lua either sucks or this was a pain in the ass to make (simple if statement aswell 💔)
                 library:create( "Frame" , {
@@ -6821,6 +6889,19 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     CornerRadius = dim(0, 999)
                 });
                 
+                items[ "slider_hitbox" ] = library:create( "TextButton" , {
+                    Text = "";
+                    AutoButtonColor = false;
+                    AnchorPoint = vec2(1, 0.5);
+                    Parent = items[ "right_components" ];
+                    Name = "\0";
+                    Position = dim2(1, 0, 0, 2);
+                    Size = dim2(1, -4, 0, 22);
+                    BorderSizePixel = 0;
+                    BackgroundTransparency = 1;
+                    ZIndex = 5;
+                });
+
                 items[ "fill" ] = library:create( "Frame" , {
                     Name = "\0";
                     Parent = items[ "slider" ];
@@ -6894,25 +6975,39 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 cfg.callback(flags[cfg.flag])
             end
 
-            items[ "slider" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
-                            if Input.UserInputType ~= Enum.UserInputType.Touch then return end
-                cfg.dragging = true 
+            local slide_input = nil
+
+            local function slide_to(position)
+                local track = items[ "slider" ]
+                local size_x = (position.X - track.AbsolutePosition.X) / track.AbsoluteSize.X
+
+                cfg.set(((cfg.max - cfg.min) * math.clamp(size_x, 0, 1)) + cfg.min)
+            end
+
+            local function begin_slide(input)
+                if input.UserInputType ~= Enum.UserInputType.Touch and input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
+
+                slide_input = input
+                cfg.dragging = true
                 library:tween(items[ "value" ], {TextColor3 = rgb(255, 255, 255)}, Enum.EasingStyle.Quad, 0.2)
-            end))
+                slide_to(input.Position)
+            end
+
+            items[ "slider_hitbox" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(begin_slide))
+            items[ "slider" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(begin_slide))
 
             library:connection(uis.InputChanged, function(input)
-                if cfg.dragging and input.UserInputType == Enum.UserInputType.Touch then 
-                    local size_x = (input.Position.X - items[ "slider" ].AbsolutePosition.X) / items[ "slider" ].AbsoluteSize.X
-                    local value = ((cfg.max - cfg.min) * size_x) + cfg.min
-                    cfg.set(value)
+                if cfg.dragging and input == slide_input then
+                    slide_to(input.Position)
                 end
             end)
 
             library:connection(uis.InputEnded, function(input)
-                if input.UserInputType == Enum.UserInputType.Touch then
+                if input == slide_input then
+                    slide_input = nil
                     cfg.dragging = false
-                    library:tween(items[ "value" ], {TextColor3 = rgb(72, 72, 73)}, Enum.EasingStyle.Quad, 0.2) 
-                end 
+                    library:tween(items[ "value" ], {TextColor3 = rgb(72, 72, 73)}, Enum.EasingStyle.Quad, 0.2)
+                end
             end)
 
             if cfg.seperator then 
@@ -7108,7 +7203,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         ZIndex = 10;
                     });
                     
-                    items[ "outline" ] = library:create( "Frame" , {
+                    items[ "outline" ] = library:create( "ScrollingFrame" , {
                         Parent = items[ "dropdown_holder" ];
                         Size = dim2(1, 0, 1, 0);
                         ClipsDescendants = true;
@@ -7116,6 +7211,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         BorderSizePixel = 0;
                         BackgroundColor3 = rgb(33, 33, 35);
                         ZIndex = 10;
+                        CanvasSize = dim2(0, 0, 0, 0);
+                        AutomaticCanvasSize = Enum.AutomaticSize.Y;
+                        ScrollBarThickness = 3;
+                        ScrollBarImageColor3 = themes.preset.accent;
+                        ScrollBarImageTransparency = 0.2;
+                        ScrollingDirection = Enum.ScrollingDirection.Y;
+                        ElasticBehavior = Enum.ElasticBehavior.Never;
+                        VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar;
                     });
                     
                     library:create( "UIPadding" , {
@@ -7171,7 +7274,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
              end
 
             function cfg.set_visible(bool)
-                local a = bool and cfg.y_size or 0
+                local a = bool and math.min(cfg.y_size, 220) or 0
                 library:tween(items[ "dropdown_holder" ], {Size = dim_offset(items[ "dropdown" ].AbsoluteSize.X, a)})
 
                 items[ "dropdown_holder" ].Position = dim2(0, items[ "dropdown" ].AbsolutePosition.X, 0, items[ "dropdown" ].AbsolutePosition.Y + 80)
@@ -7214,8 +7317,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     cfg.y_size += button.AbsoluteSize.Y + 6 -- super annoying manual sizing but oh well
                     insert(cfg.option_instances, button)
                     
-                    button.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
-                            if Input.UserInputType ~= Enum.UserInputType.Touch then return end
+                    library:on_tap(button, LPH_NO_VIRTUALIZE(function(Input)
                         if cfg.multi then 
                             local selected_index = find(cfg.multi_items, button.Text)
                             
@@ -7236,7 +7338,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
             end
 
-            items[ "dropdown" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+            library:on_tap(items[ "dropdown" ], LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
                     cfg.open = not cfg.open  
                     cfg.set_visible(cfg.open)
@@ -7799,7 +7901,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 cfg.set()
             end
 
-            items[ "colorpicker" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+            library:on_tap(items[ "colorpicker" ], LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
                     cfg.open = not cfg.open 
 
@@ -8187,7 +8289,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                             PaddingLeft = dim(0, 5)
                         });
 
-                        name.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                        library:on_tap(name, LPH_NO_VIRTUALIZE(function(input)
                             if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
                                 cfg.set(option)
                                 cfg.set_visible(false)
@@ -8272,8 +8374,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 items[ "dropdown" ].Position = dim_offset(items[ "keybind_holder" ].AbsolutePosition.X, items[ "keybind_holder" ].AbsolutePosition.Y + items[ "keybind_holder" ].AbsoluteSize.Y + 60)
             end
         
-            items[ "keybind_holder" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(Input)
-                            if Input.UserInputType ~= Enum.UserInputType.Touch then return end
+            library:on_tap(items[ "keybind_holder" ], LPH_NO_VIRTUALIZE(function(Input)
                 task.wait()
                 items[ "key" ].Text = "..."	
 
@@ -8382,7 +8483,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 }); library:apply_theme(items[ "name" ], "accent", "BackgroundColor3");                            
             end 
 
-            items[ "button" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+            library:on_tap(items[ "button" ], LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
                     cfg.callback()
 
@@ -8485,7 +8586,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 library:close_element(cfg)
             end
             
-            items[ "tick" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+            library:on_tap(items[ "tick" ], LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
                     cfg.open = not cfg.open
                     cfg.set_visible(cfg.open)
@@ -8572,7 +8673,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         CornerRadius = dim(0, 3)
                     });     
 
-                    button.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                    library:on_tap(button, LPH_NO_VIRTUALIZE(function(input)
                         if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
                             local current = cfg.current_element 
 
