@@ -6748,7 +6748,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 cfg.set(cfg.enabled)
             end
 
-            library:on_tap(items[ "toggle" ], flip_toggle)
             library:on_tap(items[ "toggle_button" ], flip_toggle)
             
             if cfg.seperator then -- ok bro my lua either sucks or this was a pain in the ass to make (simple if statement aswell 💔)
@@ -7074,7 +7073,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         FontFace = fonts.small;
                         TextColor3 = rgb(245, 245, 245);
                         BorderColor3 = rgb(0, 0, 0);
-                        Text = "Dropdown";
+                        Text = cfg.name;
                         Parent = items[ "dropdown_object" ];
                         Name = "\0";
                         Size = dim2(1, 0, 0, 0);
