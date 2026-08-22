@@ -111,6 +111,12 @@ end
 
 local esp_fighter_controller = nil
 
+local function esp_identity()
+    local fn = getgenv().set_identity
+
+    if fn then fn(8) elseif setthreadidentity then pcall(setthreadidentity, 8) end
+end
+
 local function get_fighter_controller()
     if esp_fighter_controller then return esp_fighter_controller end
 
@@ -502,15 +508,24 @@ do
                 end)
 
                 Players_ESP[plr.Name].Health_Changed = LPH_NO_VIRTUALIZE(function()
-                    health_clamped = math.clamp(Humanoid.Health, 0, Humanoid.MaxHealth)
-                    health = health_clamped / Humanoid.MaxHealth;
+                    esp_identity()
+
+                    pcall(function()
+                        health_clamped = math.clamp(Humanoid.Health, 0, Humanoid.MaxHealth)
+                        health = health_clamped / Humanoid.MaxHealth
+                    end)
                 end)
 
                 Players_ESP[plr.Name].Health_Changed()
 
                 Players_ESP[plr.Name].Child_Added = LPH_NO_VIRTUALIZE(function()
-                    local info = GetPlayerWeaponInfo(plr)
-                    Weapon.Text = info and info.Name or "None"
+                    esp_identity()
+
+                    pcall(function()
+                        local info = GetPlayerWeaponInfo(plr)
+
+                        Weapon.Text = info and info.Name or "None"
+                    end)
                 end)
 
 
