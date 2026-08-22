@@ -111,12 +111,6 @@ end
 
 local esp_fighter_controller = nil
 
-local function esp_identity()
-    local fn = getgenv().set_identity
-
-    if fn then fn(8) elseif setthreadidentity then pcall(setthreadidentity, 8) end
-end
-
 local function get_fighter_controller()
     if esp_fighter_controller then return esp_fighter_controller end
 
@@ -129,50 +123,6 @@ local function get_fighter_controller()
     end
 
     return esp_fighter_controller
-end
-
-local function wait_player_character(plr)
-    if plr.Character then return plr.Character end
-
-    local controller = get_fighter_controller()
-    if not controller then return nil end
-
-    local ok, fighter = pcall(controller.WaitForFighter, controller, plr)
-    if not ok or not fighter then return plr.Character end
-
-    local deadline = os.clock() + 10
-    repeat task.wait() until (fighter.Entity and fighter.Entity:IsInWorld()) or os.clock() > deadline
-
-    return fighter.Entity and fighter.Entity.Model or plr.Character
-end
-
-local function on_player_character(plr, callback)
-    local controller = get_fighter_controller()
-    local fighter = controller and controller:GetFighter(plr)
-
-    if not fighter and controller then
-        local deadline = os.clock() + 10
-        repeat
-            task.wait()
-            fighter = controller:GetFighter(plr)
-        until fighter or os.clock() > deadline
-    end
-
-    if not fighter or not fighter.EntityAdded then
-        return plr.CharacterAdded:Connect(callback)
-    end
-
-    return fighter.EntityAdded:Connect(LPH_NO_VIRTUALIZE(function(entity)
-        if not entity then return end
-
-        if entity:IsInWorld() then
-            callback(entity.Model)
-        else
-            entity.EnteredWorld:Connect(function()
-                callback(entity.Model)
-            end)
-        end
-    end))
 end
 
 local GetPlayerWeaponInfo = function(player)
@@ -408,7 +358,7 @@ do
             --local DroppedItems = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0)})
             --
             Functions.AddOutline(LeftTop, 1); Functions.AddOutline(LeftSide, 1); Functions.AddOutline(LeftSide, 1); Functions.AddOutline(RightTop, 1); Functions.AddOutline(RightSide, 1); Functions.AddOutline(BottomSide, 1); Functions.AddOutline(BottomDown, 1); Functions.AddOutline(BottomRightSide, 1); Functions.AddOutline(BottomRightDown, 1); 
-            local character = wait_player_character(plr)
+            local character = plr.Character or plr.CharacterAdded:Wait()
             if not character then return end
 
             local Humanoid = character:WaitForChild("Humanoid", 5)
@@ -552,8 +502,6 @@ do
                 end)
 
                 Players_ESP[plr.Name].Health_Changed = LPH_NO_VIRTUALIZE(function()
-                    esp_identity()
-
                     health_clamped = math.clamp(Humanoid.Health, 0, Humanoid.MaxHealth)
                     health = health_clamped / Humanoid.MaxHealth;
                 end)
@@ -561,48 +509,45 @@ do
                 Players_ESP[plr.Name].Health_Changed()
 
                 Players_ESP[plr.Name].Child_Added = LPH_NO_VIRTUALIZE(function()
-                    esp_identity()
-
                     local info = GetPlayerWeaponInfo(plr)
                     Weapon.Text = info and info.Name or "None"
                 end)
 
 
-                Players_ESP[plr.Name].ToolConnection_Added = character.ChildAdded:Connect(Players_ESP[plr.Name].Child_Added)
-                Players_ESP[plr.Name].ToolConnection_Removed = character.ChildRemoved:Connect(Players_ESP[plr.Name].Child_Added)
+                Players_ESP[plr.Name].ToolConnection_Added = plr.Character.ChildAdded:Connect(Players_ESP[plr.Name].Child_Added)
+                Players_ESP[plr.Name].ToolConnection_Removed = plr.Character.ChildRemoved:Connect(Players_ESP[plr.Name].Child_Added)
 
                 Players_ESP[plr.Name].HumanoidConnection = Humanoid.HealthChanged:Connect(Players_ESP[plr.Name].Health_Changed)
 
-                Players_ESP[plr.Name].CharacterAdded = on_player_character(plr, LPH_JIT_MAX(function(Character)
-                    if not Character then return end
-
-                    esp_identity()
-
+                Players_ESP[plr.Name].CharacterAdded = plr.CharacterAdded:Connect(LPH_JIT_MAX(function(Character)
+                    -- Clear before waiting. These are the refs the updater draws from, and
+                    -- the old ones point at a destroyed rig whose Position never changes
+                    -- again - so leaving them set paints a frozen box at the death spot for
+                    -- as long as the wait takes. Nil makes the updater hide instead, and the
+                    -- timeout stops a character that never finishes loading from hanging it.
                     Humanoid, HRP = nil, nil
                     Humanoid = Character:WaitForChild("Humanoid", 10)
                     HRP = Character:WaitForChild("HumanoidRootPart", 10)
-
-                    local record = Players_ESP[plr.Name]
-                    if not record then return end
-
-                    if record.ToolConnection_Added then
-                        SafeDisconnect(record.ToolConnection_Added)
+                    if Players_ESP[plr.Name] and Players_ESP[plr.Name].ToolConnection_Added then
+                        SafeDisconnect(Players_ESP[plr.Name].ToolConnection_Added)
                     end
 
-                    if record.ToolConnection_Removed then
-                        SafeDisconnect(record.ToolConnection_Removed)
+
+                    if Players_ESP[plr.Name] and Players_ESP[plr.Name].ToolConnection_Removed then
+                        SafeDisconnect(Players_ESP[plr.Name].ToolConnection_Removed)
                     end
 
-                    record.ToolConnection_Added = Character.ChildAdded:Connect(record.Child_Added)
-                    record.ToolConnection_Removed = Character.ChildRemoved:Connect(record.Child_Added)
 
-                    if Humanoid then
-                        SafeDisconnect(record.HumanoidConnection)
-                        record.HumanoidConnection = Humanoid.HealthChanged:Connect(record.Health_Changed)
-                        record.Health_Changed()
-                    end
+                    Players_ESP[plr.Name].ToolConnection_Removed = nil
+                    Players_ESP[plr.Name].ToolConnection_Added = nil
 
-                    record.RefreshElements()
+                    Players_ESP[plr.Name].ToolConnection_Added = plr.Character.ChildAdded:Connect(Players_ESP[plr.Name].Child_Added)
+                    Players_ESP[plr.Name].ToolConnection_Removed = plr.Character.ChildRemoved:Connect(Players_ESP[plr.Name].Child_Added)
+
+                    SafeDisconnect(Players_ESP[plr.Name].HumanoidConnection)
+                    Players_ESP[plr.Name].HumanoidConnection = Humanoid.HealthChanged:Connect(Players_ESP[plr.Name].Health_Changed)
+                    Players_ESP[plr.Name].Health_Changed()
+                    Players_ESP[plr.Name].RefreshElements()
                 end))
 
                 Players_ESP[plr.Name].RefreshElements()
@@ -773,7 +718,7 @@ do
                                     HideESP()
                                 elseif HRP and Humanoid then
                                     do -- Chams
-                                        Chams.Adornee = character
+                                        Chams.Adornee = plr.Character
                                         Chams.Enabled = Config.ESP.Drawing.Chams.Enabled
                                         do -- Breathe
                                             if Config.ESP.Drawing.Chams.Thermal then
@@ -1096,17 +1041,14 @@ do
             end);
 
             Players.PlayerRemoving:Connect(function(v)
-                local record = Players_ESP[v.Name]
-                if record then
-                    record.RefreshElements = nil
-                    SafeDisconnect(record.CharacterAdded)
-                    SafeDisconnect(record.ToolConnection_Added)
-                    SafeDisconnect(record.ToolConnection_Removed)
-                    SafeDisconnect(record.HumanoidConnection)
-                    record.CharacterAdded = nil
-                    record.ToolConnection_Removed = nil
-                    record.ToolConnection_Added = nil
-                    record.HumanoidConnection = nil
+                if Players_ESP[v.Name] then
+                    Players_ESP[v.Name].RefreshElements = nil
+                    Players_ESP[v.Name].CharacterAdded:Disconnect()
+                    Players_ESP[v.Name].CharacterAdded = nil
+                    Players_ESP[v.Name].ToolConnection_Added:Disconnect()
+                    Players_ESP[v.Name].ToolConnection_Removed:Disconnect()
+                    Players_ESP[v.Name].ToolConnection_Removed = nil
+                    Players_ESP[v.Name].ToolConnection_Added = nil
                     Players_ESP[v.Name] = nil
                 end
             end)
