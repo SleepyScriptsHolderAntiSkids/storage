@@ -55,15 +55,7 @@ end;
 
 
 
-local run_service = cloneref(game.GetService(game, "RunService"));
 local replicated_storage = cloneref(game.GetService(game, "ReplicatedStorage"));
-local user_input_service = cloneref(game.GetService(game, "UserInputService"));
-local replicated_first = cloneref(game.GetService(game, "ReplicatedFirst"));
-local tween_service = cloneref(game.GetService(game, "TweenService"));
-local script_context = cloneref(game.GetService(game, "ScriptContext"));
-local collection_service = cloneref(game.GetService(game, "CollectionService"));
-local log_service = cloneref(game.GetService(game, "LogService"));
-local game_settings = cloneref(UserSettings().GetService(UserSettings(), "UserGameSettings"));
 
 local DuelLibrary = require(replicated_storage:FindFirstChild("DuelLibrary", true))
 
@@ -75,23 +67,10 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/SleepyScriptsHolderAn
 
 
 
-Players, players = cloneref(game:GetService("Players")), cloneref(game:GetService("Players"))
-LocalPlayer = cloneref(game:GetService("Players")).LocalPlayer
+Players = cloneref(game:GetService("Players"))
+LocalPlayer = Players.LocalPlayer
 
-ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
-UserInputService = cloneref(game:GetService("UserInputService"))
 Workspace = cloneref(game:GetService("Workspace"))
-RunService = cloneref(game:GetService("RunService"))
-ProximityPromptService = cloneref(game:GetService("ProximityPromptService"))
-StarterGui = cloneref(game:GetService("StarterGui"))
-Lighting = cloneref(game:GetService("Lighting"))
-lighting = cloneref(game:GetService("Lighting"))
-
-mathrandom = math.random
-mathabs = math.abs
-Mobile = UserInputService.PreferredInput
-
-Camera = cloneref(Workspace.CurrentCamera)
 
 
 
@@ -164,7 +143,6 @@ end)
 
 do
     local Workspace = cloneref(game:GetService("Workspace"))
-    local RunService = cloneref(game:GetService("RunService"))
     local Players = cloneref(game:GetService("Players"))
     local CoreGui = cloneref(game:GetService("CoreGui"))
 
@@ -543,6 +521,11 @@ do
                     Humanoid, HRP = nil, nil
                     Humanoid = Character:WaitForChild("Humanoid", 10)
                     HRP = Character:WaitForChild("HumanoidRootPart", 10)
+
+                    -- WaitForChild can time out; without this the HealthChanged
+                    -- connect below indexes nil and kills this player's ESP.
+                    if not Players_ESP[plr.Name] then return end
+
                     if Players_ESP[plr.Name] and Players_ESP[plr.Name].ToolConnection_Added then
                         SafeDisconnect(Players_ESP[plr.Name].ToolConnection_Added)
                     end
@@ -560,8 +543,11 @@ do
                     Players_ESP[plr.Name].ToolConnection_Removed = plr.Character.ChildRemoved:Connect(Players_ESP[plr.Name].Child_Added)
 
                     SafeDisconnect(Players_ESP[plr.Name].HumanoidConnection)
-                    Players_ESP[plr.Name].HumanoidConnection = Humanoid.HealthChanged:Connect(Players_ESP[plr.Name].Health_Changed)
-                    Players_ESP[plr.Name].Health_Changed()
+
+                    if Humanoid then
+                        Players_ESP[plr.Name].HumanoidConnection = Humanoid.HealthChanged:Connect(Players_ESP[plr.Name].Health_Changed)
+                        Players_ESP[plr.Name].Health_Changed()
+                    end
                     Players_ESP[plr.Name].RefreshElements()
                 end))
 
