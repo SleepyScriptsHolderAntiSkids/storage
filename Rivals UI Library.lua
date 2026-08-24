@@ -53,6 +53,8 @@ if LPH_OBFUSCATED == nil then
     end
 end;
 
+print(Build)
+
 local run_service = cloneref(game.GetService(game, "RunService"));
 local replicated_storage = cloneref(game.GetService(game, "ReplicatedStorage"));
 local user_input_service = cloneref(game.GetService(game, "UserInputService"));
@@ -109,6 +111,7 @@ local Mouse = setmetatable({}, {
 if not LocalPlayer.Character then
     LocalPlayer.CharacterAdded:Wait()
 end
+print("Character Loaded")
 
 ------------------------------------------------------
 
@@ -533,6 +536,7 @@ getgenv().crosshair = {
 -- end
 
 if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
+    print("Keyboard & Mouse")
 --LPH_JIT_MAX(function()
     local uis = cloneref(game:GetService("UserInputService"))
     local players, Players = cloneref(game:GetService("Players")), cloneref(game:GetService("Players"))
