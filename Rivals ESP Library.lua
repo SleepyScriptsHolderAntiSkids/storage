@@ -170,6 +170,17 @@ do
     -- inside each updater, producing a set they hash into. Outside a live round the set is
     -- empty, so every updater hides itself once and then costs a single lookup per frame.
     local ESP_ROUND_PLAYERS = {}
+
+    -- Per-frame values that are the same for every entity. Computed once in the
+    -- shared loop instead of N times inside the per-player updaters.
+    local ESP_BREATHE = 0
+    local ESP_LOCAL_TEAM = nil
+
+    -- Visible writes invalidate render state; reads do not. These elements are
+    -- driven by config toggles, so the value is identical almost every frame.
+    local function set_vis(element, state)
+        if element.Visible ~= state then element.Visible = state end
+    end
     local DuelController = require(lplayer:FindFirstChild("DuelController", true))
 
     local function hide_all_esp()
@@ -206,6 +217,16 @@ do
                     end
                 end
             end
+        end
+
+        ESP_BREATHE = math.atan(math.sin(tick() * 2)) * 2 / math.pi
+
+        if Config.ESP.TeamCheck then
+            local local_team_id = lplayer:GetAttribute("TeamID")
+
+            ESP_LOCAL_TEAM = local_team_id and DuelLibrary:GetTeamColor(local_team_id) or nil
+        else
+            ESP_LOCAL_TEAM = nil
         end
 
         for key, updater in pairs(ESP_UPDATERS) do
@@ -574,26 +595,26 @@ do
                     is_friend = ok and result == true
                 end)
                 local HideESP = LPH_NO_VIRTUALIZE(function()
-                    Box.Visible = false;
-                    Name.Visible = false;
-                    Distance.Visible = false;
-                    Weapon.Visible = false;
-                    StateFlag.Visible = false;
-                    Healthbar.Visible = false;
-                    BehindHealthbar.Visible = false;
-                    HealthText.Visible = false;
-                    WeaponIcon.Visible = false;
-                    LeftTop.Visible = false;
-                    LeftSide.Visible = false;
-                    BottomSide.Visible = false;
-                    BottomDown.Visible = false;
-                    RightTop.Visible = false;
-                    RightSide.Visible = false;
-                    BottomRightSide.Visible = false;
-                    BottomRightDown.Visible = false;
-                    Flag1.Visible = false;
+                    set_vis(Box, false)
+                    set_vis(Name, false)
+                    set_vis(Distance, false)
+                    set_vis(Weapon, false)
+                    set_vis(StateFlag, false)
+                    set_vis(Healthbar, false)
+                    set_vis(BehindHealthbar, false)
+                    set_vis(HealthText, false)
+                    set_vis(WeaponIcon, false)
+                    set_vis(LeftTop, false)
+                    set_vis(LeftSide, false)
+                    set_vis(BottomSide, false)
+                    set_vis(BottomDown, false)
+                    set_vis(RightTop, false)
+                    set_vis(RightSide, false)
+                    set_vis(BottomRightSide, false)
+                    set_vis(BottomRightDown, false)
+                    set_vis(Flag1, false)
                     Chams.Enabled = false;
-                    Flag2.Visible = false;
+                    set_vis(Flag2, false)
                     if not plr then
                         ScreenGui:Destroy();
                         ESP_UPDATERS[esp_key] = nil;
@@ -701,17 +722,12 @@ do
                                 -- Teamcheck
                                 local hideForTeam = false
 
-                                if Config.ESP.TeamCheck then
-                                    local local_team_id = lplayer:GetAttribute("TeamID")
+                                if ESP_LOCAL_TEAM then
                                     local target_team_id = plr:GetAttribute("TeamID")
+                                    local target_team_color = target_team_id and DuelLibrary:GetTeamColor(target_team_id)
 
-                                    if local_team_id and target_team_id then
-                                        local local_team_color = DuelLibrary:GetTeamColor(local_team_id)
-                                        local target_team_color = DuelLibrary:GetTeamColor(target_team_id)
-
-                                        if local_team_color and target_team_color and local_team_color == target_team_color then
-                                            hideForTeam = true
-                                        end
+                                    if target_team_color == ESP_LOCAL_TEAM then
+                                        hideForTeam = true
                                     end
                                 end
 
@@ -723,45 +739,44 @@ do
                                         Chams.Enabled = Config.ESP.Drawing.Chams.Enabled
                                         do -- Breathe
                                             if Config.ESP.Drawing.Chams.Thermal then
-                                                local breathe_effect = math.atan(math.sin(tick() * 2)) * 2 / math.pi
-                                                Chams.FillTransparency = Config.ESP.Drawing.Chams.Fill_Transparency * breathe_effect * 0.01
-                                                Chams.OutlineTransparency = Config.ESP.Drawing.Chams.Outline_Transparency * breathe_effect * 0.01
+                                                Chams.FillTransparency = Config.ESP.Drawing.Chams.Fill_Transparency * ESP_BREATHE * 0.01
+                                                Chams.OutlineTransparency = Config.ESP.Drawing.Chams.Outline_Transparency * ESP_BREATHE * 0.01
                                             end
                                         end
                                     end;
 
                                     do -- Corner Boxes
                                         if not Config.ESP.Drawing.Boxes.Bounding.Enabled or (Config.ESP.Drawing.Boxes.Corner.Enabled and Config.ESP.Drawing.Boxes.Bounding.Enabled) then
-                                            LeftTop.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            set_vis(LeftTop, Config.ESP.Drawing.Boxes.Corner.Enabled)
                                             LeftTop.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                             LeftTop.Size = UDim2.new(0, w / 5, 0, 1)
 
-                                            LeftSide.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            set_vis(LeftSide, Config.ESP.Drawing.Boxes.Corner.Enabled)
                                             LeftSide.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                             LeftSide.Size = UDim2.new(0, 1, 0, h / 5)
 
-                                            BottomSide.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            set_vis(BottomSide, Config.ESP.Drawing.Boxes.Corner.Enabled)
                                             BottomSide.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y + h / 2)
                                             BottomSide.Size = UDim2.new(0, 1, 0, h / 5)
 
-                                            BottomDown.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            set_vis(BottomDown, Config.ESP.Drawing.Boxes.Corner.Enabled)
                                             BottomDown.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y + h / 2)
                                             BottomDown.Size = UDim2.new(0, w / 5, 0, 1)
 
 
-                                            RightTop.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            set_vis(RightTop, Config.ESP.Drawing.Boxes.Corner.Enabled)
                                             RightTop.Position = UDim2.new(0, Pos.X + w / 2, 0, Pos.Y - h / 2)
                                             RightTop.Size = UDim2.new(0, w / 5, 0, 1)
 
-                                            RightSide.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            set_vis(RightSide, Config.ESP.Drawing.Boxes.Corner.Enabled)
                                             RightSide.Position = UDim2.new(0, Pos.X + w / 2 - 1, 0, Pos.Y - h / 2)
                                             RightSide.Size = UDim2.new(0, 1, 0, h / 5)
 
-                                            BottomRightSide.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            set_vis(BottomRightSide, Config.ESP.Drawing.Boxes.Corner.Enabled)
                                             BottomRightSide.Position = UDim2.new(0, Pos.X + w / 2, 0, Pos.Y + h / 2)
                                             BottomRightSide.Size = UDim2.new(0, 1, 0, h / 5)
 
-                                            BottomRightDown.Visible = Config.ESP.Drawing.Boxes.Corner.Enabled
+                                            set_vis(BottomRightDown, Config.ESP.Drawing.Boxes.Corner.Enabled)
                                             BottomRightDown.Position = UDim2.new(0, Pos.X + w / 2, 0, Pos.Y + h / 2)
                                             BottomRightDown.Size = UDim2.new(0, w / 5, 0, 1)
                                         end
@@ -769,36 +784,36 @@ do
 
                                     do -- // Bounding Boxes
                                         if not Config.ESP.Drawing.Boxes.Corner.Enabled then
-                                            LeftTop.Visible = Config.ESP.Drawing.Boxes.Bounding.Enabled
+                                            set_vis(LeftTop, Config.ESP.Drawing.Boxes.Bounding.Enabled)
                                             LeftTop.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                             LeftTop.Size = UDim2.new(0, w, 0, 1)
 
 
-                                            LeftSide.Visible = Config.ESP.Drawing.Boxes.Bounding.Enabled
+                                            set_vis(LeftSide, Config.ESP.Drawing.Boxes.Bounding.Enabled)
                                             LeftSide.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                             LeftSide.Size = UDim2.new(0, 1, 0, h)
 
 
-                                            BottomSide.Visible = Config.ESP.Drawing.Boxes.Bounding.Enabled
+                                            set_vis(BottomSide, Config.ESP.Drawing.Boxes.Bounding.Enabled)
                                             BottomSide.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y + h / 2)
                                             BottomSide.Size = UDim2.new(0, w, 0, 1) 
 
 
-                                            RightSide.Visible = Config.ESP.Drawing.Boxes.Bounding.Enabled 
+                                            set_vis(RightSide, Config.ESP.Drawing.Boxes.Bounding.Enabled)
                                             RightSide.Position = UDim2.new(0, Pos.X + w / 2 - 1, 0, Pos.Y - h / 2)
                                             RightSide.Size = UDim2.new(0, 1, 0, h) 
 
-                                            BottomRightSide.Visible = false
-                                            BottomRightDown.Visible = false
-                                            BottomDown.Visible = false
-                                            RightTop.Visible = false
+                                            set_vis(BottomRightSide, false)
+                                            set_vis(BottomRightDown, false)
+                                            set_vis(BottomDown, false)
+                                            set_vis(RightTop, false)
                                         end
                                     end
 
                                     do -- Boxes
                                         Box.Position = UDim2.new(0, Pos.X - w / 2, 0, Pos.Y - h / 2)
                                         Box.Size = UDim2.new(0, w, 0, h)
-                                        Box.Visible = Config.ESP.Drawing.Boxes.Full.Enabled
+                                        set_vis(Box, Config.ESP.Drawing.Boxes.Full.Enabled)
 
                                         -- Animation
                                         if Config.ESP.Drawing.Boxes.Animate then
@@ -857,8 +872,8 @@ do
                                             Healthbar.BackgroundColor3 = not Config.ESP.Drawing.Healthbar.Gradient and color or Color3.new(1,1,1)
                                             -- Health Text
 
-                                            Healthbar.Visible = Config.ESP.Drawing.Healthbar.Enabled
-                                            BehindHealthbar.Visible = Config.ESP.Drawing.Healthbar.Enabled
+                                            set_vis(Healthbar, Config.ESP.Drawing.Healthbar.Enabled)
+                                            set_vis(BehindHealthbar, Config.ESP.Drawing.Healthbar.Enabled)
 
                                             do
                                                 if Config.ESP.Drawing.Healthbar.HealthText then
@@ -872,7 +887,7 @@ do
                                                     HealthText.Text = healthtexttext
                                                     HealthText.TextSize = Config.ESP.FontSize
                                                     --HealthText.Font = Config.ESP.Font
-                                                    HealthText.Visible = Config.ESP.Drawing.Healthbar.HealthText
+                                                    set_vis(HealthText, Config.ESP.Drawing.Healthbar.HealthText)
                                                     HealthText.TextStrokeTransparency = Config.ESP.Drawing.Healthbar.HealthTextTransparency
                                                     if Config.ESP.Drawing.Healthbar.Lerp then
                                                         HealthText.TextColor3 = color
@@ -880,13 +895,13 @@ do
                                                         HealthText.TextColor3 = Config.ESP.Drawing.Healthbar.HealthTextRGB
                                                     end
                                                 else
-                                                    HealthText.Visible = false
+                                                    set_vis(HealthText, false)
                                                 end
                                             end
                                     end
 
                                     do -- Names
-                                            Name.Visible = Config.ESP.Drawing.Names.Enabled
+                                            set_vis(Name, Config.ESP.Drawing.Names.Enabled)
                                             if Config.ESP.Options.Friendcheck and is_friend then
                                                 Name.Text = string.format('(<font color="rgb(%d, %d, %d)">F</font>) %s', Config.ESP.Options.FriendcheckRGB.R * 255, Config.ESP.Options.FriendcheckRGB.G * 255, Config.ESP.Options.FriendcheckRGB.B * 255, plr.Name)
                                             else
@@ -900,9 +915,9 @@ do
                                             local text = string.format("%d studs", math.floor(Dist))
 
                                             if Distance.Text ~= text then Distance.Text = text end
-                                            Distance.Visible = true
+                                            set_vis(Distance, true)
                                         else
-                                            Distance.Visible = false
+                                            set_vis(Distance, false)
                                         end
                                     end
 
@@ -931,7 +946,7 @@ do
                                                 if label ~= state_label then
                                                     state_label = label
                                                     StateFlag.Text = label or ""
-                                                    StateFlag.Visible = label ~= nil
+                                                    set_vis(StateFlag, label ~= nil)
                                                 end
 
                                                 if state_color ~= state_config.Color then
@@ -966,7 +981,7 @@ do
                                                     local icon = info and info.Image or ""
 
                                                     if WeaponIcon.Image ~= icon then WeaponIcon.Image = icon end
-                                                    WeaponIcon.Visible = icon ~= ""
+                                                    set_vis(WeaponIcon, icon ~= "")
                                                     WeaponIcon.ImageColor3 = weapons_cfg.WeaponTextRGB
                                                 else
                                                     local name = info and info.Name or "None"
