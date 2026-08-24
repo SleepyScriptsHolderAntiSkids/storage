@@ -53,7 +53,6 @@ if LPH_OBFUSCATED == nil then
     end
 end;
 
-print(Build)
 local run_service = cloneref(game.GetService(game, "RunService"));
 local replicated_storage = cloneref(game.GetService(game, "ReplicatedStorage"));
 local user_input_service = cloneref(game.GetService(game, "UserInputService"));
@@ -109,9 +108,7 @@ local Mouse = setmetatable({}, {
 
 if not LocalPlayer.Character then
     LocalPlayer.CharacterAdded:Wait()
-    task.wait(1)
 end
-print("Character Loaded")
 
 ------------------------------------------------------
 
@@ -536,7 +533,6 @@ getgenv().crosshair = {
 -- end
 
 if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
-    print("Keyboard & Mouse")
 --LPH_JIT_MAX(function()
     local uis = cloneref(game:GetService("UserInputService"))
     local players, Players = cloneref(game:GetService("Players")), cloneref(game:GetService("Players"))
@@ -958,8 +954,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             local last = -1
-            while true do
+            local settle = 0
+
+            while settle < 20 do
+                settle += 1
                 task.wait(0.5)
+
                 local count = 0
                 for _ in next, library.config_flags do count += 1 end
                 if count > 0 and count == last then break end
@@ -1411,8 +1411,13 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end)
 
             RunService.RenderStepped:Connect(LPH_NO_VIRTUALIZE(function()
-                if library[ "items" ].Enabled then
+                if not library[ "items" ].Enabled then return end
+
+                if uis.MouseBehavior ~= Enum.MouseBehavior.Default then
                     uis.MouseBehavior = Enum.MouseBehavior.Default
+                end
+
+                if not uis.MouseIconEnabled then
                     uis.MouseIconEnabled = true
                 end
             end))
@@ -5208,8 +5213,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             local last = -1
-            while true do
+            local settle = 0
+
+            while settle < 20 do
+                settle += 1
                 task.wait(0.5)
+
                 local count = 0
                 for _ in next, library.config_flags do count += 1 end
                 if count > 0 and count == last then break end
