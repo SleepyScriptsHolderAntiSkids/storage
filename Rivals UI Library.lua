@@ -997,12 +997,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 for i = 1, #refreshers do
                     pcall(refreshers[i])
                 end
-
-                task.delay(0.12, function()
-                    for i = 1, #refreshers do
-                        pcall(refreshers[i])
-                    end
-                end)
             end)
         end
 
@@ -5283,12 +5277,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 for i = 1, #refreshers do
                     pcall(refreshers[i])
                 end
-
-                task.delay(0.12, function()
-                    for i = 1, #refreshers do
-                        pcall(refreshers[i])
-                    end
-                end)
             end)
         end
 
