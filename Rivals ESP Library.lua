@@ -615,12 +615,34 @@ do
                     set_vis(Flag1, false)
                     Chams.Enabled = false;
                     set_vis(Flag2, false)
-                    if not plr then
-                        ScreenGui:Destroy();
-                        ESP_UPDATERS[esp_key] = nil;
-                        ESP_HIDERS[esp_key] = nil;
+                end)
+
+                local esp_elements = {
+                    Box, Name, Distance, Weapon, StateFlag, Healthbar, BehindHealthbar,
+                    HealthText, WeaponIcon, Chams, LeftTop, LeftSide, BottomSide,
+                    BottomDown, RightTop, RightSide, BottomRightSide, BottomRightDown,
+                    Flag1, Flag2
+                }
+
+                local esp_destroyed = false
+
+                local DestroyESP = LPH_NO_VIRTUALIZE(function()
+                    if esp_destroyed then return end
+                    esp_destroyed = true
+
+                    ESP_UPDATERS[esp_key] = nil
+                    ESP_HIDERS[esp_key] = nil
+
+                    for i = 1, #esp_elements do
+                        local element = esp_elements[i]
+
+                        if element then pcall(element.Destroy, element) end
                     end
                 end)
+
+                if Players_ESP[plr.Name] then
+                    Players_ESP[plr.Name].Destroy = DestroyESP
+                end
                 --
                 local superseded = ESP_HIDERS[esp_key]
                 if superseded then pcall(superseded) end
@@ -628,12 +650,9 @@ do
                 ESP_HIDERS[esp_key] = HideESP
                 --
                 ESP_UPDATERS[esp_key] = LPH_NO_VIRTUALIZE(function()
-                    -- Player gone: hide everything FIRST, then remove self. This
-                    -- guarantees no box can ever be left frozen on screen.
                     if not plr or not plr.Parent then
                         HideESP()
-                        ESP_UPDATERS[esp_key] = nil
-                        ESP_HIDERS[esp_key] = nil
+                        DestroyESP()
                         return
                     end
 
@@ -1057,14 +1076,26 @@ do
             end);
 
             Players.PlayerRemoving:Connect(function(v)
-                if Players_ESP[v.Name] then
-                    Players_ESP[v.Name].RefreshElements = nil
-                    Players_ESP[v.Name].CharacterAdded:Disconnect()
-                    Players_ESP[v.Name].CharacterAdded = nil
-                    Players_ESP[v.Name].ToolConnection_Added:Disconnect()
-                    Players_ESP[v.Name].ToolConnection_Removed:Disconnect()
-                    Players_ESP[v.Name].ToolConnection_Removed = nil
-                    Players_ESP[v.Name].ToolConnection_Added = nil
+                local record = Players_ESP[v.Name]
+
+                if record then
+                    record.RefreshElements = nil
+
+                    if record.Destroy then record.Destroy() end
+
+                    SafeDisconnect(record.CharacterAdded)
+                    SafeDisconnect(record.ToolConnection_Added)
+                    SafeDisconnect(record.ToolConnection_Removed)
+                    SafeDisconnect(record.HumanoidConnection)
+
+                    record.CharacterAdded = nil
+                    record.ToolConnection_Added = nil
+                    record.ToolConnection_Removed = nil
+                    record.HumanoidConnection = nil
+                    record.Health_Changed = nil
+                    record.Child_Added = nil
+                    record.Destroy = nil
+
                     Players_ESP[v.Name] = nil
                 end
             end)
