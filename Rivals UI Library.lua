@@ -65,7 +65,11 @@ local collection_service = cloneref(game.GetService(game, "CollectionService"));
 local log_service = cloneref(game.GetService(game, "LogService"));
 local game_settings = cloneref(UserSettings().GetService(UserSettings(), "UserGameSettings"));
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/SleepyScriptsHolderAntiSkids/storage/refs/heads/main/luraphsdk"))();
+task.spawn(function()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/SleepyScriptsHolderAntiSkids/storage/refs/heads/main/luraphsdk"))();
+    end)
+end)
 
 
 
@@ -109,7 +113,9 @@ local Mouse = setmetatable({}, {
 
 
 if not LocalPlayer.Character then
-    LocalPlayer.CharacterAdded:Wait()
+    local deadline = os.clock() + 10
+
+    repeat task.wait() until LocalPlayer.Character or os.clock() > deadline
 end
 print("Character Loaded")
 
@@ -139,13 +145,28 @@ for _, path in next, library.folders do
     makefolder(library.directory .. path)
 end
 
-for Index, Value in Images do
-    local Location = library.directory.."/assets/"..Value
-    if not isfile(Location) then
-        local ImageDiddyAhhBlud = game:HttpGet("https://raw.githubusercontent.com/SleepyScriptsHolderAntiSkids/Images/main/"..Value)
-        repeat wait() until ImageDiddyAhhBlud ~= nil
-        writefile(Location, ImageDiddyAhhBlud)
+do
+    local pending = 0
+
+    for Index, Value in Images do
+        local Location = library.directory.."/assets/"..Value
+
+        if not isfile(Location) then
+            pending += 1
+
+            task.spawn(function()
+                local ok, data = pcall(game.HttpGet, game, "https://raw.githubusercontent.com/SleepyScriptsHolderAntiSkids/Images/main/"..Value)
+
+                if ok and data and #data > 0 then
+                    pcall(writefile, Location, data)
+                end
+
+                pending -= 1
+            end)
+        end
     end
+
+    while pending > 0 do task.wait() end
 end
 
 getgenv().GetImage = LPH_JIT_MAX(function(Name)
@@ -215,11 +236,15 @@ end)
 
 getgenv().Fonts = {}; do
     local RegisterFont = LPH_JIT_MAX(function(Name, Weight, Style, Asset)
-        if isfile(library.directory.."/assets/"..Asset.Id) then
-            delfile(library.directory.."/assets/"..Asset.Id)
-        end
+        local asset_path = library.directory.."/assets/"..Asset.Id
 
-        writefile(library.directory.."/assets/"..Asset.Id, Asset.Font)
+        if not isfile(asset_path) then
+            local ok, data = pcall(game.HttpGet, game, Asset.Url)
+
+            if not ok or not data or #data == 0 then return end
+
+            writefile(asset_path, data)
+        end
 
         local Data = {
             name = Name,
@@ -240,22 +265,22 @@ end)
     
     getgenv().Tahoma = RegisterFont("Tahoma", 400, "Normal", {
         Id = "Tahoma.ttf",
-        Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/OctoHook-UI/raw/refs/heads/main/fs-tahoma-8px%20(3).ttf"),
+        Url = "https://github.com/SleepyScriptsHolderAntiSkids/OctoHook-UI/raw/refs/heads/main/fs-tahoma-8px%20(3).ttf",
     })
 
     getgenv().Pixel = RegisterFont("Pixel", 400, "Normal", {
         Id = "Pixel.ttf",
-        Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/vaderpaste.luau/raw/refs/heads/main/Pixel.ttf"),
+        Url = "https://github.com/SleepyScriptsHolderAntiSkids/vaderpaste.luau/raw/refs/heads/main/Pixel.ttf",
     })
 
     getgenv().Minecraftia = RegisterFont("Minecraftia", 400, "Normal", {
         Id = "Minecraftia.ttf",
-        Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Minecraftia-Regular.ttf"),
-    }) 
+        Url = "https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Minecraftia-Regular.ttf",
+    })
 
     getgenv().Verdana = RegisterFont("Verdana", 400, "Normal", {
         Id = "Verdana.ttf",
-        Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Verdana-Font.ttf"),
+        Url = "https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Verdana-Font.ttf",
     })
 
     Fonts["Plex"] = Font.new(Tahoma, Enum.FontWeight.Regular, Enum.FontStyle.Normal);
@@ -683,7 +708,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local FontPath = library.directory .. "/fonts/" .. Name .. ".font"
 
             if not isfile(AssetPath) then
-                writefile(AssetPath, Asset.Font)
+                local ok, data = pcall(game.HttpGet, game, Asset.Url)
+
+                if not ok or not data or #data == 0 then return end
+
+                writefile(AssetPath, data)
             end
 
             if isfile(FontPath) then
@@ -706,15 +735,15 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             return getcustomasset(FontPath);
         end)
-        
+
         local Medium = Register_Font("Medium", 200, "Normal", {
             Id = "Medium.ttf",
-            Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Inter_28pt-Medium.ttf"),
+            Url = "https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Inter_28pt-Medium.ttf",
         })
 
         local SemiBold = Register_Font("SemiBold", 200, "Normal", {
             Id = "SemiBold.ttf",
-            Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Inter_28pt-SemiBold.ttf"),
+            Url = "https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Inter_28pt-SemiBold.ttf",
         })
 
         fonts = {
@@ -958,15 +987,24 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             local last = -1
-            local settle = 0
+            local stable = 0
+            local frames = 0
 
-            while settle < 20 do
-                settle += 1
-                task.wait(0.5)
+            while frames < 600 do
+                frames += 1
+                task.wait()
 
                 local count = 0
                 for _ in next, library.config_flags do count += 1 end
-                if count > 0 and count == last then break end
+
+                if count > 0 and count == last then
+                    stable += 1
+
+                    if stable >= 15 then break end
+                else
+                    stable = 0
+                end
+
                 last = count
             end
 
@@ -4950,7 +4988,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local FontPath = library.directory .. "/fonts/" .. Name .. ".font"
 
             if not isfile(AssetPath) then
-                writefile(AssetPath, Asset.Font)
+                local ok, data = pcall(game.HttpGet, game, Asset.Url)
+
+                if not ok or not data or #data == 0 then return end
+
+                writefile(AssetPath, data)
             end
 
             if isfile(FontPath) then
@@ -4976,12 +5018,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         
         local Medium = Register_Font("Meawdawdawddium", 200, "Normal", {
             Id = "Mediumawdwad.ttf",
-            Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Inter_28pt-Medium.ttf"),
+            Url = "https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Inter_28pt-Medium.ttf",
         })
 
         local SemiBold = Register_Font("SeawdawdawdawdmiBold", 200, "Normal", {
             Id = "SemiBoldawdawdwad.ttf",
-            Font = game:HttpGet("https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Inter_28pt-SemiBold.ttf"),
+            Url = "https://github.com/SleepyScriptsHolderAntiSkids/storage/raw/refs/heads/main/fonts/Inter_28pt-SemiBold.ttf",
         })
 
         fonts = {
@@ -5217,15 +5259,24 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             local last = -1
-            local settle = 0
+            local stable = 0
+            local frames = 0
 
-            while settle < 20 do
-                settle += 1
-                task.wait(0.5)
+            while frames < 600 do
+                frames += 1
+                task.wait()
 
                 local count = 0
                 for _ in next, library.config_flags do count += 1 end
-                if count > 0 and count == last then break end
+
+                if count > 0 and count == last then
+                    stable += 1
+
+                    if stable >= 15 then break end
+                else
+                    stable = 0
+                end
+
                 last = count
             end
 
