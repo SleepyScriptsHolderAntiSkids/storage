@@ -134,9 +134,10 @@ getgenv().library = {
     },
     flags = {},
     config_flags = {},
-    connections = {},   
+    connections = {},
     notifications = {notifs = {}},
-    current_open; 
+    setup_complete = false,
+    current_open;
 }
 
 getgenv().Images = {"Rust.mp3", "TF2.mp3", "Quake.mp3", "Dyssodia.mp3", "Bubble.mp3", "MW2019.mp3", "Sparkle.mp3", "Impact.mp3","WhiteBeam.png", "ESP.png", "World.png", "Wrench.png", "Settings.png", "Node.png", "cursor.png", "Bullet.png", "Snapline.png", "Pistol.png", "folder.png", "UZI.png", "FieldOfView2.png", "Lock.png", "Aimlock.png", "Cash.png", "Wheatt.png", "Pickkaxe.png", "unlocked.png"}
@@ -986,26 +987,22 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
-            local last = -1
-            local stable = 0
-            local frames = 0
+            local deadline = os.clock() + 30
 
-            while frames < 600 do
-                frames += 1
-                task.wait()
+            repeat task.wait() until library.setup_complete or os.clock() > deadline
 
-                local count = 0
-                for _ in next, library.config_flags do count += 1 end
+            if not library.setup_complete then
+                local last = -1
 
-                if count > 0 and count == last then
-                    stable += 1
+                repeat
+                    local count = 0
+                    for _ in next, library.config_flags do count += 1 end
 
-                    if stable >= 15 then break end
-                else
-                    stable = 0
-                end
+                    if count > 0 and count == last then break end
 
-                last = count
+                    last = count
+                    task.wait(0.5)
+                until os.clock() > deadline + 10
             end
 
             -- Every control has written its default into flags by now, so this snapshot is
@@ -4637,6 +4634,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     info = "Everything reset to default"
                 })
             end})
+
+            library.setup_complete = true
         end
     --
 
@@ -5258,26 +5257,22 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
-            local last = -1
-            local stable = 0
-            local frames = 0
+            local deadline = os.clock() + 30
 
-            while frames < 600 do
-                frames += 1
-                task.wait()
+            repeat task.wait() until library.setup_complete or os.clock() > deadline
 
-                local count = 0
-                for _ in next, library.config_flags do count += 1 end
+            if not library.setup_complete then
+                local last = -1
 
-                if count > 0 and count == last then
-                    stable += 1
+                repeat
+                    local count = 0
+                    for _ in next, library.config_flags do count += 1 end
 
-                    if stable >= 15 then break end
-                else
-                    stable = 0
-                end
+                    if count > 0 and count == last then break end
 
-                last = count
+                    last = count
+                    task.wait(0.5)
+                until os.clock() > deadline + 10
             end
 
             library.default_config = library:get_config()
@@ -8876,6 +8871,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
             section:keybind({name = "Menu Bind", callback = function(bool) window.toggle_menu(bool) end, default = true})
+
+            library.setup_complete = true
         end
     --
 
