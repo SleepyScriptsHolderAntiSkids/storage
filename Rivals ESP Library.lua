@@ -60,7 +60,11 @@ local replicated_storage = cloneref(game.GetService(game, "ReplicatedStorage"));
 local DuelLibrary = require(replicated_storage:FindFirstChild("DuelLibrary", true))
 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/SleepyScriptsHolderAntiSkids/storage/refs/heads/main/luraphsdk"))();
+task.spawn(function()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/SleepyScriptsHolderAntiSkids/storage/refs/heads/main/luraphsdk"))();
+    end)
+end)
 
 
 
@@ -363,7 +367,16 @@ do
             --local DroppedItems = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0)})
             --
             Functions.AddOutline(LeftTop, 1); Functions.AddOutline(LeftSide, 1); Functions.AddOutline(LeftSide, 1); Functions.AddOutline(RightTop, 1); Functions.AddOutline(RightSide, 1); Functions.AddOutline(BottomSide, 1); Functions.AddOutline(BottomDown, 1); Functions.AddOutline(BottomRightSide, 1); Functions.AddOutline(BottomRightDown, 1); 
-            local character = plr.Character or plr.CharacterAdded:Wait()
+            local character = plr.Character
+
+            if not character then
+                local deadline = os.clock() + 10
+
+                repeat task.wait() until plr.Character or not plr.Parent or os.clock() > deadline
+
+                character = plr.Character
+            end
+
             if not character then return end
 
             local Humanoid = character:WaitForChild("Humanoid", 5)
