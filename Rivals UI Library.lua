@@ -1105,15 +1105,19 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 library[ "items" ].Enabled = false
             end
 
-            getgenv().silent_load_block = false
-
             if getgenv().silent_load_active and library.menu_bind then
-                pcall(library.menu_bind.set, {
-                    mode = library.menu_bind.mode,
-                    active = false,
-                    key = library.menu_bind.key
-                })
+                local bind = library.menu_bind
+
+                bind.active = false
+
+                local mirror = bind.flag and library.flags and library.flags[bind.flag]
+
+                if type(mirror) == "table" then mirror.active = false end
+
+                if library[ "items" ] then library[ "items" ].Enabled = false end
             end
+
+            getgenv().silent_load_block = false
         end))
 
         function library:relayout_sections()
@@ -5443,15 +5447,19 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 library[ "items" ].Enabled = false
             end
 
-            getgenv().silent_load_block = false
-
             if getgenv().silent_load_active and library.menu_bind then
-                pcall(library.menu_bind.set, {
-                    mode = library.menu_bind.mode,
-                    active = false,
-                    key = library.menu_bind.key
-                })
+                local bind = library.menu_bind
+
+                bind.active = false
+
+                local mirror = bind.flag and library.flags and library.flags[bind.flag]
+
+                if type(mirror) == "table" then mirror.active = false end
+
+                if library[ "items" ] then library[ "items" ].Enabled = false end
             end
+
+            getgenv().silent_load_block = false
         end))
 
 
