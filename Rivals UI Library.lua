@@ -2958,7 +2958,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         BorderColor3 = rgb(0, 0, 0);
                         Parent = library[ "items" ];
                         Name = "\0";
-                        Visible = true;
+                        Visible = false;
                         BackgroundTransparency = 1;
                         Size = dim2(0, 0, 0, 0);
                         BorderSizePixel = 0;
@@ -3034,10 +3034,29 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             
             function cfg.set_visible(bool)
                 local a = bool and math.min(cfg.y_size, 220) or 0
-                library:tween(items[ "dropdown_holder" ], {Size = dim_offset(items[ "dropdown" ].AbsoluteSize.X, a)})
+                local holder = items[ "dropdown_holder" ]
 
-                items[ "dropdown_holder" ].Position = dim2(0, items[ "dropdown" ].AbsolutePosition.X, 0, items[ "dropdown" ].AbsolutePosition.Y + 80)
-                if not (self.sanity and library.current_open == self) then 
+                cfg._visible_token = (cfg._visible_token or 0) + 1
+
+                local token = cfg._visible_token
+
+                if bool then
+                    holder.Visible = true
+                end
+
+                library:tween(holder, {Size = dim_offset(items[ "dropdown" ].AbsoluteSize.X, a)})
+
+                holder.Position = dim2(0, items[ "dropdown" ].AbsolutePosition.X, 0, items[ "dropdown" ].AbsolutePosition.Y + 80)
+
+                if not bool then
+                    task.delay(0.3, function()
+                        if cfg._visible_token == token then
+                            holder.Visible = false
+                        end
+                    end)
+                end
+
+                if not (self.sanity and library.current_open == self) then
                     library:close_element(cfg)
                 end
             end
@@ -7313,7 +7332,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         BorderColor3 = rgb(0, 0, 0);
                         Parent = library[ "items" ];
                         Name = "\0";
-                        Visible = true;
+                        Visible = false;
                         BackgroundTransparency = 1;
                         Size = dim2(0, 0, 0, 0);
                         BorderSizePixel = 0;
@@ -7393,10 +7412,29 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             function cfg.set_visible(bool)
                 local a = bool and math.min(cfg.y_size, 220) or 0
-                library:tween(items[ "dropdown_holder" ], {Size = dim_offset(items[ "dropdown" ].AbsoluteSize.X, a)})
+                local holder = items[ "dropdown_holder" ]
 
-                items[ "dropdown_holder" ].Position = dim2(0, items[ "dropdown" ].AbsolutePosition.X, 0, items[ "dropdown" ].AbsolutePosition.Y + 80)
-                if not (self.sanity and library.current_open == self) then 
+                cfg._visible_token = (cfg._visible_token or 0) + 1
+
+                local token = cfg._visible_token
+
+                if bool then
+                    holder.Visible = true
+                end
+
+                library:tween(holder, {Size = dim_offset(items[ "dropdown" ].AbsoluteSize.X, a)})
+
+                holder.Position = dim2(0, items[ "dropdown" ].AbsolutePosition.X, 0, items[ "dropdown" ].AbsolutePosition.Y + 80)
+
+                if not bool then
+                    task.delay(0.3, function()
+                        if cfg._visible_token == token then
+                            holder.Visible = false
+                        end
+                    end)
+                end
+
+                if not (self.sanity and library.current_open == self) then
                     library:close_element(cfg)
                 end
             end
