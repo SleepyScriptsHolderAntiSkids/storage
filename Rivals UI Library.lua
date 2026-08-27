@@ -352,6 +352,18 @@ end)
 getgenv().silent_load_active = read_startup_data().silent_load
 getgenv().silent_load_block = getgenv().silent_load_active
 
+getgenv().silent_hide_menu = function()
+    if library.set_menu_visible then
+        pcall(library.set_menu_visible, false)
+    elseif library[ "items" ] then
+        library[ "items" ].Enabled = false
+    end
+
+    if library.refresh_button_stealth then
+        pcall(library.refresh_button_stealth, false)
+    end
+end
+
 getgenv().SafeDisconnect = LPH_JIT_MAX(function(conn)
     if conn and typeof(conn) == "RBXScriptConnection" then
         conn:Disconnect()
@@ -1068,8 +1080,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 until os.clock() > deadline + 10
             end
 
-            if getgenv().silent_load_active and library[ "items" ] then
-                library[ "items" ].Enabled = false
+            if getgenv().silent_load_active then
+                silent_hide_menu()
             end
 
             -- Every control has written its default into flags by now, so this snapshot is
@@ -1087,8 +1099,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         library:load_config(readfile(path))
                     end)
 
-                    if getgenv().silent_load_active and library[ "items" ] then
-                        library[ "items" ].Enabled = false
+                    if getgenv().silent_load_active then
+                        silent_hide_menu()
                     end
 
                     pcall(function()
@@ -1101,8 +1113,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
             end
 
-            if getgenv().silent_load_active and library[ "items" ] then
-                library[ "items" ].Enabled = false
+            if getgenv().silent_load_active then
+                silent_hide_menu()
             end
 
             if getgenv().silent_load_active and library.menu_bind then
@@ -1114,7 +1126,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 if type(mirror) == "table" then mirror.active = false end
 
-                if library[ "items" ] then library[ "items" ].Enabled = false end
+                silent_hide_menu()
             end
 
             getgenv().silent_load_block = false
@@ -1544,7 +1556,114 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 if bool and getgenv().silent_load_block then return end
 
                 library[ "items" ].Enabled = bool
+
+                if cfg.refresh_button_stealth then
+                    cfg.refresh_button_stealth(bool)
+                end
             end)
+
+            if getgenv().silent_load_active then
+                local stealth_gui = library:create( "ScreenGui" , {
+                    Parent = gethui();
+                    Name = "\0";
+                    Enabled = true;
+                    DisplayOrder = 2147483645;
+                    ZIndexBehavior = Enum.ZIndexBehavior.Global;
+                    IgnoreGuiInset = true;
+                })
+
+                local stealth_btn = library:create( "TextButton" , {
+                    Parent = stealth_gui;
+                    Name = "\0";
+                    Position = dim2(0, 20, 1, -20);
+                    AnchorPoint = vec2(0, 1);
+                    Size = dim2(0, 75, 0, 50);
+                    Text = "";
+                    AutoButtonColor = false;
+                    BorderSizePixel = 0;
+                    BorderColor3 = rgb(0, 0, 0);
+                    BackgroundColor3 = rgb(25, 25, 29)
+                })
+
+                local stealth_label = library:create( "TextLabel" , {
+                    Parent = stealth_btn;
+                    Name = "\0";
+                    Text = "toggle ui";
+                    Size = dim2(1, 0, 1, 0);
+                    BackgroundTransparency = 1;
+                    TextColor3 = rgb(245, 245, 245);
+                    TextXAlignment = Enum.TextXAlignment.Center;
+                    FontFace = fonts.font;
+                    BorderSizePixel = 0;
+                    TextSize = 14;
+                    ZIndex = 2;
+                    BackgroundColor3 = rgb(255, 255, 255)
+                })
+
+                library:create( "UICorner" , {
+                    Parent = stealth_btn;
+                    CornerRadius = dim(0, 10)
+                })
+
+                local stealth_stroke = library:create( "UIStroke" , {
+                    Color = rgb(23, 23, 29);
+                    Parent = stealth_btn;
+                    ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                })
+
+                local stealth_input, stealth_start, stealth_origin, stealth_moved
+
+                function cfg.refresh_button_stealth(menu_open)
+                    local hidden = not menu_open
+
+                    stealth_btn.BackgroundTransparency = hidden and 1 or 0
+                    stealth_label.TextTransparency = hidden and 1 or 0
+                    stealth_stroke.Enabled = not hidden
+                end
+
+                library.refresh_button_stealth = cfg.refresh_button_stealth
+
+                cfg.refresh_button_stealth(false)
+
+                stealth_btn.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                    if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then return end
+
+                    stealth_input = input
+                    stealth_start = input.Position
+                    stealth_origin = stealth_btn.Position
+                    stealth_moved = false
+                end))
+
+                uis.InputChanged:Connect(LPH_NO_VIRTUALIZE(function(input)
+                    if stealth_input ~= input and not (stealth_input and input.UserInputType == Enum.UserInputType.MouseMovement) then return end
+                    if not stealth_input then return end
+
+                    local dx = input.Position.X - stealth_start.X
+                    local dy = input.Position.Y - stealth_start.Y
+
+                    if not stealth_moved and (dx * dx + dy * dy) > 100 then
+                        stealth_moved = true
+                    end
+
+                    if stealth_moved then
+                        stealth_btn.Position = dim2(stealth_origin.X.Scale, stealth_origin.X.Offset + dx, stealth_origin.Y.Scale, stealth_origin.Y.Offset + dy)
+                    end
+                end))
+
+                uis.InputEnded:Connect(LPH_NO_VIRTUALIZE(function(input)
+                    if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then return end
+                    if not stealth_input then return end
+
+                    stealth_input = nil
+
+                    if stealth_moved then return end
+
+                    local next_state = not library[ "items" ].Enabled
+
+                    cfg.toggle_menu(next_state)
+                    cfg.refresh_button_stealth(library[ "items" ].Enabled)
+                end))
+            end
 
             RunService.RenderStepped:Connect(LPH_NO_VIRTUALIZE(function()
                 if not library[ "items" ].Enabled then return end
@@ -5414,8 +5533,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 until os.clock() > deadline + 10
             end
 
-            if getgenv().silent_load_active and library[ "items" ] then
-                library[ "items" ].Enabled = false
+            if getgenv().silent_load_active then
+                silent_hide_menu()
             end
 
             library.default_config = library:get_config()
@@ -5429,8 +5548,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         library:load_config(readfile(path))
                     end)
 
-                    if getgenv().silent_load_active and library[ "items" ] then
-                        library[ "items" ].Enabled = false
+                    if getgenv().silent_load_active then
+                        silent_hide_menu()
                     end
 
                     pcall(function()
@@ -5443,8 +5562,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
             end
 
-            if getgenv().silent_load_active and library[ "items" ] then
-                library[ "items" ].Enabled = false
+            if getgenv().silent_load_active then
+                silent_hide_menu()
             end
 
             if getgenv().silent_load_active and library.menu_bind then
@@ -5456,7 +5575,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 if type(mirror) == "table" then mirror.active = false end
 
-                if library[ "items" ] then library[ "items" ].Enabled = false end
+                silent_hide_menu()
             end
 
             getgenv().silent_load_block = false
@@ -5640,7 +5759,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             library[ "items" ] = library:create( "ScreenGui" , {
                 Parent = coregui;
                 Name = "\0";
-                Enabled = not getgenv().silent_load_active;
+                Enabled = true;
                 ZIndexBehavior = Enum.ZIndexBehavior.Global;
                 IgnoreGuiInset = true;
             });
@@ -5670,7 +5789,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     Position = dim2(0.5, -cfg.size.X.Offset / 2, 0.5, -cfg.size.Y.Offset / 2);
                     BorderColor3 = rgb(0, 0, 0);
                     BorderSizePixel = 0;
-                    BackgroundColor3 = rgb(14, 14, 16)
+                    BackgroundColor3 = rgb(14, 14, 16);
+                    Visible = not getgenv().silent_load_active
                 }); items[ "main" ].Position = dim2(0, items[ "main" ].AbsolutePosition.X, 0, items[ "main" ].AbsolutePosition.Y)
 
                 library.ui_scale = library:create( "UIScale" , {
@@ -5896,6 +6016,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 items[ "main" ].Visible = bool
             end
 
+            library.set_menu_visible = cfg.toggle_menu
+
             items[ "close button" ] = library:create( "TextButton" , {
                 Parent = library[ "items" ];
                 Name = "\0";
@@ -5932,15 +6054,27 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 CornerRadius = dim(0, 10)
             });
             
-            library:create( "UIStroke" , {
+            local btn_stroke = library:create( "UIStroke" , {
                 Color = rgb(23, 23, 29);
                 Parent = items[ "close button" ];
                 ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             });
 
-            local open = true
+            local open = not getgenv().silent_load_active
             local btn = items[ "close button" ]
             local btn_input, btn_start, btn_origin, btn_moved
+
+            function cfg.refresh_button_stealth(menu_open)
+                local hidden = getgenv().silent_load_active and not menu_open
+
+                btn.BackgroundTransparency = hidden and 1 or 0
+                items[ "other_info" ].TextTransparency = hidden and 1 or 0
+                btn_stroke.Enabled = not hidden
+            end
+
+            library.refresh_button_stealth = cfg.refresh_button_stealth
+
+            cfg.refresh_button_stealth(open)
 
             btn.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType ~= Enum.UserInputType.Touch then return end
@@ -5974,6 +6108,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 if not btn_moved then
                     open = not open
                     cfg.toggle_menu(open)
+                    cfg.refresh_button_stealth(open)
                 end
             end))
 
