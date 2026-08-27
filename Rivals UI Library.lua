@@ -1066,8 +1066,16 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 local path = library.directory .. "/configs/" .. name .. ".cfg"
 
                 if isfile(path) then
-                    pcall(function()
+                    local loaded = pcall(function()
                         library:load_config(readfile(path))
+                    end)
+
+                    pcall(function()
+                        library.notifications:create_notification({
+                            name = "Configs",
+                            info = loaded and ("Auto Load Config: " .. name) or ("Auto Load failed: " .. name),
+                            lifetime = 5
+                        })
                     end)
                 end
             end
@@ -1107,8 +1115,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                             if typeof(element) == "Instance" then
                                 element.Visible = shown
-
-                                break
                             end
                         end
 
@@ -5339,8 +5345,16 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 local path = library.directory .. "/configs/" .. name .. ".cfg"
 
                 if isfile(path) then
-                    pcall(function()
+                    local loaded = pcall(function()
                         library:load_config(readfile(path))
+                    end)
+
+                    pcall(function()
+                        library.notifications:create_notification({
+                            name = "Configs",
+                            info = loaded and ("Auto Load Config: " .. name) or ("Auto Load failed: " .. name),
+                            lifetime = 5
+                        })
                     end)
                 end
             end
@@ -5413,8 +5427,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                             if typeof(element) == "Instance" then
                                 element.Visible = shown
-
-                                break
                             end
                         end
 
