@@ -1067,6 +1067,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 until os.clock() > deadline + 10
             end
 
+            if getgenv().silent_load_active and library[ "items" ] then
+                library[ "items" ].Enabled = false
+            end
+
             -- Every control has written its default into flags by now, so this snapshot is
             -- the untouched state. Taken before autoload so a saved config can't poison it.
             -- Panic replays it through load_config, which already knows how to feed every
@@ -1082,6 +1086,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         library:load_config(readfile(path))
                     end)
 
+                    if getgenv().silent_load_active and library[ "items" ] then
+                        library[ "items" ].Enabled = false
+                    end
+
                     pcall(function()
                         library.notifications:create_notification({
                             name = "Configs",
@@ -1090,6 +1098,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         })
                     end)
                 end
+            end
+
+            if getgenv().silent_load_active and library[ "items" ] then
+                library[ "items" ].Enabled = false
             end
         end))
 
@@ -4615,6 +4627,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local startup_data = read_startup_data()
 
             section:toggle({
+                type = "toggle",
                 name = "Auto Load Config",
                 flag = "autoload_config",
                 default = startup_data.autoload_config and isfile(AUTOLOAD_PATH),
@@ -5384,6 +5397,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 until os.clock() > deadline + 10
             end
 
+            if getgenv().silent_load_active and library[ "items" ] then
+                library[ "items" ].Enabled = false
+            end
+
             library.default_config = library:get_config()
 
             if isfile(AUTOLOAD_PATH) then
@@ -5395,6 +5412,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         library:load_config(readfile(path))
                     end)
 
+                    if getgenv().silent_load_active and library[ "items" ] then
+                        library[ "items" ].Enabled = false
+                    end
+
                     pcall(function()
                         library.notifications:create_notification({
                             name = "Configs",
@@ -5403,6 +5424,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         })
                     end)
                 end
+            end
+
+            if getgenv().silent_load_active and library[ "items" ] then
+                library[ "items" ].Enabled = false
             end
         end))
 
@@ -8969,6 +8994,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local startup_data = read_startup_data()
 
             section:toggle({
+                type = "toggle",
                 name = "Auto Load Config",
                 flag = "autoload_config",
                 default = startup_data.autoload_config and isfile(AUTOLOAD_PATH),
