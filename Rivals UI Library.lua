@@ -358,10 +358,41 @@ getgenv().silent_hide_menu = function()
     elseif library[ "items" ] then
         library[ "items" ].Enabled = false
     end
+end
 
-    if library.refresh_button_stealth then
-        pcall(library.refresh_button_stealth, false)
+getgenv().apply_recording_style = function(button, label, stroke)
+    button.Size = UDim2.fromOffset(54, 54)
+    button.BackgroundColor3 = Color3.fromRGB(255, 90, 20)
+    button.BackgroundTransparency = 0
+
+    if stroke then stroke.Enabled = false end
+    if label then label.Text = "" end
+
+    for _, child in pairs(button:GetChildren()) do
+        if child:IsA("UICorner") then
+            child.CornerRadius = UDim.new(1, 0)
+        end
     end
+
+    local gradient = Instance.new("UIGradient")
+    gradient.Name = "\0"
+    gradient.Color = ColorSequence.new(Color3.fromRGB(255, 55, 0), Color3.fromRGB(255, 195, 0))
+    gradient.Rotation = 45
+    gradient.Parent = button
+
+    local dot = Instance.new("Frame")
+    dot.Name = "\0"
+    dot.AnchorPoint = Vector2.new(0.5, 0.5)
+    dot.Position = UDim2.fromScale(0.5, 0.5)
+    dot.Size = UDim2.fromOffset(20, 20)
+    dot.BackgroundColor3 = Color3.new(1, 1, 1)
+    dot.BorderSizePixel = 0
+    dot.ZIndex = 3
+    dot.Parent = button
+
+    local dot_corner = Instance.new("UICorner")
+    dot_corner.CornerRadius = UDim.new(1, 0)
+    dot_corner.Parent = dot
 end
 
 getgenv().SafeDisconnect = LPH_JIT_MAX(function(conn)
@@ -1556,10 +1587,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 if bool and getgenv().silent_load_block then return end
 
                 library[ "items" ].Enabled = bool
-
-                if cfg.refresh_button_stealth then
-                    cfg.refresh_button_stealth(bool)
-                end
             end)
 
             if getgenv().silent_load_active then
@@ -1613,17 +1640,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 local stealth_input, stealth_start, stealth_origin, stealth_moved
 
-                function cfg.refresh_button_stealth(menu_open)
-                    local hidden = not menu_open
-
-                    stealth_btn.BackgroundTransparency = hidden and 1 or 0
-                    stealth_label.TextTransparency = hidden and 1 or 0
-                    stealth_stroke.Enabled = not hidden
-                end
-
-                library.refresh_button_stealth = cfg.refresh_button_stealth
-
-                cfg.refresh_button_stealth(false)
+                apply_recording_style(stealth_btn, stealth_label, stealth_stroke)
 
                 stealth_btn.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
                     if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then return end
@@ -1658,10 +1675,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                     if stealth_moved then return end
 
-                    local next_state = not library[ "items" ].Enabled
-
-                    cfg.toggle_menu(next_state)
-                    cfg.refresh_button_stealth(library[ "items" ].Enabled)
+                    cfg.toggle_menu(not library[ "items" ].Enabled)
                 end))
             end
 
@@ -6064,17 +6078,9 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local btn = items[ "close button" ]
             local btn_input, btn_start, btn_origin, btn_moved
 
-            function cfg.refresh_button_stealth(menu_open)
-                local hidden = getgenv().silent_load_active and not menu_open
-
-                btn.BackgroundTransparency = hidden and 1 or 0
-                items[ "other_info" ].TextTransparency = hidden and 1 or 0
-                btn_stroke.Enabled = not hidden
+            if getgenv().silent_load_active then
+                apply_recording_style(btn, items[ "other_info" ], btn_stroke)
             end
-
-            library.refresh_button_stealth = cfg.refresh_button_stealth
-
-            cfg.refresh_button_stealth(open)
 
             btn.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType ~= Enum.UserInputType.Touch then return end
@@ -6108,7 +6114,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 if not btn_moved then
                     open = not open
                     cfg.toggle_menu(open)
-                    cfg.refresh_button_stealth(open)
                 end
             end))
 
