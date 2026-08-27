@@ -130,7 +130,8 @@ getgenv().library = {
         "/configs",
         "/assets",
         "/autoload",
-        "/unlockall"
+        "/unlockall",
+        "/data"
     },
     flags = {},
     config_flags = {},
@@ -290,6 +291,53 @@ end)
     Fonts["Verdana"] = Font.new(Verdana, Enum.FontWeight.Regular, Enum.FontStyle.Normal);
 end
 
+
+getgenv().DATA_PATH = library.directory .. "/data/startup.cfg"
+
+local data_http = cloneref(game:GetService("HttpService"))
+
+getgenv().CONFIG_EXCLUDED = {
+    autoload_config = true,
+    autoload_enabled = true,
+    config_name_list = true,
+    config_name_text = true
+}
+
+getgenv().read_startup_data = LPH_JIT_MAX(function()
+    local defaults = { autoload_config = false, autoload_enabled = false }
+
+    if not isfile(DATA_PATH) then
+        pcall(writefile, DATA_PATH, data_http:JSONEncode(defaults))
+        return defaults
+    end
+
+    local read_ok, raw = pcall(readfile, DATA_PATH)
+
+    if not read_ok or type(raw) ~= "string" or raw == "" then
+        pcall(writefile, DATA_PATH, data_http:JSONEncode(defaults))
+        return defaults
+    end
+
+    local decode_ok, decoded = pcall(data_http.JSONDecode, data_http, raw)
+
+    if not decode_ok or type(decoded) ~= "table" then
+        pcall(writefile, DATA_PATH, data_http:JSONEncode(defaults))
+        return defaults
+    end
+
+    return {
+        autoload_config = decoded.autoload_config == true,
+        autoload_enabled = decoded.autoload_enabled == true
+    }
+end)
+
+getgenv().write_startup_data = LPH_JIT_MAX(function(key, value)
+    local data = read_startup_data()
+
+    data[key] = value == true
+
+    pcall(writefile, DATA_PATH, data_http:JSONEncode(data))
+end)
 
 getgenv().SafeDisconnect = LPH_JIT_MAX(function(conn)
     if conn and typeof(conn) == "RBXScriptConnection" then
@@ -937,7 +985,9 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local Config = {}
             
             for _, v in next, flags do
-                if type(v) == "table" and v.key then
+                if CONFIG_EXCLUDED[_] then
+                    continue
+                elseif type(v) == "table" and v.key then
                     Config[_] = {active = v.active, mode = v.mode, key = tostring(v.key)}
                 elseif type(v) == "table" and v["Transparency"] and v["Color"] then
                     Config[_] = {Transparency = v["Transparency"], Color = v["Color"]:ToHex()}
@@ -956,8 +1006,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             for _, v in config do 
                 local function_set = library.config_flags[_]
                 
-                if _ == "config_name_list" then 
-                    continue 
+                if CONFIG_EXCLUDED[_] then
+                    continue
                 end
 
                 if function_set then 
@@ -4514,12 +4564,15 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 AUTOLOAD_ENABLED = false
             end
 
+            local startup_data = read_startup_data()
+
             section:toggle({
                 name = "Auto Load Config",
                 flag = "autoload_config",
-                default = isfile(AUTOLOAD_PATH),
+                default = startup_data.autoload_config and isfile(AUTOLOAD_PATH),
                 callback = function(state)
                     AUTOLOAD_ENABLED = state
+                    write_startup_data("autoload_config", state)
 
                     if state then
                         local name = flags["config_name_list"]
@@ -4536,7 +4589,9 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
             })
 
-            section:toggle({type="toggle",name="Auto Load Script",flag="autoload_enabled",default=false, callback = function(state)
+            section:toggle({type="toggle",name="Auto Load Script",flag="autoload_enabled",default=startup_data.autoload_enabled, seperator = true, callback = function(state)
+                write_startup_data("autoload_enabled", state)
+
                 if state then
                     if script_key then
                         local loader = (getgenv().Build == "EarlyAccess")
@@ -5207,7 +5262,9 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local Config = {}
             
             for _, v in next, flags do
-                if type(v) == "table" and v.key then
+                if CONFIG_EXCLUDED[_] then
+                    continue
+                elseif type(v) == "table" and v.key then
                     Config[_] = {active = v.active, mode = v.mode, key = tostring(v.key)}
                 elseif type(v) == "table" and v["Transparency"] and v["Color"] then
                     Config[_] = {Transparency = v["Transparency"], Color = v["Color"]:ToHex()}
@@ -5227,7 +5284,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             for _, v in config do
                 local function_set = library.config_flags[_]
 
-                if _ == "config_name_list" then
+                if CONFIG_EXCLUDED[_] then
                     continue
                 end
 
@@ -8821,11 +8878,16 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 autoload_label.set("Auto Load: None")
             end
 
+            local startup_data = read_startup_data()
+
             section:toggle({
                 name = "Auto Load Config",
                 flag = "autoload_config",
-                default = isfile(AUTOLOAD_PATH),
+                default = startup_data.autoload_config and isfile(AUTOLOAD_PATH),
+                seperator = true,
                 callback = function(state)
+                    write_startup_data("autoload_config", state)
+
                     if state then
                         local name = flags["config_name_list"]
                         if name and name ~= "" then
