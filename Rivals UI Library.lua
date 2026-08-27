@@ -350,6 +350,7 @@ getgenv().write_startup_data = LPH_JIT_MAX(function(key, value)
 end)
 
 getgenv().silent_load_active = read_startup_data().silent_load
+getgenv().silent_load_block = getgenv().silent_load_active
 
 getgenv().SafeDisconnect = LPH_JIT_MAX(function(conn)
     if conn and typeof(conn) == "RBXScriptConnection" then
@@ -1103,6 +1104,16 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             if getgenv().silent_load_active and library[ "items" ] then
                 library[ "items" ].Enabled = false
             end
+
+            getgenv().silent_load_block = false
+
+            if getgenv().silent_load_active and library.menu_bind then
+                pcall(library.menu_bind.set, {
+                    mode = library.menu_bind.mode,
+                    active = false,
+                    key = library.menu_bind.key
+                })
+            end
         end))
 
         function library:relayout_sections()
@@ -1526,6 +1537,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 -- cfg.tween = 
                 --cursor_image.Visible = bool
                 --uis.MouseIconEnabled = not bool
+                if bool and getgenv().silent_load_block then return end
+
                 library[ "items" ].Enabled = bool
             end)
 
@@ -4687,7 +4700,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end})
 
             section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
-            section:keybind({name = "Menu Bind", key = Enum.KeyCode.Insert, callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
+            library.menu_bind = section:keybind({name = "Menu Bind", key = Enum.KeyCode.Insert, callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
 
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
 
@@ -5429,6 +5442,16 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             if getgenv().silent_load_active and library[ "items" ] then
                 library[ "items" ].Enabled = false
             end
+
+            getgenv().silent_load_block = false
+
+            if getgenv().silent_load_active and library.menu_bind then
+                pcall(library.menu_bind.set, {
+                    mode = library.menu_bind.mode,
+                    active = false,
+                    key = library.menu_bind.key
+                })
+            end
         end))
 
 
@@ -5858,10 +5881,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 -- items[ "main" ].Size = dim2(items[ "main" ].Size.Scale.X, items[ "main" ].Size.Offset.X - 20, items[ "main" ].Size.Scale.Y, items[ "main" ].Size.Offset.Y - 20)
                 -- library:tween(items[ "tab_holder" ], {Size = dim2(1, -196, 1, -81)}, Enum.EasingStyle.Quad, 0.4)
-                -- cfg.tween = 
-                
+                -- cfg.tween =
+
+                if bool and getgenv().silent_load_block then return end
+
                 items[ "main" ].Visible = bool
-            end 
+            end
 
             items[ "close button" ] = library:create( "TextButton" , {
                 Parent = library[ "items" ];
@@ -9051,7 +9076,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end})
 
             section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
-            section:keybind({name = "Menu Bind", callback = function(bool) window.toggle_menu(bool) end, default = true})
+            library.menu_bind = section:keybind({name = "Menu Bind", callback = function(bool) window.toggle_menu(bool) end, default = true})
 
             library.setup_complete = true
         end
