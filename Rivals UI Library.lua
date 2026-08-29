@@ -301,7 +301,12 @@ getgenv().CONFIG_EXCLUDED = {
     autoload_enabled = true,
     silent_load = true,
     config_name_list = true,
-    config_name_text = true
+    config_name_text = true,
+    world_preset = true,
+    antiaim_preset = true,
+    hit_effect_preset = true,
+    anim_preset = true,
+    anim_jitter_preset = true
 }
 
 getgenv().notifications_allowed = function()
