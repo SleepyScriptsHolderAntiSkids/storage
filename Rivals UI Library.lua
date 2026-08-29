@@ -111,7 +111,7 @@ local Mouse = setmetatable({}, {
 })
 
 
-
+print("Checking Character")
 if not LocalPlayer.Character then
     local deadline = os.clock() + 10
 
@@ -1083,16 +1083,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
+            print("Waiting for UI Library.lua to load")
             repeat task.wait() until library.setup_complete
+            print("UI Library.lua loaded")
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
             end
 
-            -- Every control has written its default into flags by now, so this snapshot is
-            -- the untouched state. Taken before autoload so a saved config can't poison it.
-            -- Panic replays it through load_config, which already knows how to feed every
-            -- control type back through its own setter.
             library.default_config = library:get_config()
 
             if isfile(AUTOLOAD_PATH) then
@@ -4779,9 +4777,9 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 if state then
                     if script_key then
-                        local loader = (getgenv().Build == "EarlyAccess")
+                        local loader = (getgenv().Build == "Beta")
                             and "e18a1d76bcc68efec407c3f7ee36935d"
-                            or "e18a1d76bcc68efec407c3f7ee36935d"
+                            or "a462cc3ca7e0c3747808a34e71946652"
 
                         queue_on_teleport([[
                             repeat task.wait() until game:IsLoaded()
@@ -5486,7 +5484,9 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
+            print("Waiting for UI Library.lua to load")
             repeat task.wait() until library.setup_complete
+            print("UI Library.lua loaded")
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
