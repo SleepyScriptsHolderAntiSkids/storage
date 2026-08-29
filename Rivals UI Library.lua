@@ -1063,6 +1063,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         function library:load_config(config_json)
             local config = http_service:JSONDecode(config_json)
 
+            task.wait()
+
             for flag, value in config do
                 local set = library.config_flags[flag]
 
@@ -5463,6 +5465,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
         function library:load_config(config_json)
             local config = http_service:JSONDecode(config_json)
+
+            task.wait()
 
             for flag, value in config do
                 local set = library.config_flags[flag]
