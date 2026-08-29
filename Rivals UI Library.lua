@@ -5601,8 +5601,25 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
         end))
 
 
+        user_input_service.InputChanged:Connect(LPH_NO_VIRTUALIZE(function(input)
+            local origin = library.tap_origin
+
+            if not origin or library.tap_moved then return end
+
+            if input.UserInputType ~= Enum.UserInputType.Touch
+                and input.UserInputType ~= Enum.UserInputType.MouseMovement then
+                return
+            end
+
+            local delta = input.Position - origin
+
+            if math.abs(delta.X) > 8 or math.abs(delta.Y) > 8 then
+                library.tap_moved = true
+            end
+        end))
+
         function library:on_tap(instance, callback)
-            local tracked, origin, moved = nil, nil, false
+            local tracked = nil
 
             instance.InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType ~= Enum.UserInputType.Touch
@@ -5610,25 +5627,19 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     return
                 end
 
-                tracked, origin, moved = input, input.Position, false
-            end))
-
-            instance.InputChanged:Connect(LPH_NO_VIRTUALIZE(function(input)
-                if input ~= tracked or moved then return end
-
-                local delta = input.Position - origin
-
-                if math.abs(delta.X) > 8 or math.abs(delta.Y) > 8 then
-                    moved = true
-                end
+                tracked = input
+                library.tap_origin = input.Position
+                library.tap_moved = false
             end))
 
             instance.InputEnded:Connect(LPH_NO_VIRTUALIZE(function(input)
                 if input ~= tracked then return end
 
-                local was_tap = not moved
+                local was_tap = not library.tap_moved
 
-                tracked, origin, moved = nil, nil, false
+                tracked = nil
+                library.tap_origin = nil
+                library.tap_moved = false
 
                 if was_tap then callback(input) end
             end))
@@ -7596,7 +7607,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         Parent = items[ "outline" ]
                     });
                     
-                    library:create( "UIListLayout" , {
+                    items[ "outline_layout" ] = library:create( "UIListLayout" , {
                         Parent = items[ "outline" ];
                         Padding = dim(0, 5);
                         SortOrder = Enum.SortOrder.LayoutOrder
@@ -7608,6 +7619,17 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     });
                 -- 
             end 
+
+            function cfg.measure()
+                local layout = items[ "outline_layout" ]
+                local content = layout and layout.AbsoluteContentSize.Y or 0
+
+                if content <= 0 then
+                    content = #cfg.option_instances * 24
+                end
+
+                cfg.y_size = content + 9
+            end
 
             function cfg.render_option(text)
                 local button = library:create( "TextButton" , {
@@ -7642,6 +7664,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
              end
 
             function cfg.set_visible(bool)
+                if bool then cfg.measure() end
+
                 local a = bool and math.min(cfg.y_size, 220) or 0
                 local holder = items[ "dropdown_holder" ]
                 local outline = items[ "outline" ]
@@ -7711,7 +7735,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 for _, option in list do 
                     local button = cfg.render_option(option)
-                    cfg.y_size += button.AbsoluteSize.Y + 6 -- super annoying manual sizing but oh well
                     insert(cfg.option_instances, button)
                     
                     library:on_tap(button, LPH_NO_VIRTUALIZE(function(Input)
