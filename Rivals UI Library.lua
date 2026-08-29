@@ -111,7 +111,7 @@ local Mouse = setmetatable({}, {
 })
 
 
-print("Checking Character")
+
 if not LocalPlayer.Character then
     local deadline = os.clock() + 10
 
@@ -296,23 +296,12 @@ getgenv().DATA_PATH = library.directory .. "/data/startup.cfg"
 
 local data_http = cloneref(game:GetService("HttpService"))
 
-function restore_identity()
-    local fn = getgenv().set_identity
-
-    if fn then fn(8) elseif setthreadidentity then pcall(setthreadidentity, 8) end
-end
-
 getgenv().CONFIG_EXCLUDED = {
     autoload_config = true,
     autoload_enabled = true,
     silent_load = true,
     config_name_list = true,
-    config_name_text = true,
-    world_preset = true,
-    antiaim_preset = true,
-    hit_effect_preset = true,
-    anim_preset = true,
-    anim_jitter_preset = true
+    config_name_text = true
 }
 
 getgenv().notifications_allowed = function()
@@ -1066,24 +1055,36 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return http_service:JSONEncode(Config)
         end
 
-        function library:load_config(config_json)
+        function library:load_config(config_json) 
             local config = http_service:JSONDecode(config_json)
+            local applied = 0
 
-            task.wait()
-            restore_identity()
-
-            for flag, value in config do
-                local set = library.config_flags[flag]
-
-                if set and not CONFIG_EXCLUDED[flag] then
-                    if type(value) == "table" and value.Color and value.Transparency then
-                        pcall(set, hex(value.Color), value.Transparency)
-                    else
-                        pcall(set, value)
-                    end
+            for _, v in config do 
+                local function_set = library.config_flags[_]
+                
+                if CONFIG_EXCLUDED[_] then
+                    continue
                 end
-            end
-        end
+
+                if function_set then 
+                    applied = applied + 1
+
+                    if applied % 20 == 0 then
+                        task.wait()
+                    end
+
+                    pcall(function()
+                        if type(v) == "table" and v["Transparency"] and v["Color"] then
+                            function_set(hex(v["Color"]), v["Transparency"])
+                        elseif type(v) == "table" and v["active"] then 
+                            function_set(v)
+                        else
+                            function_set(v)
+                        end
+                    end)
+                end 
+            end 
+        end 
 
 
         local AUTOLOAD_PATH = library.directory .. "/autoload/autoload.cfg"
@@ -1092,13 +1093,32 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
-            repeat task.wait() until library.setup_complete
-            restore_identity()
+            local deadline = os.clock() + 30
+
+            repeat task.wait() until library.setup_complete or os.clock() > deadline
+
+            if not library.setup_complete then
+                local last = -1
+
+                repeat
+                    local count = 0
+                    for _ in next, library.config_flags do count += 1 end
+
+                    if count > 0 and count == last then break end
+
+                    last = count
+                    task.wait(0.5)
+                until os.clock() > deadline + 10
+            end
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
             end
 
+            -- Every control has written its default into flags by now, so this snapshot is
+            -- the untouched state. Taken before autoload so a saved config can't poison it.
+            -- Panic replays it through load_config, which already knows how to feed every
+            -- control type back through its own setter.
             library.default_config = library:get_config()
 
             if isfile(AUTOLOAD_PATH) then
@@ -5471,23 +5491,37 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return http_service:JSONEncode(Config)
         end
 
-        function library:load_config(config_json)
+        function library:load_config(config_json) 
             local config = http_service:JSONDecode(config_json)
 
-            task.wait()
-            restore_identity()
+            local applied = 0
 
-            for flag, value in config do
-                local set = library.config_flags[flag]
+            for _, v in config do
+                local function_set = library.config_flags[_]
 
-                if set and not CONFIG_EXCLUDED[flag] then
-                    if type(value) == "table" and value.Color and value.Transparency then
-                        pcall(set, hex(value.Color), value.Transparency)
-                    else
-                        pcall(set, value)
+                if CONFIG_EXCLUDED[_] then
+                    continue
+                end
+
+                if function_set then
+                    applied = applied + 1
+
+                    if applied % 20 == 0 then
+                        task.wait()
                     end
+
+                    pcall(function()
+                        if type(v) == "table" and v["Transparency"] and v["Color"] then
+                            function_set(hex(v["Color"]), v["Transparency"])
+                        elseif type(v) == "table" and v["active"] then
+                            function_set(v)
+                        else
+                            function_set(v)
+                        end
+                    end)
                 end
             end
+
         end
 
 
@@ -5495,8 +5529,23 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
-            repeat task.wait() until library.setup_complete
-            restore_identity()
+            local deadline = os.clock() + 30
+
+            repeat task.wait() until library.setup_complete or os.clock() > deadline
+
+            if not library.setup_complete then
+                local last = -1
+
+                repeat
+                    local count = 0
+                    for _ in next, library.config_flags do count += 1 end
+
+                    if count > 0 and count == last then break end
+
+                    last = count
+                    task.wait(0.5)
+                until os.clock() > deadline + 10
+            end
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
