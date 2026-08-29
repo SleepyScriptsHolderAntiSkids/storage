@@ -9199,7 +9199,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 name = "Auto Load Config",
                 flag = "autoload_config",
                 default = startup_data.autoload_config and isfile(AUTOLOAD_PATH),
-                seperator = true,
                 callback = function(state)
                     write_startup_data("autoload_config", state)
 
