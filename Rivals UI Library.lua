@@ -296,6 +296,12 @@ getgenv().DATA_PATH = library.directory .. "/data/startup.cfg"
 
 local data_http = cloneref(game:GetService("HttpService"))
 
+function restore_identity()
+    local fn = getgenv().set_identity
+
+    if fn then fn(8) elseif setthreadidentity then pcall(setthreadidentity, 8) end
+end
+
 getgenv().CONFIG_EXCLUDED = {
     autoload_config = true,
     autoload_enabled = true,
@@ -1064,6 +1070,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local config = http_service:JSONDecode(config_json)
 
             task.wait()
+            restore_identity()
 
             for flag, value in config do
                 local set = library.config_flags[flag]
@@ -1086,6 +1093,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             repeat task.wait() until library.setup_complete
+            restore_identity()
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
@@ -5467,6 +5475,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             local config = http_service:JSONDecode(config_json)
 
             task.wait()
+            restore_identity()
 
             for flag, value in config do
                 local set = library.config_flags[flag]
@@ -5487,6 +5496,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             repeat task.wait() until library.setup_complete
+            restore_identity()
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
