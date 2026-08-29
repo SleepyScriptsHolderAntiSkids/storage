@@ -1083,9 +1083,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
-            print("Waiting for UI Library.lua to load")
             repeat task.wait() until library.setup_complete
-            print("UI Library.lua loaded")
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
@@ -5484,9 +5482,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
-            print("Waiting for UI Library.lua to load")
             repeat task.wait() until library.setup_complete
-            print("UI Library.lua loaded")
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
