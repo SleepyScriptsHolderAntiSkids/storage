@@ -1,4 +1,3 @@
-
 if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
@@ -4807,7 +4806,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 if state then
                     if script_key then
                         local loader = (getgenv().Build == "EarlyAccess")
-                            and "e18a1d76bcc68efec407c3f7ee36935d"
+                            and "a462cc3ca7e0c3747808a34e71946652"
                             or "e18a1d76bcc68efec407c3f7ee36935d"
 
                         queue_on_teleport([[
