@@ -1,4 +1,4 @@
-if LPH_OBFUSCATED == nil then
+ if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -295,6 +295,12 @@ end
 getgenv().DATA_PATH = library.directory .. "/data/startup.cfg"
 
 local data_http = cloneref(game:GetService("HttpService"))
+
+function restore_identity()
+    local fn = getgenv().set_identity
+
+    if fn then fn(8) elseif setthreadidentity then pcall(setthreadidentity, 8) end
+end
 
 getgenv().CONFIG_EXCLUDED = {
     autoload_config = true,
@@ -1089,6 +1095,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     end)
                 end 
             end 
+
+            restore_identity()
         end 
 
 
@@ -4461,10 +4469,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end 
 
             items[ "button" ].MouseButton1Click:Connect(function()
-                cfg.callback()
-
-                items[ "name" ].TextColor3 = themes.preset.accent 
+                items[ "name" ].TextColor3 = themes.preset.accent
                 library:tween(items[ "name" ], {TextColor3 = rgb(245, 245, 245)})
+
+                cfg.callback()
             end)
             
             return setmetatable(cfg, library)
@@ -4901,11 +4909,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             section:button({name = "Panic", callback = function()
                 if not library.default_config then return end
 
-                library:load_config(library.default_config)
                 notifications:create_notification({
                     name = "Sleepy.gg",
                     info = "Everything reset to default"
                 })
+
+                library:load_config(library.default_config)
             end})
 
             library.setup_complete = true
@@ -5527,6 +5536,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
             end
 
+
+            restore_identity()
         end
 
 
@@ -8905,10 +8916,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             library:on_tap(items[ "button" ], LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Touch then
-                    cfg.callback()
-
-                    items[ "name" ].TextColor3 = themes.preset.accent 
+                    items[ "name" ].TextColor3 = themes.preset.accent
                     library:tween(items[ "name" ], {TextColor3 = rgb(245, 245, 245)})
+
+                    cfg.callback()
                 end
             end))
             
@@ -9232,11 +9243,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             section:button({name = "Panic", callback = function()
                 if not library.default_config then return end
 
-                library:load_config(library.default_config)
                 notifications:create_notification({
                     name = "Sleepy.gg",
                     info = "Everything reset to default"
                 })
+
+                library:load_config(library.default_config)
             end})
 
             section:textbox({name = "Menu Size %", flag = "menu_size", default = "50", placeholder = "50", callback = function(text)
