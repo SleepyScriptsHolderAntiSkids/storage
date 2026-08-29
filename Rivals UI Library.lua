@@ -301,7 +301,12 @@ getgenv().CONFIG_EXCLUDED = {
     autoload_enabled = true,
     silent_load = true,
     config_name_list = true,
-    config_name_text = true
+    config_name_text = true,
+    world_preset = true,
+    antiaim_preset = true,
+    hit_effect_preset = true,
+    anim_preset = true,
+    anim_jitter_preset = true
 }
 
 getgenv().notifications_allowed = function()
@@ -1055,36 +1060,21 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return http_service:JSONEncode(Config)
         end
 
-        function library:load_config(config_json) 
+        function library:load_config(config_json)
             local config = http_service:JSONDecode(config_json)
-            local applied = 0
 
-            for _, v in config do 
-                local function_set = library.config_flags[_]
-                
-                if CONFIG_EXCLUDED[_] then
-                    continue
-                end
+            for flag, value in config do
+                local set = library.config_flags[flag]
 
-                if function_set then 
-                    applied = applied + 1
-
-                    if applied % 20 == 0 then
-                        task.wait()
+                if set and not CONFIG_EXCLUDED[flag] then
+                    if type(value) == "table" and value.Color and value.Transparency then
+                        pcall(set, hex(value.Color), value.Transparency)
+                    else
+                        pcall(set, value)
                     end
-
-                    pcall(function()
-                        if type(v) == "table" and v["Transparency"] and v["Color"] then
-                            function_set(hex(v["Color"]), v["Transparency"])
-                        elseif type(v) == "table" and v["active"] then 
-                            function_set(v)
-                        else
-                            function_set(v)
-                        end
-                    end)
-                end 
-            end 
-        end 
+                end
+            end
+        end
 
 
         local AUTOLOAD_PATH = library.directory .. "/autoload/autoload.cfg"
@@ -1093,23 +1083,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
-            local deadline = os.clock() + 30
-
-            repeat task.wait() until library.setup_complete or os.clock() > deadline
-
-            if not library.setup_complete then
-                local last = -1
-
-                repeat
-                    local count = 0
-                    for _ in next, library.config_flags do count += 1 end
-
-                    if count > 0 and count == last then break end
-
-                    last = count
-                    task.wait(0.5)
-                until os.clock() > deadline + 10
-            end
+            repeat task.wait() until library.setup_complete
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
@@ -5491,37 +5465,20 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return http_service:JSONEncode(Config)
         end
 
-        function library:load_config(config_json) 
+        function library:load_config(config_json)
             local config = http_service:JSONDecode(config_json)
 
-            local applied = 0
+            for flag, value in config do
+                local set = library.config_flags[flag]
 
-            for _, v in config do
-                local function_set = library.config_flags[_]
-
-                if CONFIG_EXCLUDED[_] then
-                    continue
-                end
-
-                if function_set then
-                    applied = applied + 1
-
-                    if applied % 20 == 0 then
-                        task.wait()
+                if set and not CONFIG_EXCLUDED[flag] then
+                    if type(value) == "table" and value.Color and value.Transparency then
+                        pcall(set, hex(value.Color), value.Transparency)
+                    else
+                        pcall(set, value)
                     end
-
-                    pcall(function()
-                        if type(v) == "table" and v["Transparency"] and v["Color"] then
-                            function_set(hex(v["Color"]), v["Transparency"])
-                        elseif type(v) == "table" and v["active"] then
-                            function_set(v)
-                        else
-                            function_set(v)
-                        end
-                    end)
                 end
             end
-
         end
 
 
@@ -5529,23 +5486,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
-            local deadline = os.clock() + 30
-
-            repeat task.wait() until library.setup_complete or os.clock() > deadline
-
-            if not library.setup_complete then
-                local last = -1
-
-                repeat
-                    local count = 0
-                    for _ in next, library.config_flags do count += 1 end
-
-                    if count > 0 and count == last then break end
-
-                    last = count
-                    task.wait(0.5)
-                until os.clock() > deadline + 10
-            end
+            repeat task.wait() until library.setup_complete
 
             if getgenv().silent_load_active then
                 silent_hide_menu()
