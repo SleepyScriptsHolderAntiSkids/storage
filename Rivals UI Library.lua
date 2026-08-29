@@ -296,12 +296,6 @@ getgenv().DATA_PATH = library.directory .. "/data/startup.cfg"
 
 local data_http = cloneref(game:GetService("HttpService"))
 
-function restore_identity()
-    local fn = getgenv().set_identity
-
-    if fn then fn(8) elseif setthreadidentity then pcall(setthreadidentity, 8) end
-end
-
 getgenv().CONFIG_EXCLUDED = {
     autoload_config = true,
     autoload_enabled = true,
@@ -1095,8 +1089,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     end)
                 end 
             end 
-
-            restore_identity()
         end 
 
 
@@ -5536,8 +5528,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
             end
 
-
-            restore_identity()
         end
 
 
@@ -9210,6 +9200,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 name = "Auto Load Config",
                 flag = "autoload_config",
                 default = startup_data.autoload_config and isfile(AUTOLOAD_PATH),
+                seperator = true,
                 callback = function(state)
                     write_startup_data("autoload_config", state)
 
