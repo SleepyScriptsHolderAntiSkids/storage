@@ -1,4 +1,4 @@
- if LPH_OBFUSCATED == nil then
+  if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -241,33 +241,6 @@ do
         end
     end))
 
-    local SKELETON_R6 = {
-        {"Head", "Torso"},
-        {"Torso", "Left Arm"},
-        {"Torso", "Right Arm"},
-        {"Torso", "Left Leg"},
-        {"Torso", "Right Leg"}
-    }
-
-    local SKELETON_R15 = {
-        {"Head", "UpperTorso"},
-        {"UpperTorso", "LowerTorso"},
-        {"UpperTorso", "LeftUpperArm"},
-        {"LeftUpperArm", "LeftLowerArm"},
-        {"LeftLowerArm", "LeftHand"},
-        {"UpperTorso", "RightUpperArm"},
-        {"RightUpperArm", "RightLowerArm"},
-        {"RightLowerArm", "RightHand"},
-        {"LowerTorso", "LeftUpperLeg"},
-        {"LeftUpperLeg", "LeftLowerLeg"},
-        {"LeftLowerLeg", "LeftFoot"},
-        {"LowerTorso", "RightUpperLeg"},
-        {"RightUpperLeg", "RightLowerLeg"},
-        {"RightLowerLeg", "RightFoot"}
-    }
-
-    local SKELETON_MAX_BONES = #SKELETON_R15
-
     local Functions = {}
     do
         function Functions:Create(Class, Properties)
@@ -296,23 +269,7 @@ do
             end;
         end);  
 
-        Functions.BoneList = LPH_NO_VIRTUALIZE(function(character)
-            return character:FindFirstChild("UpperTorso") and SKELETON_R15 or SKELETON_R6
-        end)
-
-        Functions.DrawBone = LPH_NO_VIRTUALIZE(function(frame, from, to, thickness, colour)
-            local dx = to.X - from.X
-            local dy = to.Y - from.Y
-            local length = math.sqrt(dx * dx + dy * dy)
-
-            frame.Position = UDim2.fromOffset((from.X + to.X) * 0.5, (from.Y + to.Y) * 0.5)
-            frame.Size = UDim2.fromOffset(length, thickness)
-            frame.Rotation = math.deg(math.atan2(dy, dx))
-            frame.BackgroundColor3 = colour
-            frame.Visible = true
-        end)
-
-        Functions.AddOutline = LPH_NO_VIRTUALIZE(function(Frame, Thickness)
+        Functions.AddOutline = LPH_NO_VIRTUALIZE(function(Frame, Thickness)     
             Functions:Create("Frame", {
                 Parent = Frame,
                 BorderSizePixel = 0,
@@ -386,19 +343,6 @@ do
             local Distance = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, Position = UDim2.new(0.5, 0, 0, 11), Size = UDim2.new(0, 100, 0, 20), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0), RichText = true})
             local Weapon = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, Position = UDim2.new(0.5, 0, 0, 31), Size = UDim2.new(0, 100, 0, 20), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0), RichText = true, Text = "None"})
             local StateFlag = Functions:Create("TextLabel", {Visible = false,Parent = ScreenGui, Position = UDim2.new(0.5, 0, 0, 41), Size = UDim2.new(0, 100, 0, 20), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255, 255, 255), Font = Enum.Font.Code, TextSize = Config.ESP.FontSize, TextStrokeTransparency = 0, TextStrokeColor3 = Color3.fromRGB(0, 0, 0), RichText = true, Text = ""})
-            local Bones = {}
-
-            for index = 1, SKELETON_MAX_BONES do
-                Bones[index] = Functions:Create("Frame", {
-                    Parent = ScreenGui,
-                    Visible = false,
-                    AnchorPoint = Vector2.new(0.5, 0.5),
-                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-                    BorderSizePixel = 0,
-                    ZIndex = 1
-                })
-            end
-
             local Box = Functions:Create("Frame", {Parent = ScreenGui, BackgroundColor3 = Color3.fromRGB(0, 0, 0), BackgroundTransparency = 0.75, BorderSizePixel = 0})
             local Gradient1 = Functions:Create("UIGradient", {Parent = Box, Enabled = Config.ESP.Drawing.Boxes.GradientFill, Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Config.ESP.Drawing.Boxes.GradientFillRGB1), ColorSequenceKeypoint.new(1, Config.ESP.Drawing.Boxes.GradientFillRGB2)}})
             local Outline = Functions:Create("UIStroke", {Parent = Box, Enabled = Config.ESP.Drawing.Boxes.Gradient, Transparency = 0, Color = Color3.fromRGB(255, 255, 255), LineJoinMode = Enum.LineJoinMode.Miter})
@@ -664,10 +608,6 @@ do
                     is_friend = ok and result == true
                 end)
                 local HideESP = LPH_NO_VIRTUALIZE(function()
-                    for index = 1, SKELETON_MAX_BONES do
-                        set_vis(Bones[index], false)
-                    end
-
                     set_vis(Box, false)
                     set_vis(Name, false)
                     set_vis(Distance, false)
@@ -696,10 +636,6 @@ do
                     BottomDown, RightTop, RightSide, BottomRightSide, BottomRightDown,
                     Flag1, Flag2
                 }
-
-                for index = 1, SKELETON_MAX_BONES do
-                    esp_elements[#esp_elements + 1] = Bones[index]
-                end
 
                 local esp_destroyed = false
 
@@ -903,41 +839,6 @@ do
                                             set_vis(BottomRightDown, false)
                                             set_vis(BottomDown, false)
                                             set_vis(RightTop, false)
-                                        end
-                                    end
-
-                                    do -- Skeleton
-                                        local shown = 0
-                                        local skeleton = Config.ESP.Drawing.Skeleton
-
-                                        if skeleton and skeleton.Enabled then
-                                            local bones = Functions.BoneList(character)
-                                            local thickness = skeleton.Thickness or 2
-                                            local colour = skeleton.RGB or Color3.fromRGB(255, 255, 255)
-
-                                            for index = 1, #bones do
-                                                local pair = bones[index]
-                                                local first = character:FindFirstChild(pair[1])
-                                                local second = character:FindFirstChild(pair[2])
-
-                                                if first and second then
-                                                    local a, a_on = Cam:WorldToViewportPoint(first.Position)
-                                                    local b, b_on = Cam:WorldToViewportPoint(second.Position)
-
-                                                    if a_on and b_on then
-                                                        shown = shown + 1
-                                                        Functions.DrawBone(Bones[shown], a, b, thickness, colour)
-
-                                                        if Config.ESP.FadeOut.OnDistance then
-                                                            Functions.FadeOutOnDist(Bones[shown], Dist)
-                                                        end
-                                                    end
-                                                end
-                                            end
-                                        end
-
-                                        for index = shown + 1, SKELETON_MAX_BONES do
-                                            set_vis(Bones[index], false)
                                         end
                                     end
 
