@@ -1,4 +1,4 @@
- if LPH_OBFUSCATED == nil then
+  if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -672,6 +672,83 @@ do
                     set_vis(Flag2, false)
                 end)
 
+                -- Aura and particles attach to the target's character, not to our ScreenGui,
+                -- so they cannot live in esp_elements. Held here instead, rebuilt when the
+                -- character is replaced, and torn down with the entity.
+                local aura_box, particle_emitter = nil, nil
+
+                local function clear_effects()
+                    if aura_box then
+                        aura_box:Destroy()
+                        aura_box = nil
+                    end
+
+                    if particle_emitter then
+                        particle_emitter:Destroy()
+                        particle_emitter = nil
+                    end
+                end
+
+                local function apply_effects(character, root)
+                    local cfg = Config.ESP.Drawing.Effects
+
+                    if not cfg then return clear_effects() end
+
+                    -- A respawn destroys the old character and everything parented to it,
+                    -- leaving these pointing at instances that are no longer anywhere.
+                    if aura_box and aura_box.Parent ~= character then aura_box = nil end
+                    if particle_emitter and particle_emitter.Parent ~= root then particle_emitter = nil end
+
+                    local aura = cfg.Aura
+
+                    if aura and aura.Enabled then
+                        if not aura_box then
+                            aura_box = Functions:Create("SelectionBox", {
+                                Name = "\0",
+                                Adornee = character,
+                                Parent = character
+                            })
+                        end
+
+                        aura_box.Color3 = aura.LineRGB or ESP_TEXT_WHITE
+                        aura_box.SurfaceColor3 = aura.SurfaceRGB or ESP_TEXT_WHITE
+                        aura_box.LineThickness = aura.Thickness or 0.05
+                        aura_box.SurfaceTransparency = aura.SurfaceTransparency or 0.85
+                        aura_box.Transparency = 0
+                    elseif aura_box then
+                        aura_box:Destroy()
+                        aura_box = nil
+                    end
+
+                    local particles = cfg.Particles
+
+                    if particles and particles.Enabled and root then
+                        if not particle_emitter then
+                            particle_emitter = Functions:Create("ParticleEmitter", {
+                                Name = "\0",
+                                Parent = root,
+                                LightEmission = 1,
+                                LockedToPart = false,
+                                SpreadAngle = Vector2.new(180, 180)
+                            })
+                        end
+
+                        particle_emitter.Color = ColorSequence.new{
+                            ColorSequenceKeypoint.new(0, particles.RGB1 or ESP_TEXT_WHITE),
+                            ColorSequenceKeypoint.new(0.5, particles.RGB2 or ESP_TEXT_WHITE),
+                            ColorSequenceKeypoint.new(1, particles.RGB3 or ESP_TEXT_WHITE)
+                        }
+
+                        particle_emitter.Size = NumberSequence.new(particles.Size or 0.5)
+                        particle_emitter.Lifetime = NumberRange.new(particles.Lifetime or 0.5)
+                        particle_emitter.Rate = particles.Rate or 10
+                        particle_emitter.Speed = NumberRange.new(particles.Speed or 1)
+                    elseif particle_emitter then
+                        particle_emitter:Destroy()
+                        particle_emitter = nil
+                    end
+                end
+
                 local esp_elements = {
                     Box, Name, Distance, Weapon, StateFlag, Healthbar, BehindHealthbar,
                     HealthText, WeaponIcon, Chams, LeftTop, LeftSide, BottomSide,
@@ -687,6 +764,8 @@ do
 
                     ESP_UPDATERS[esp_key] = nil
                     ESP_HIDERS[esp_key] = nil
+
+                    clear_effects()
 
                     for i = 1, #esp_elements do
                         local element = esp_elements[i]
@@ -752,6 +831,8 @@ do
                     end
 
                     if character and lplayer.Character and Config.ESP.Enabled then
+                        apply_effects(character, HRP)
+
                         if Humanoid and HRP then
                             Pos, OnScreen = Cam:WorldToScreenPoint(HRP.Position)
                             Dist = (Cam.CFrame.Position - HRP.Position).Magnitude
