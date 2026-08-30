@@ -455,7 +455,12 @@ do
 
                                 if sequence then
                                     gradient.Color = sequence
-                                    gradient.Rotation = rotation
+
+                                    -- Animation owns Rotation while it runs; writing the
+                                    -- slider value here would fight it every refresh.
+                                    if not cfg.Animate then
+                                        gradient.Rotation = rotation
+                                    end
                                 end
                             end
                         end
@@ -675,13 +680,9 @@ do
                 -- Aura and particles attach to the target's character, not to our ScreenGui,
                 -- so they cannot live in esp_elements. Held here instead, rebuilt when the
                 -- character is replaced, and torn down with the entity.
-                local aura_box, particle_emitter = nil, nil
+                local particle_emitter = nil
 
                 local function clear_effects()
-                    if aura_box then
-                        aura_box:Destroy()
-                        aura_box = nil
-                    end
 
                     if particle_emitter then
                         particle_emitter:Destroy()
@@ -689,36 +690,14 @@ do
                     end
                 end
 
-                local function apply_effects(character, root)
+                local function apply_effects(root)
                     local cfg = Config.ESP.Drawing.Effects
 
                     if not cfg then return clear_effects() end
 
                     -- A respawn destroys the old character and everything parented to it,
                     -- leaving these pointing at instances that are no longer anywhere.
-                    if aura_box and aura_box.Parent ~= character then aura_box = nil end
                     if particle_emitter and particle_emitter.Parent ~= root then particle_emitter = nil end
-
-                    local aura = cfg.Aura
-
-                    if aura and aura.Enabled then
-                        if not aura_box then
-                            aura_box = Functions:Create("SelectionBox", {
-                                Name = "\0",
-                                Adornee = character,
-                                Parent = character
-                            })
-                        end
-
-                        aura_box.Color3 = aura.LineRGB or ESP_TEXT_WHITE
-                        aura_box.SurfaceColor3 = aura.SurfaceRGB or ESP_TEXT_WHITE
-                        aura_box.LineThickness = aura.Thickness or 0.05
-                        aura_box.SurfaceTransparency = aura.SurfaceTransparency or 0.85
-                        aura_box.Transparency = 0
-                    elseif aura_box then
-                        aura_box:Destroy()
-                        aura_box = nil
-                    end
 
                     local particles = cfg.Particles
 
@@ -831,7 +810,7 @@ do
                     end
 
                     if character and lplayer.Character and Config.ESP.Enabled then
-                        apply_effects(character, HRP)
+                        apply_effects(HRP)
 
                         if Humanoid and HRP then
                             Pos, OnScreen = Cam:WorldToScreenPoint(HRP.Position)
@@ -975,6 +954,16 @@ do
                                             RotationAngle = RotationAngle + (tick() - Tick) * Config.ESP.Drawing.Boxes.RotationSpeed * math.cos(math.pi / 4 * tick() - math.pi / 2)
                                             Gradient1.Rotation = RotationAngle
                                             Gradient2.Rotation = RotationAngle
+                                        end
+
+                                        local text_cfg = Config.ESP.Drawing.TextGradient
+
+                                        if text_cfg and text_cfg.Enabled and text_cfg.Animate then
+                                            local spin = tick() * (text_cfg.Speed or 60) % 360
+
+                                            for index = 1, #TextGradients do
+                                                TextGradients[index].Rotation = spin
+                                            end
                                         end
 
                                         
