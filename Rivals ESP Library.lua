@@ -1,4 +1,4 @@
-  if LPH_OBFUSCATED == nil then
+ if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -185,6 +185,23 @@ do
     local function set_vis(element, state)
         if element.Visible ~= state then element.Visible = state end
     end
+
+    -- Three stops across every label. Allocated here and only here: the render path
+    -- writes Rotation and nothing else, so an animated gradient costs one property
+    -- write per label instead of rebuilding a ColorSequence sixty times a second.
+    local ESP_TEXT_WHITE = Color3.fromRGB(255, 255, 255)
+
+    local function text_gradient_sequence()
+        local cfg = Config.ESP.Drawing.TextGradient
+
+        if not cfg then return end
+
+        return ColorSequence.new{
+            ColorSequenceKeypoint.new(0, cfg.RGB1 or ESP_TEXT_WHITE),
+            ColorSequenceKeypoint.new(0.5, cfg.RGB2 or ESP_TEXT_WHITE),
+            ColorSequenceKeypoint.new(1, cfg.RGB3 or ESP_TEXT_WHITE)
+        }
+    end
     local DuelController = require(lplayer:FindFirstChild("DuelController", true))
 
     local function hide_all_esp()
@@ -354,6 +371,13 @@ do
             local Chams = Functions:Create("Highlight", {Parent = ScreenGui, FillTransparency = 1, OutlineTransparency = 0, OutlineColor = Color3.fromRGB(119, 120, 255), DepthMode = "AlwaysOnTop"})
             local WeaponIcon = Functions:Create("ImageLabel", {Parent = ScreenGui, BackgroundTransparency = 1, BorderColor3 = Color3.fromRGB(0, 0, 0), BorderSizePixel = 0, Size = UDim2.new(0, 40, 0, 40)})
             local Gradient3 = Functions:Create("UIGradient", {Parent = WeaponIcon, Rotation = -90, Enabled = Config.ESP.Drawing.Weapons.Gradient, Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Config.ESP.Drawing.Weapons.GradientRGB1), ColorSequenceKeypoint.new(1, Config.ESP.Drawing.Weapons.GradientRGB2)}})
+            local NameGradient = Functions:Create("UIGradient", {Parent = Name, Enabled = false})
+            local DistanceGradient = Functions:Create("UIGradient", {Parent = Distance, Enabled = false})
+            local WeaponGradient = Functions:Create("UIGradient", {Parent = Weapon, Enabled = false})
+            local HealthTextGradient = Functions:Create("UIGradient", {Parent = HealthText, Enabled = false})
+
+            local TextGradients = {NameGradient, DistanceGradient, WeaponGradient, HealthTextGradient}
+
             local LeftTop = Functions:Create("Frame", {Parent = ScreenGui, BackgroundColor3 = Config.ESP.Drawing.Boxes.Corner.RGB, Position = UDim2.new(0, 0, 0, 0), BorderSizePixel = 0, BorderColor3 = Color3.new(0,0,0)})
             local LeftSide = Functions:Create("Frame", {Parent = ScreenGui, BackgroundColor3 = Config.ESP.Drawing.Boxes.Corner.RGB, Position = UDim2.new(0, 0, 0, 0), BorderSizePixel = 0, BorderColor3 = Color3.new(0,0,0)})
             local RightTop = Functions:Create("Frame", {Parent = ScreenGui, BackgroundColor3 = Config.ESP.Drawing.Boxes.Corner.RGB, Position = UDim2.new(0, 0, 0, 0), BorderSizePixel = 0, BorderColor3 = Color3.new(0,0,0)})
@@ -416,6 +440,24 @@ do
                             Name.Font = Config.ESP.Font
                             Distance.Font = Config.ESP.Font
                             Weapon.Font = Config.ESP.Font
+                        end
+
+                        do -- \\ Text gradient
+                            local cfg = Config.ESP.Drawing.TextGradient
+                            local on = cfg ~= nil and cfg.Enabled == true
+                            local sequence = on and text_gradient_sequence()
+                            local rotation = on and (tonumber(cfg.Rotation) or 0) or 0
+
+                            for index = 1, #TextGradients do
+                                local gradient = TextGradients[index]
+
+                                gradient.Enabled = on
+
+                                if sequence then
+                                    gradient.Color = sequence
+                                    gradient.Rotation = rotation
+                                end
+                            end
                         end
 
                         do -- \\ Boxes
