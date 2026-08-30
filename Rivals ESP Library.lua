@@ -1,4 +1,4 @@
-  if LPH_OBFUSCATED == nil then
+ if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
