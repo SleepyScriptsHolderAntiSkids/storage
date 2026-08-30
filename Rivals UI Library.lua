@@ -361,7 +361,9 @@ getgenv().silent_hide_menu = function()
     if library.set_menu_visible then
         pcall(library.set_menu_visible, false)
     elseif library[ "items" ] then
-        library[ "items" ].Enabled = false
+        pcall(function()
+            library[ "items" ].Enabled = false
+        end)
     end
 end
 
@@ -2660,7 +2662,16 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end;
             
              cfg.set = LPH_NO_VIRTUALIZE(function(bool)
-                if cfg.type == "checkbox" then 
+                cfg.enabled = bool
+                flags[cfg.flag] = bool
+
+                cfg.callback(bool)
+
+                if cfg.folding then
+                    elements.Visible = bool
+                end
+
+                if cfg.type == "checkbox" then
                     library:tween(items[ "tick" ], {Rotation = bool and 0 or 45, ImageTransparency = bool and 0 or 1})
                     library:tween(items[ "toggle_button" ], {BackgroundColor3 = bool and themes.preset.accent or rgb(67, 67, 68)})
                     library:tween(items[ "outline" ], {BackgroundColor3 = bool and themes.preset.accent or rgb(22, 22, 24)})
@@ -2669,15 +2680,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     library:tween(items[ "inline" ], {BackgroundColor3 = bool and themes.preset.accent or rgb(50, 50, 50)}, Enum.EasingStyle.Quad)
                     library:tween(items[ "circle" ], {BackgroundColor3 = bool and rgb(255, 255, 255) or rgb(86, 86, 88), Position = bool and dim2(1, -14, 0, 2) or dim2(0, 2, 0, 2)}, Enum.EasingStyle.Quad)
                 end
-
-                cfg.enabled = bool
-                cfg.callback(bool)
-
-                if cfg.folding then 
-                    elements.Visible = bool
-                end
-
-                flags[cfg.flag] = bool
             end)
             
             items[ "toggle" ].MouseButton1Click:Connect(LPH_NO_VIRTUALIZE(function()
@@ -2907,11 +2909,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
              cfg.set = LPH_NO_VIRTUALIZE(function(value)
                 cfg.value = clamp(library:round(value, cfg.intervals), cfg.min, cfg.max)
 
-                library:tween(items[ "fill" ], {Size = dim2((cfg.value - cfg.min) / (cfg.max - cfg.min), cfg.value == cfg.min and 0 or -4, 0, 2)}, Enum.EasingStyle.Linear, 0.05)
-                items[ "value" ].Text = tostring(cfg.value) .. cfg.suffix
-
                 flags[cfg.flag] = cfg.value
                 cfg.callback(flags[cfg.flag])
+
+                library:tween(items[ "fill" ], {Size = dim2((cfg.value - cfg.min) / (cfg.max - cfg.min), cfg.value == cfg.min and 0 or -4, 0, 2)}, Enum.EasingStyle.Linear, 0.05)
+                items[ "value" ].Text = tostring(cfg.value) .. cfg.suffix
             end)
 
             local function slide_to(position)
@@ -7103,7 +7105,16 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end;
             
             function cfg.set(bool)
-                if cfg.type == "checkbox" then 
+                cfg.enabled = bool
+                flags[cfg.flag] = bool
+
+                cfg.callback(bool)
+
+                if cfg.folding then
+                    elements.Visible = bool
+                end
+
+                if cfg.type == "checkbox" then
                     library:tween(items[ "tick" ], {Rotation = bool and 0 or 45, ImageTransparency = bool and 0 or 1})
                     library:tween(items[ "toggle_button" ], {BackgroundColor3 = bool and themes.preset.accent or rgb(67, 67, 68)})
                     library:tween(items[ "outline" ], {BackgroundColor3 = bool and themes.preset.accent or rgb(22, 22, 24)})
@@ -7112,16 +7123,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                     library:tween(items[ "inline" ], {BackgroundColor3 = bool and themes.preset.accent or rgb(50, 50, 50)}, Enum.EasingStyle.Quad)
                     library:tween(items[ "circle" ], {BackgroundColor3 = bool and rgb(255, 255, 255) or rgb(86, 86, 88), Position = bool and dim2(1, -14, 0, 2) or dim2(0, 2, 0, 2)}, Enum.EasingStyle.Quad)
                 end
-
-                cfg.enabled = bool
-                cfg.callback(bool)
-
-                if cfg.folding then 
-                    elements.Visible = bool
-                end
-
-                flags[cfg.flag] = bool
-            end 
+            end
             
             local function flip_toggle()
                 cfg.enabled = not cfg.enabled
@@ -7347,11 +7349,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             function cfg.set(value)
                 cfg.value = clamp(library:round(value, cfg.intervals), cfg.min, cfg.max)
 
-                library:tween(items[ "fill" ], {Size = dim2((cfg.value - cfg.min) / (cfg.max - cfg.min), cfg.value == cfg.min and 0 or -4, 0, 2)}, Enum.EasingStyle.Linear, 0.05)
-                items[ "value" ].Text = tostring(cfg.value) .. cfg.suffix
-
                 flags[cfg.flag] = cfg.value
                 cfg.callback(flags[cfg.flag])
+
+                library:tween(items[ "fill" ], {Size = dim2((cfg.value - cfg.min) / (cfg.max - cfg.min), cfg.value == cfg.min and 0 or -4, 0, 2)}, Enum.EasingStyle.Linear, 0.05)
+                items[ "value" ].Text = tostring(cfg.value) .. cfg.suffix
             end
 
             local slide_input = nil
