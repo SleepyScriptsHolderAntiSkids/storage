@@ -185,6 +185,48 @@ do
     local function set_vis(element, state)
         if element.Visible ~= state then element.Visible = state end
     end
+
+    -- Rig only. Accessories live inside Accessory objects, so walking the direct
+    -- children and taking BaseParts gives the body without hats, hair or wings.
+    local ESP_BOX_CORNERS = {
+        Vector3.new( 1,  1,  1), Vector3.new( 1,  1, -1),
+        Vector3.new( 1, -1,  1), Vector3.new( 1, -1, -1),
+        Vector3.new(-1,  1,  1), Vector3.new(-1,  1, -1),
+        Vector3.new(-1, -1,  1), Vector3.new(-1, -1, -1)
+    }
+
+    -- Measured in the root's own space, so the result is a pose, not a place: it stays
+    -- valid while the target walks and turns. Only crouching changes it, which is why
+    -- it is re-measured on a slow cadence rather than every frame.
+    local ESP_RIG_REMEASURE = 0.5
+
+    local function rig_bounds(character, root)
+        local inverse = root.CFrame:Inverse()
+        local min_x, min_y, min_z = math.huge, math.huge, math.huge
+        local max_x, max_y, max_z = -math.huge, -math.huge, -math.huge
+        local found = false
+
+        for _, part in ipairs(character:GetChildren()) do
+            if part:IsA("BasePart") then
+                local pos = inverse * part.Position
+                local half = part.Size * 0.5
+
+                found = true
+
+                if pos.X - half.X < min_x then min_x = pos.X - half.X end
+                if pos.X + half.X > max_x then max_x = pos.X + half.X end
+                if pos.Y - half.Y < min_y then min_y = pos.Y - half.Y end
+                if pos.Y + half.Y > max_y then max_y = pos.Y + half.Y end
+                if pos.Z - half.Z < min_z then min_z = pos.Z - half.Z end
+                if pos.Z + half.Z > max_z then max_z = pos.Z + half.Z end
+            end
+        end
+
+        if not found then return end
+
+        return Vector3.new((min_x + max_x) * 0.5, (min_y + max_y) * 0.5, (min_z + max_z) * 0.5),
+               Vector3.new((max_x - min_x) * 0.5, (max_y - min_y) * 0.5, (max_z - min_z) * 0.5)
+    end
     local DuelController = require(lplayer:FindFirstChild("DuelController", true))
 
     local function hide_all_esp()
@@ -630,6 +672,8 @@ do
                     set_vis(Flag2, false)
                 end)
 
+                local rig_centre, rig_half, rig_measured_at = nil, nil, 0
+
                 local esp_elements = {
                     Box, Name, Distance, Weapon, StateFlag, Healthbar, BehindHealthbar,
                     HealthText, WeaponIcon, Chams, LeftTop, LeftSide, BottomSide,
@@ -715,17 +759,42 @@ do
                             Dist = (Cam.CFrame.Position - HRP.Position).Magnitude
                             
                             if OnScreen and Dist <= Config.ESP.MaxDistance then
-                                -- Accurate, monitor-independent box: project the character's
-                                -- head-top and feet-bottom to the screen and size the box from
-                                -- those real world points. WorldToViewportPoint handles FOV/
-                                -- aspect/resolution, so the box always hugs the body the same
-                                -- on any monitor. Tune the 2.9 half-height / 0.5 width ratio.
-                                local root_pos = HRP.Position
-                                local top_screen = Cam:WorldToViewportPoint(root_pos + Vector3.new(0, 2.9, 0))
-                                local bottom_screen = Cam:WorldToViewportPoint(root_pos - Vector3.new(0, 2.9, 0))
+                                -- Measure the rig, then project all eight corners of that volume
+                                -- and take the screen extents. Handles R6/R15, crouching and any
+                                -- facing angle, and stays monitor-independent because
+                                -- WorldToViewportPoint already accounts for FOV and resolution.
+                                local now = tick()
 
-                                h = math.abs(top_screen.Y - bottom_screen.Y)
-                                w = h * 0.5
+                                if not rig_half or now - rig_measured_at > ESP_RIG_REMEASURE then
+                                    rig_measured_at = now
+                                    rig_centre, rig_half = rig_bounds(character, HRP)
+                                end
+
+                                if rig_half then
+                                    local root_cf = HRP.CFrame
+                                    local left, right = math.huge, -math.huge
+                                    local top, bottom = math.huge, -math.huge
+
+                                    for corner = 1, 8 do
+                                        local screen = Cam:WorldToViewportPoint(root_cf * (rig_centre + ESP_BOX_CORNERS[corner] * rig_half))
+
+                                        if screen.X < left then left = screen.X end
+                                        if screen.X > right then right = screen.X end
+                                        if screen.Y < top then top = screen.Y end
+                                        if screen.Y > bottom then bottom = screen.Y end
+                                    end
+
+                                    w = right - left
+                                    h = bottom - top
+
+                                    Pos = Vector3.new((left + right) * 0.5, (top + bottom) * 0.5, Pos.Z)
+                                else
+                                    local root_pos = HRP.Position
+
+                                    h = math.abs(Cam:WorldToViewportPoint(root_pos + Vector3.new(0, 2.9, 0)).Y
+                                        - Cam:WorldToViewportPoint(root_pos - Vector3.new(0, 2.9, 0)).Y)
+                                    w = h * 0.5
+                                end
 
                                 -- Fade-out effect --
                                 if Config.ESP.FadeOut.OnDistance then
