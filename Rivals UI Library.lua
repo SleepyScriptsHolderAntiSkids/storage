@@ -1227,11 +1227,31 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return parent
         end
 
-        function library:round(number, float) 
+        function library:restore_nested(parent, branches)
+            local previous = parent.callback
+
+            parent.callback = function(state, ...)
+                if previous then previous(state, ...) end
+
+                if not state then return end
+
+                for i = 1, #branches do
+                    local branch = branches[i]
+
+                    if branch and branch.callback then
+                        branch.callback(branch.enabled)
+                    end
+                end
+            end
+
+            return parent
+        end
+
+        function library:round(number, float)
             local multiplier = 1 / (float or 1)
 
             return floor(number * multiplier + 0.5) / multiplier
-        end 
+        end
 
         function library:apply_theme(instance, theme, property) 
             insert(themes.utility[theme][property], instance)
@@ -5700,6 +5720,26 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end
 
             apply(parent.enabled)
+
+            return parent
+        end
+
+        function library:restore_nested(parent, branches)
+            local previous = parent.callback
+
+            parent.callback = function(state, ...)
+                if previous then previous(state, ...) end
+
+                if not state then return end
+
+                for i = 1, #branches do
+                    local branch = branches[i]
+
+                    if branch and branch.callback then
+                        branch.callback(branch.enabled)
+                    end
+                end
+            end
 
             return parent
         end
