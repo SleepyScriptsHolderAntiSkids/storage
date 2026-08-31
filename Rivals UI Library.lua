@@ -91,6 +91,30 @@ lighting = cloneref(game:GetService("Lighting"))
 
 mathrandom = math.random
 mathabs = math.abs
+
+-- FindFirstChildOfClass is watched by the game's AC, so resolve by conventional name
+-- first and fall back to a child scan. Cached refs, so no __namecall routing either.
+local ffc_child = Workspace.FindFirstChild
+local ffc_children = Workspace.GetChildren
+local ffc_isa = Workspace.IsA
+
+function child_of_class(parent, class_name, known_name)
+    if not parent then return nil end
+
+    if known_name then
+        local named = ffc_child(parent, known_name)
+        if named and ffc_isa(named, class_name) then return named end
+    end
+
+    local children = ffc_children(parent)
+
+    for i = 1, #children do
+        local child = children[i]
+        if ffc_isa(child, class_name) then return child end
+    end
+
+    return nil
+end
 Mobile = UserInputService.PreferredInput
 
 Camera = cloneref(Workspace.CurrentCamera)
@@ -2205,7 +2229,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
 
                 if cfg.autosize then
-                    local layout = items[ "elements" ]:FindFirstChildOfClass("UIListLayout")
+                    local layout = child_of_class(items[ "elements" ], "UIListLayout")
 
                     local fit_retry = 0
 
@@ -3483,8 +3507,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 color = options.color or color(1, 1, 1), -- Default to white color if not provided
                 alpha = options.alpha and 1 - options.alpha or 0,
-                
-                open = false, 
+
+                -- set on pickers whose target has no alpha channel, so the UI doesn't
+                -- offer a slider that cannot do anything
+                no_alpha = options.no_alpha or false,
+
+                open = false,
                 callback = options.callback or function() end,
                 items = {};
 
@@ -3863,7 +3891,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 library:tween(items[ "alpha_picker" ], {Position = dim2(0, (items[ "alpha_gradient" ].AbsoluteSize.X - items[ "alpha_picker" ].AbsoluteSize.X) * (1 - a), 0.5, 0)}, Enum.EasingStyle.Linear, 0.05)
                 library:tween(items[ "satvalpicker" ], {Position = dim2(0, s * (items[ "saturation_holder" ].AbsoluteSize.X - items[ "satvalpicker" ].AbsoluteSize.X), 1, 1 - v * (items[ "saturation_holder" ].AbsoluteSize.Y - items[ "satvalpicker" ].AbsoluteSize.Y))}, Enum.EasingStyle.Linear, 0.05)
 
-                items[ "alpha_indicator" ]:FindFirstChildOfClass("UIGradient").Color = rgbseq{rgbkey(0, rgb(112, 112, 112)), rgbkey(1, hsv(h, 1, 1))}; -- shit code
+                child_of_class(items[ "alpha_indicator" ], "UIGradient").Color = rgbseq{rgbkey(0, rgb(112, 112, 112)), rgbkey(1, hsv(h, 1, 1))}; -- shit code
                 
                 items[ "colorpicker" ].BackgroundColor3 = Color
                 items[ "colorpicker_inline" ].BackgroundColor3 = Color
@@ -3949,6 +3977,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 library:tween(items[ "input" ], {TextColor3 = rgb(72, 72, 72)})
             end)
             
+            if cfg.no_alpha then
+                -- Visible = false also stops the button receiving input, so the drag
+                -- handler dies with it. Holder loses the 18px the alpha row occupied.
+                items[ "alpha_gradient" ].Visible = false
+                items[ "colorpicker_holder" ].Size = dim2(0, 166, 0, 179)
+                cfg.alpha = 0
+            end
+
             cfg.set(cfg.color, cfg.alpha)
             config_flags[cfg.flag] = cfg.set
 
@@ -6674,7 +6710,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 });
 
                 if cfg.autosize then
-                    local layout = items[ "elements" ]:FindFirstChildOfClass("UIListLayout")
+                    local layout = child_of_class(items[ "elements" ], "UIListLayout")
 
                     local fit_retry = 0
 
@@ -7946,8 +7982,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 color = options.color or color(1, 1, 1), -- Default to white color if not provided
                 alpha = options.alpha and 1 - options.alpha or 0,
-                
-                open = false, 
+
+                -- set on pickers whose target has no alpha channel, so the UI doesn't
+                -- offer a slider that cannot do anything
+                no_alpha = options.no_alpha or false,
+
+                open = false,
                 callback = options.callback or function() end,
                 items = {};
 
@@ -8331,7 +8371,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 library:tween(items[ "alpha_picker" ], {Position = dim2(0, (items[ "alpha_gradient" ].AbsoluteSize.X - items[ "alpha_picker" ].AbsoluteSize.X) * (1 - a), 0.5, 0)}, Enum.EasingStyle.Linear, 0.05)
                 library:tween(items[ "satvalpicker" ], {Position = dim2(0, s * (items[ "saturation_holder" ].AbsoluteSize.X - items[ "satvalpicker" ].AbsoluteSize.X), 1, 1 - v * (items[ "saturation_holder" ].AbsoluteSize.Y - items[ "satvalpicker" ].AbsoluteSize.Y))}, Enum.EasingStyle.Linear, 0.05)
 
-                items[ "alpha_indicator" ]:FindFirstChildOfClass("UIGradient").Color = rgbseq{rgbkey(0, rgb(112, 112, 112)), rgbkey(1, hsv(h, 1, 1))}; -- shit code
+                child_of_class(items[ "alpha_indicator" ], "UIGradient").Color = rgbseq{rgbkey(0, rgb(112, 112, 112)), rgbkey(1, hsv(h, 1, 1))}; -- shit code
                 
                 items[ "colorpicker" ].BackgroundColor3 = Color
                 items[ "colorpicker_inline" ].BackgroundColor3 = Color
@@ -8422,6 +8462,14 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 library:tween(items[ "input" ], {TextColor3 = rgb(72, 72, 72)})
             end))
             
+            if cfg.no_alpha then
+                -- Visible = false also stops the button receiving input, so the drag
+                -- handler dies with it. Holder loses the 18px the alpha row occupied.
+                items[ "alpha_gradient" ].Visible = false
+                items[ "colorpicker_holder" ].Size = dim2(0, 166, 0, 179)
+                cfg.alpha = 0
+            end
+
             cfg.set(cfg.color, cfg.alpha)
             config_flags[cfg.flag] = cfg.set
 
