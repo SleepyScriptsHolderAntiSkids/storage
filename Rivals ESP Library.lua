@@ -150,6 +150,30 @@ do
     local Players = cloneref(game:GetService("Players"))
     local CoreGui = cloneref(game:GetService("CoreGui"))
 
+    -- FindFirstChildOfClass is watched by the game's AC and this runs on every enemy
+    -- character every frame, so resolve by the conventional name off a cached ref.
+    local esp_find_child = Workspace.FindFirstChild
+    local esp_get_children = Workspace.GetChildren
+    local esp_is_a = Workspace.IsA
+
+    local function ChildOfClass(parent, class_name, known_name)
+        if not parent then return nil end
+
+        if known_name then
+            local named = esp_find_child(parent, known_name)
+            if named and esp_is_a(named, class_name) then return named end
+        end
+
+        local children = esp_get_children(parent)
+
+        for i = 1, #children do
+            local child = children[i]
+            if esp_is_a(child, class_name) then return child end
+        end
+
+        return nil
+    end
+
     -- Def & Vars
     local Euphoria = Config.ESP.Connections;
     local lplayer = Players.LocalPlayer;
@@ -200,6 +224,28 @@ do
             ColorSequenceKeypoint.new(0, cfg.RGB1 or ESP_TEXT_WHITE),
             ColorSequenceKeypoint.new(0.5, cfg.RGB2 or ESP_TEXT_WHITE),
             ColorSequenceKeypoint.new(1, cfg.RGB3 or ESP_TEXT_WHITE)
+        }
+    end
+
+    -- each gradient stop carries its own alpha, so the three colourpickers fade
+    -- independently across the label rather than sharing one flat value
+    local ESP_TEXT_OPAQUE = NumberSequence.new(0)
+
+    local function text_gradient_transparency()
+        local cfg = Config.ESP.Drawing.TextGradient
+
+        if not cfg then return ESP_TEXT_OPAQUE end
+
+        local a1 = tonumber(cfg.Alpha1) or 0
+        local a2 = tonumber(cfg.Alpha2) or 0
+        local a3 = tonumber(cfg.Alpha3) or 0
+
+        if a1 == 0 and a2 == 0 and a3 == 0 then return ESP_TEXT_OPAQUE end
+
+        return NumberSequence.new{
+            NumberSequenceKeypoint.new(0, math.clamp(a1, 0, 1)),
+            NumberSequenceKeypoint.new(0.5, math.clamp(a2, 0, 1)),
+            NumberSequenceKeypoint.new(1, math.clamp(a3, 0, 1))
         }
     end
     local DuelController = require(lplayer:FindFirstChild("DuelController", true))
@@ -455,6 +501,7 @@ do
 
                                 if sequence then
                                     gradient.Color = sequence
+                                    gradient.Transparency = text_gradient_transparency()
 
                                     -- Animation owns Rotation while it runs; writing the
                                     -- slider value here would fight it every refresh.
@@ -638,6 +685,7 @@ do
             local Updater = function()
                 local esp_key = plr.Name;
                 local hb_c1, hb_c2;
+                local hb_a1, hb_a2;
                 local wep_next = 0;
                 local state_next, state_label, state_color = 0, nil, nil;
                 local icon_row = 28;
@@ -718,6 +766,12 @@ do
                             ColorSequenceKeypoint.new(1, particles.RGB3 or ESP_TEXT_WHITE)
                         }
 
+                        particle_emitter.Transparency = NumberSequence.new{
+                            NumberSequenceKeypoint.new(0, math.clamp(tonumber(particles.Alpha1) or 0, 0, 1)),
+                            NumberSequenceKeypoint.new(0.5, math.clamp(tonumber(particles.Alpha2) or 0, 0, 1)),
+                            NumberSequenceKeypoint.new(1, math.clamp(tonumber(particles.Alpha3) or 0, 0, 1))
+                        }
+
                         particle_emitter.Size = NumberSequence.new(particles.Size or 0.5)
                         particle_emitter.Lifetime = NumberRange.new(particles.Lifetime or 0.5)
                         particle_emitter.Rate = particles.Rate or 10
@@ -786,7 +840,7 @@ do
 
                     if character and character.Parent and character:IsDescendantOf(Workspace) then
                         if not Humanoid or Humanoid.Parent ~= character then
-                            Humanoid = character:FindFirstChildOfClass("Humanoid")
+                            Humanoid = ChildOfClass(character, "Humanoid", "Humanoid")
                         end
 
                         if not HRP or HRP.Parent ~= character then
@@ -994,6 +1048,20 @@ do
                                             HealthbarGradient.Enabled = Config.ESP.Drawing.Healthbar.Gradient
                                             local _hbc1 = Config.ESP.Drawing.Healthbar.GradientRGB1
                                             local _hbc2 = Config.ESP.Drawing.Healthbar.GradientRGB2
+
+                                            -- both healthbar pickers carry alpha; low end at
+                                            -- stop 0, high end at stop 1
+                                            local _hba1 = tonumber(Config.ESP.Drawing.Healthbar.GradientAlpha1) or 0
+                                            local _hba2 = tonumber(Config.ESP.Drawing.Healthbar.GradientAlpha2) or 0
+
+                                            if _hba1 ~= hb_a1 or _hba2 ~= hb_a2 then
+                                                hb_a1, hb_a2 = _hba1, _hba2
+                                                HealthbarGradient.Transparency = NumberSequence.new{
+                                                    NumberSequenceKeypoint.new(0, math.clamp(_hba1, 0, 1)),
+                                                    NumberSequenceKeypoint.new(1, math.clamp(_hba2, 0, 1))
+                                                }
+                                            end
+
                                             if _hbc1 ~= hb_c1 or _hbc2 ~= hb_c2 then
                                                 hb_c1, hb_c2 = _hbc1, _hbc2
                                                 HealthbarGradient.Color = ColorSequence.new{
