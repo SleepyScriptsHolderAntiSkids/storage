@@ -1227,26 +1227,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return parent
         end
 
-        function library:restore_nested(parent, branches)
-            local previous = parent.callback
-
-            parent.callback = function(state, ...)
-                if previous then previous(state, ...) end
-
-                if not state then return end
-
-                for i = 1, #branches do
-                    local branch = branches[i]
-
-                    if branch and branch.callback then
-                        branch.callback(branch.enabled)
-                    end
-                end
-            end
-
-            return parent
-        end
-
         function library:round(number, float)
             local multiplier = 1 / (float or 1)
 
@@ -3192,8 +3172,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                         PaddingLeft = dim(0, 3);
                         Parent = items[ "outline" ]
                     });
-                    
-                    library:create( "UIListLayout" , {
+
+                    items[ "outline_layout" ] = library:create( "UIListLayout" , {
                         Parent = items[ "outline" ];
                         Padding = dim(0, 5);
                         SortOrder = Enum.SortOrder.LayoutOrder
@@ -3233,8 +3213,36 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 
                 return button
             end
-            
+
+            -- Measured on open, never at build time. Rows report AbsoluteSize 0 until the
+            -- layout pass runs, so sizing at creation collapses short lists to a sliver.
+            function cfg.measure()
+                local count = #cfg.option_instances
+
+                if count == 0 then
+                    cfg.y_size, cfg.overflow = 0, false
+
+                    return
+                end
+
+                local layout = items[ "outline_layout" ]
+                local content = layout and layout.AbsoluteContentSize.Y or 0
+
+                if content <= 0 then -- layout hasn't settled, size off the rows themselves
+                    content = (count - 1) * 5
+
+                    for _, option in cfg.option_instances do
+                        content += option.AbsoluteSize.Y > 0 and option.AbsoluteSize.Y or 19
+                    end
+                end
+
+                cfg.y_size = content + 9 -- UIPadding top (3) + bottom (6)
+                cfg.overflow = cfg.y_size > 220
+            end
+
             function cfg.set_visible(bool)
+                if bool then cfg.measure() end
+
                 local a = bool and math.min(cfg.y_size, 220) or 0
                 local holder = items[ "dropdown_holder" ]
                 local outline = items[ "outline" ]
@@ -3248,7 +3256,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                     if outline then
                         outline.Visible = true
-                        outline.ScrollBarThickness = 3
+                        -- short lists get no bar, otherwise the inset steals row width for nothing
+                        outline.ScrollBarThickness = cfg.overflow and 3 or 0
                     end
                 elseif outline then
                     outline.ScrollBarThickness = 0
@@ -3261,7 +3270,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 holder.Position = dim2(0, items[ "dropdown" ].AbsolutePosition.X, 0, items[ "dropdown" ].AbsolutePosition.Y + 80)
 
                 if bool and outline then
-                    outline.ScrollingEnabled = true
+                    outline.ScrollingEnabled = cfg.overflow
                 end
 
                 if not bool then
@@ -3306,9 +3315,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 
                 cfg.option_instances = {} 
 
-                for _, option in list do 
+                for _, option in list do
                     local button = cfg.render_option(option)
-                    cfg.y_size += button.AbsoluteSize.Y + 6 -- super annoying manual sizing but oh well
                     insert(cfg.option_instances, button)
                     
                     button.MouseButton1Down:Connect(function()
@@ -5724,26 +5732,6 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return parent
         end
 
-        function library:restore_nested(parent, branches)
-            local previous = parent.callback
-
-            parent.callback = function(state, ...)
-                if previous then previous(state, ...) end
-
-                if not state then return end
-
-                for i = 1, #branches do
-                    local branch = branches[i]
-
-                    if branch and branch.callback then
-                        branch.callback(branch.enabled)
-                    end
-                end
-            end
-
-            return parent
-        end
-
         function library:round(number, float)
             local multiplier = 1 / (float or 1)
 
@@ -7663,15 +7651,30 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 -- 
             end 
 
+            -- Measured on open, never at build time. Rows report AbsoluteSize 0 until the
+            -- layout pass runs, so sizing at creation collapses short lists to a sliver.
             function cfg.measure()
+                local count = #cfg.option_instances
+
+                if count == 0 then
+                    cfg.y_size, cfg.overflow = 0, false
+
+                    return
+                end
+
                 local layout = items[ "outline_layout" ]
                 local content = layout and layout.AbsoluteContentSize.Y or 0
 
-                if content <= 0 then
-                    content = #cfg.option_instances * 24
+                if content <= 0 then -- layout hasn't settled, size off the rows themselves
+                    content = (count - 1) * 5
+
+                    for _, option in cfg.option_instances do
+                        content += option.AbsoluteSize.Y > 0 and option.AbsoluteSize.Y or 19
+                    end
                 end
 
-                cfg.y_size = content + 9
+                cfg.y_size = content + 9 -- UIPadding top (3) + bottom (6)
+                cfg.overflow = cfg.y_size > 220
             end
 
             function cfg.render_option(text)
@@ -7722,7 +7725,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                     if outline then
                         outline.Visible = true
-                        outline.ScrollBarThickness = 3
+                        -- short lists get no bar, otherwise the inset steals row width for nothing
+                        outline.ScrollBarThickness = cfg.overflow and 3 or 0
                     end
                 elseif outline then
                     outline.ScrollBarThickness = 0
@@ -7735,7 +7739,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 holder.Position = dim2(0, items[ "dropdown" ].AbsolutePosition.X, 0, items[ "dropdown" ].AbsolutePosition.Y + 80)
 
                 if bool and outline then
-                    outline.ScrollingEnabled = true
+                    outline.ScrollingEnabled = cfg.overflow
                 end
 
                 if not bool then
