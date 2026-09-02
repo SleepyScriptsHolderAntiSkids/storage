@@ -665,10 +665,20 @@ getgenv().crosshair = {
 
     crosshair_color = Color3.fromRGB(0, 163, 224),
 
+    outline = true,
+    outline_color = Color3.new(0, 0, 0),
+    outline_alpha = 0,
+
+    bounce = 0,
+    bounce_speed = 1,
+    lerp = 20,
+
     color1 = Color3.fromRGB(0, 163, 224),
     color2 = Color3.fromRGB(0, 163, 224),
     color3 = Color3.fromRGB(0, 163, 224),
     gradient_rotation = 0,
+    gradient_animate = false,
+    gradient_speed = 60,
 
     spin = true,
     spin_speed = 150,
@@ -2857,11 +2867,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 items[ "slider_hitbox" ] = library:create( "TextButton" , {
                     Text = "";
                     AutoButtonColor = false;
-                    AnchorPoint = vec2(1, 0.5);
-                    Parent = items[ "right_components" ];
+                    AnchorPoint = vec2(0, 0);
+                    Parent = items[ "slider_object" ];
                     Name = "\0";
-                    Position = dim2(1, 0, 0, 2);
-                    Size = dim2(1, -4, 0, 22);
+                    Position = dim2(0, 0, 0, 14);
+                    Size = dim2(1, 0, 0, 28);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
                     ZIndex = 5;
@@ -2960,6 +2970,12 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             end))
 
             items[ "slider" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    begin_slide(input)
+                end
+            end))
+
+            items[ "slider_object" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     begin_slide(input)
                 end
@@ -7337,11 +7353,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 items[ "slider_hitbox" ] = library:create( "TextButton" , {
                     Text = "";
                     AutoButtonColor = false;
-                    AnchorPoint = vec2(1, 0.5);
-                    Parent = items[ "right_components" ];
+                    AnchorPoint = vec2(0, 0);
+                    Parent = items[ "slider_object" ];
                     Name = "\0";
-                    Position = dim2(1, 0, 0, 2);
-                    Size = dim2(1, -4, 0, 22);
+                    Position = dim2(0, 0, 0, 14);
+                    Size = dim2(1, 0, 0, 28);
                     BorderSizePixel = 0;
                     BackgroundTransparency = 1;
                     ZIndex = 5;
@@ -7440,6 +7456,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
             items[ "slider_hitbox" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(begin_slide))
             items[ "slider" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(begin_slide))
+            items[ "slider_object" ].InputBegan:Connect(LPH_NO_VIRTUALIZE(begin_slide))
 
             library:connection(uis.InputChanged, function(input)
                 if cfg.dragging and input == slide_input then
