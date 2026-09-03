@@ -774,6 +774,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
     local themes = {
         preset = {
             accent = rgb(0, 162, 255),
+            background = rgb(14, 14, 16),
+            element = rgb(25, 25, 29),
+            outline = rgb(36, 36, 37),
+            text = rgb(245, 245, 245),
+            inactive = rgb(72, 72, 73),
         }, 
 
         utility = {
@@ -1267,6 +1272,123 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return floor(number * multiplier + 0.5) / multiplier
         end
 
+        local THEME_BASES = {
+            background = rgb(14, 14, 16),
+            element    = rgb(25, 25, 29),
+            outline    = rgb(36, 36, 37),
+            text       = rgb(245, 245, 245),
+            inactive   = rgb(72, 72, 73)
+        }
+
+        local THEME_LOOKUP = {
+            ["14,14,16"]    = "background",
+            ["23,23,29"]    = "background",
+            ["18,18,20"]    = "background",
+            ["25,25,29"]    = "element",
+            ["33,33,35"]    = "element",
+            ["28,28,32"]    = "element",
+            ["36,36,37"]    = "outline",
+            ["22,22,24"]    = "outline",
+            ["50,50,50"]    = "outline",
+            ["245,245,245"] = "text",
+            ["211,211,211"] = "text",
+            ["72,72,73"]    = "inactive",
+            ["72,72,72"]    = "inactive",
+            ["130,130,130"] = "inactive",
+            ["58,58,62"]    = "inactive",
+            ["67,67,68"]    = "inactive",
+            ["86,86,88"]    = "inactive",
+            ["86,86,87"]    = "inactive"
+        }
+
+        local THEME_PROPERTIES = { "BackgroundColor3", "TextColor3", "ImageColor3", "ScrollBarImageColor3" }
+
+        local theme_tracked = {}
+
+        local function theme_key_of(color)
+            if typeof(color) ~= "Color3" then return nil end
+
+            local id = math.floor(color.R * 255 + 0.5) .. "," .. math.floor(color.G * 255 + 0.5) .. "," .. math.floor(color.B * 255 + 0.5)
+
+            return THEME_LOOKUP[id]
+        end
+
+        local function theme_shade(base, original, target)
+            local base_level = (base.R + base.G + base.B) / 3
+            local original_level = (original.R + original.G + original.B) / 3
+            local ratio = base_level > 0.004 and (original_level / base_level) or 1
+
+            return Color3.new(
+                math.clamp(target.R * ratio, 0, 1),
+                math.clamp(target.G * ratio, 0, 1),
+                math.clamp(target.B * ratio, 0, 1)
+            )
+        end
+
+        function library:track_theme(instance, options)
+            for _, property in THEME_PROPERTIES do
+                local value = options[property]
+                local key = theme_key_of(value)
+
+                if key then
+                    insert(theme_tracked, {
+                        instance = instance,
+                        property = property,
+                        original = value,
+                        key = key
+                    })
+                end
+            end
+        end
+
+        function library:paint_theme(key, color)
+            themes.preset[key] = color
+
+            for _, entry in theme_tracked do
+                if entry.key == key and entry.instance and entry.instance.Parent then
+                    entry.instance[entry.property] = theme_shade(THEME_BASES[key], entry.original, color)
+                end
+            end
+        end
+
+        THEME_PRESETS = {
+            ["Sleepy"]     = { accent = rgb(0, 162, 255),   background = rgb(14, 14, 16),  element = rgb(25, 25, 29),  outline = rgb(36, 36, 37),  text = rgb(245, 245, 245), inactive = rgb(72, 72, 73) },
+            ["Midnight"]   = { accent = rgb(120, 120, 255), background = rgb(10, 10, 18),  element = rgb(20, 20, 34),  outline = rgb(34, 34, 52),  text = rgb(238, 238, 255), inactive = rgb(76, 76, 100) },
+            ["Crimson"]    = { accent = rgb(230, 45, 60),   background = rgb(16, 10, 11),  element = rgb(28, 18, 20),  outline = rgb(48, 30, 32),  text = rgb(250, 238, 238), inactive = rgb(92, 66, 68) },
+            ["Emerald"]    = { accent = rgb(40, 210, 130),  background = rgb(10, 16, 14),  element = rgb(18, 28, 24),  outline = rgb(30, 46, 40),  text = rgb(236, 250, 244), inactive = rgb(66, 92, 82) },
+            ["Amber"]      = { accent = rgb(255, 176, 32),  background = rgb(16, 14, 10),  element = rgb(28, 24, 18),  outline = rgb(48, 42, 30),  text = rgb(250, 246, 236), inactive = rgb(96, 88, 68) },
+            ["Ultraviolet"]= { accent = rgb(190, 90, 255),  background = rgb(14, 10, 18),  element = rgb(26, 20, 34),  outline = rgb(44, 34, 56),  text = rgb(244, 238, 252), inactive = rgb(88, 72, 104) },
+            ["Monochrome"] = { accent = rgb(225, 225, 225), background = rgb(12, 12, 12),  element = rgb(24, 24, 24),  outline = rgb(42, 42, 42),  text = rgb(245, 245, 245), inactive = rgb(96, 96, 96) },
+            ["Ocean"]      = { accent = rgb(0, 200, 220),   background = rgb(8, 14, 18),   element = rgb(16, 26, 32),  outline = rgb(28, 44, 54),  text = rgb(234, 248, 252), inactive = rgb(64, 92, 104) },
+            ["Rose"]       = { accent = rgb(255, 105, 170), background = rgb(18, 12, 15),  element = rgb(30, 20, 26),  outline = rgb(50, 34, 42),  text = rgb(252, 240, 246), inactive = rgb(100, 74, 86) }
+        }
+
+        THEME_PRESET_NAMES = { "Sleepy", "Midnight", "Crimson", "Emerald", "Amber", "Ultraviolet", "Monochrome", "Ocean", "Rose" }
+
+        function library:apply_theme_preset(name)
+            local preset = THEME_PRESETS[name]
+
+            if not preset then return end
+
+            library:update_theme("accent", preset.accent)
+
+            for key in THEME_BASES do
+                if preset[key] then
+                    library:paint_theme(key, preset[key])
+                end
+            end
+
+            if library.theme_pickers then
+                for key, picker in library.theme_pickers do
+                    local color = key == "accent" and preset.accent or preset[key]
+
+                    if color and picker and picker.set then
+                        pcall(picker.set, color, 0)
+                    end
+                end
+            end
+        end
+
         function library:apply_theme(instance, theme, property) 
             insert(themes.utility[theme][property], instance)
         end
@@ -1311,6 +1433,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             for prop, value in options do 
                 ins[prop] = value
             end
+
+            library:track_theme(ins, options)
             
             return ins 
         end
@@ -4892,9 +5016,9 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 if state then
                     if script_key then
-                        local loader = (getgenv().Build == "Beta")
-                            and "e18a1d76bcc68efec407c3f7ee36935d"
-                            or "a462cc3ca7e0c3747808a34e71946652"
+                        local loader = (getgenv().Build == "Paid")
+                            and "d39ae8d7a3f0a3b6a4a54d9e53f97c23"
+                            or "e35a387f84dfdf79459747b73c68a7bf"
 
                         queue_on_teleport([[
                             repeat task.wait() until game:IsLoaded()
@@ -4923,7 +5047,18 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 library.notifications:refresh_notifs()
             end})
 
-            section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
+            library.theme_pickers = library.theme_pickers or {}
+
+            library.theme_pickers.accent = section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
+            library.theme_pickers.background = section:colorpicker({name = "Background", callback = function(color) library:paint_theme("background", color) end, color = themes.preset.background})
+            library.theme_pickers.element = section:colorpicker({name = "Elements", callback = function(color) library:paint_theme("element", color) end, color = themes.preset.element})
+            library.theme_pickers.outline = section:colorpicker({name = "Outlines", callback = function(color) library:paint_theme("outline", color) end, color = themes.preset.outline})
+            library.theme_pickers.text = section:colorpicker({name = "Text", callback = function(color) library:paint_theme("text", color) end, color = themes.preset.text})
+            library.theme_pickers.inactive = section:colorpicker({name = "Inactive", callback = function(color) library:paint_theme("inactive", color) end, color = themes.preset.inactive})
+
+            section:dropdown({name = "Theme Preset", flag = "menu_theme_preset", width = 100, items = THEME_PRESET_NAMES, multi = false, default = "Sleepy", seperator = true, callback = function(state)
+                library:apply_theme_preset(state)
+            end})
             library.menu_bind = section:keybind({name = "Menu Bind", key = Enum.KeyCode.Insert, callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
 
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
@@ -5262,6 +5397,11 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
     local themes = {
         preset = {
             accent = rgb(0, 162, 255),
+            background = rgb(14, 14, 16),
+            element = rgb(25, 25, 29),
+            outline = rgb(36, 36, 37),
+            text = rgb(245, 245, 245),
+            inactive = rgb(72, 72, 73),
         }, 
 
         utility = {
@@ -5790,6 +5930,123 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             return floor(number * multiplier + 0.5) / multiplier
         end 
 
+        local THEME_BASES = {
+            background = rgb(14, 14, 16),
+            element    = rgb(25, 25, 29),
+            outline    = rgb(36, 36, 37),
+            text       = rgb(245, 245, 245),
+            inactive   = rgb(72, 72, 73)
+        }
+
+        local THEME_LOOKUP = {
+            ["14,14,16"]    = "background",
+            ["23,23,29"]    = "background",
+            ["18,18,20"]    = "background",
+            ["25,25,29"]    = "element",
+            ["33,33,35"]    = "element",
+            ["28,28,32"]    = "element",
+            ["36,36,37"]    = "outline",
+            ["22,22,24"]    = "outline",
+            ["50,50,50"]    = "outline",
+            ["245,245,245"] = "text",
+            ["211,211,211"] = "text",
+            ["72,72,73"]    = "inactive",
+            ["72,72,72"]    = "inactive",
+            ["130,130,130"] = "inactive",
+            ["58,58,62"]    = "inactive",
+            ["67,67,68"]    = "inactive",
+            ["86,86,88"]    = "inactive",
+            ["86,86,87"]    = "inactive"
+        }
+
+        local THEME_PROPERTIES = { "BackgroundColor3", "TextColor3", "ImageColor3", "ScrollBarImageColor3" }
+
+        local theme_tracked = {}
+
+        local function theme_key_of(color)
+            if typeof(color) ~= "Color3" then return nil end
+
+            local id = math.floor(color.R * 255 + 0.5) .. "," .. math.floor(color.G * 255 + 0.5) .. "," .. math.floor(color.B * 255 + 0.5)
+
+            return THEME_LOOKUP[id]
+        end
+
+        local function theme_shade(base, original, target)
+            local base_level = (base.R + base.G + base.B) / 3
+            local original_level = (original.R + original.G + original.B) / 3
+            local ratio = base_level > 0.004 and (original_level / base_level) or 1
+
+            return Color3.new(
+                math.clamp(target.R * ratio, 0, 1),
+                math.clamp(target.G * ratio, 0, 1),
+                math.clamp(target.B * ratio, 0, 1)
+            )
+        end
+
+        function library:track_theme(instance, options)
+            for _, property in THEME_PROPERTIES do
+                local value = options[property]
+                local key = theme_key_of(value)
+
+                if key then
+                    insert(theme_tracked, {
+                        instance = instance,
+                        property = property,
+                        original = value,
+                        key = key
+                    })
+                end
+            end
+        end
+
+        function library:paint_theme(key, color)
+            themes.preset[key] = color
+
+            for _, entry in theme_tracked do
+                if entry.key == key and entry.instance and entry.instance.Parent then
+                    entry.instance[entry.property] = theme_shade(THEME_BASES[key], entry.original, color)
+                end
+            end
+        end
+
+        THEME_PRESETS = {
+            ["Sleepy"]     = { accent = rgb(0, 162, 255),   background = rgb(14, 14, 16),  element = rgb(25, 25, 29),  outline = rgb(36, 36, 37),  text = rgb(245, 245, 245), inactive = rgb(72, 72, 73) },
+            ["Midnight"]   = { accent = rgb(120, 120, 255), background = rgb(10, 10, 18),  element = rgb(20, 20, 34),  outline = rgb(34, 34, 52),  text = rgb(238, 238, 255), inactive = rgb(76, 76, 100) },
+            ["Crimson"]    = { accent = rgb(230, 45, 60),   background = rgb(16, 10, 11),  element = rgb(28, 18, 20),  outline = rgb(48, 30, 32),  text = rgb(250, 238, 238), inactive = rgb(92, 66, 68) },
+            ["Emerald"]    = { accent = rgb(40, 210, 130),  background = rgb(10, 16, 14),  element = rgb(18, 28, 24),  outline = rgb(30, 46, 40),  text = rgb(236, 250, 244), inactive = rgb(66, 92, 82) },
+            ["Amber"]      = { accent = rgb(255, 176, 32),  background = rgb(16, 14, 10),  element = rgb(28, 24, 18),  outline = rgb(48, 42, 30),  text = rgb(250, 246, 236), inactive = rgb(96, 88, 68) },
+            ["Ultraviolet"]= { accent = rgb(190, 90, 255),  background = rgb(14, 10, 18),  element = rgb(26, 20, 34),  outline = rgb(44, 34, 56),  text = rgb(244, 238, 252), inactive = rgb(88, 72, 104) },
+            ["Monochrome"] = { accent = rgb(225, 225, 225), background = rgb(12, 12, 12),  element = rgb(24, 24, 24),  outline = rgb(42, 42, 42),  text = rgb(245, 245, 245), inactive = rgb(96, 96, 96) },
+            ["Ocean"]      = { accent = rgb(0, 200, 220),   background = rgb(8, 14, 18),   element = rgb(16, 26, 32),  outline = rgb(28, 44, 54),  text = rgb(234, 248, 252), inactive = rgb(64, 92, 104) },
+            ["Rose"]       = { accent = rgb(255, 105, 170), background = rgb(18, 12, 15),  element = rgb(30, 20, 26),  outline = rgb(50, 34, 42),  text = rgb(252, 240, 246), inactive = rgb(100, 74, 86) }
+        }
+
+        THEME_PRESET_NAMES = { "Sleepy", "Midnight", "Crimson", "Emerald", "Amber", "Ultraviolet", "Monochrome", "Ocean", "Rose" }
+
+        function library:apply_theme_preset(name)
+            local preset = THEME_PRESETS[name]
+
+            if not preset then return end
+
+            library:update_theme("accent", preset.accent)
+
+            for key in THEME_BASES do
+                if preset[key] then
+                    library:paint_theme(key, preset[key])
+                end
+            end
+
+            if library.theme_pickers then
+                for key, picker in library.theme_pickers do
+                    local color = key == "accent" and preset.accent or preset[key]
+
+                    if color and picker and picker.set then
+                        pcall(picker.set, color, 0)
+                    end
+                end
+            end
+        end
+
         function library:apply_theme(instance, theme, property) 
             insert(themes.utility[theme][property], instance)
         end
@@ -5834,6 +6091,8 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             for prop, value in options do 
                 ins[prop] = value
             end
+
+            library:track_theme(ins, options)
             
             return ins 
         end
@@ -9364,7 +9623,18 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 library.notifications:refresh_notifs()
             end})
 
-            section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
+            library.theme_pickers = library.theme_pickers or {}
+
+            library.theme_pickers.accent = section:colorpicker({name = "Menu Accent", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
+            library.theme_pickers.background = section:colorpicker({name = "Background", callback = function(color) library:paint_theme("background", color) end, color = themes.preset.background})
+            library.theme_pickers.element = section:colorpicker({name = "Elements", callback = function(color) library:paint_theme("element", color) end, color = themes.preset.element})
+            library.theme_pickers.outline = section:colorpicker({name = "Outlines", callback = function(color) library:paint_theme("outline", color) end, color = themes.preset.outline})
+            library.theme_pickers.text = section:colorpicker({name = "Text", callback = function(color) library:paint_theme("text", color) end, color = themes.preset.text})
+            library.theme_pickers.inactive = section:colorpicker({name = "Inactive", callback = function(color) library:paint_theme("inactive", color) end, color = themes.preset.inactive})
+
+            section:dropdown({name = "Theme Preset", flag = "menu_theme_preset", width = 100, items = THEME_PRESET_NAMES, multi = false, default = "Sleepy", seperator = true, callback = function(state)
+                library:apply_theme_preset(state)
+            end})
             library.menu_bind = section:keybind({name = "Menu Bind", callback = function(bool) window.toggle_menu(bool) end, default = true})
 
             library.setup_complete = true
