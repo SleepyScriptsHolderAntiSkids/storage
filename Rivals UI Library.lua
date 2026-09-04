@@ -9612,12 +9612,10 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
 
                 if paid and not script_key then return end
 
-                local source = "repeat task.wait() until game:IsLoaded()
-"
+                local source = "repeat task.wait() until game:IsLoaded()\n"
 
                 if paid then
-                    source = source .. 'script_key = "' .. script_key .. '"
-'
+                    source = source .. 'script_key = "' .. script_key .. '"\n'
                 end
 
                 source = source .. 'loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/' .. loader .. '.lua"))()'
