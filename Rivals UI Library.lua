@@ -9596,38 +9596,27 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
                 end
             })
 
-            section:toggle({type="toggle",name="Auto Load Script",flag="autoload_enabled",default=startup_data.autoload_enabled, callback = function(state)
-                write_startup_data("autoload_enabled", state)
-
-                if not state then
-                    queue_on_teleport("")
-
-                    return
-                end
-
-                local paid = getgenv().Build == "Paid"
-                local loader = paid
-                    and "d39ae8d7a3f0a3b6a4a54d9e53f97c23"
-                    or "e35a387f84dfdf79459747b73c68a7bf"
-
-                if paid and not script_key then return end
-
-                local source = "repeat task.wait() until game:IsLoaded()
-"
-
-                if paid then
-                    source = source .. 'script_key = "' .. script_key .. '"
-'
-                end
-
-                source = source .. 'loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/' .. loader .. '.lua"))()'
-
-                queue_on_teleport(source)
-            end})
-
             section:toggle({type = "toggle", name = "Silent Load", flag = "silent_load", default = startup_data.silent_load, seperator = true, callback = function(state)
                 getgenv().silent_load_active = state
                 write_startup_data("silent_load", state)
+            end})
+
+            section:button({name = "Rejoin", callback = function()
+                cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(
+                    game.PlaceId,
+                    game.JobId
+                )
+            end})
+
+            section:button({name = "Panic", callback = function()
+                if not library.default_config then return end
+
+                notifications:create_notification({
+                    name = "Sleepy.gg",
+                    info = "Everything reset to default"
+                })
+
+                library:load_config(library.default_config)
             end})
 
             section:textbox({name = "Menu Size %", flag = "menu_size", default = "50", placeholder = "50", callback = function(text)
@@ -9653,72 +9642,7 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             section:dropdown({name = "Theme Preset", flag = "menu_theme_preset", width = 100, items = THEME_PRESET_NAMES, multi = false, default = "Sleepy", seperator = true, callback = function(state)
                 library:apply_theme_preset(state)
             end})
-            library.menu_bind = section:keybind({name = "Menu Bind", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
-
-            local _request = (http_request and http_request) or (request and request) or (http and http.request)
-
-            section:button({name = "Join Lowest Server", callback = function()
-                local Servers = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", tostring(game.PlaceId))
-
-                local ListServers = function(cursor)
-                    local Raw = game:HttpGet(Servers .. ((cursor and "&cursor="..cursor) or ""))
-                    return cloneref(game:GetService("HttpService")):JSONDecode(Raw)
-                end
-
-                local Server, Next; repeat
-                    local Servers = ListServers(Next)
-                    Server = Servers.data[1]
-                    Next = Servers.nextPageCursor
-                until Server
-
-                if Server.id == game.JobId then
-                    library.notifications:create_notification({
-                        name = "Sleepy.gg",
-                        info = `You are currently in the smallest server!`,
-                        lifetime = 10
-                    })
-                    return
-                end
-
-                cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(game.PlaceId, Server.id)
-            end})
-
-            section:button({name = "Server Hop", callback = function()
-                local Servers = {}
-                local Request = _request({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", tostring(game.PlaceId))})
-                local Body = cloneref(game:GetService("HttpService")):JSONDecode(Request.Body)
-
-                if Body and Body.data then
-                    for _, Value in next, Body.data do
-                        if type(Value) == "table" and tonumber(Value.playing) and tonumber(Value.maxPlayers) and Value.playing < Value.maxPlayers and Value.id ~= game.JobId then
-                            table.insert(Servers, 1, Value.id)
-                        end
-                    end
-                end
-
-                cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(
-                    game.PlaceId,
-                    Servers[math.random(1, #Servers)]
-                )
-            end})
-
-            section:button({name = "Rejoin", callback = function()
-                cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(
-                    game.PlaceId,
-                    game.JobId
-                )
-            end})
-
-            section:button({name = "Panic", callback = function()
-                if not library.default_config then return end
-
-                notifications:create_notification({
-                    name = "Sleepy.gg",
-                    info = "Everything reset to default"
-                })
-
-                library:load_config(library.default_config)
-            end})
+            library.menu_bind = section:keybind({name = "Menu Bind", callback = function(bool) window.toggle_menu(bool) end, default = true})
 
             library.setup_complete = true
         end
