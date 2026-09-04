@@ -5014,21 +5014,28 @@ if Mobile == (Enum.PreferredInput.KeyboardAndMouse) then
             section:toggle({type="toggle",name="Auto Load Script",flag="autoload_enabled",default=startup_data.autoload_enabled, callback = function(state)
                 write_startup_data("autoload_enabled", state)
 
-                if state then
-                    if script_key then
-                        local loader = (getgenv().Build == "Paid")
-                            and "d39ae8d7a3f0a3b6a4a54d9e53f97c23"
-                            or "e35a387f84dfdf79459747b73c68a7bf"
+                if not state then
+                    queue_on_teleport("")
 
-                        queue_on_teleport([[
-                            repeat task.wait() until game:IsLoaded()
-                            script_key = "]] .. script_key .. [["
-                            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/]] .. loader .. [[.lua"))()
-                        ]])
-                    end
-                else
-                    queue_on_teleport("") --skid behaviour
+                    return
                 end
+
+                local paid = getgenv().Build == "Paid"
+                local loader = paid
+                    and "d39ae8d7a3f0a3b6a4a54d9e53f97c23"
+                    or "e35a387f84dfdf79459747b73c68a7bf"
+
+                if paid and not script_key then return end
+
+                local source = "repeat task.wait() until game:IsLoaded()\n"
+
+                if paid then
+                    source = source .. 'script_key = "' .. script_key .. '"\n'
+                end
+
+                source = source .. 'loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/' .. loader .. '.lua"))()'
+
+                queue_on_teleport(source)
             end})
 
             section:toggle({type = "toggle", name = "Silent Load", flag = "silent_load", default = startup_data.silent_load, seperator = true, callback = function(state)
