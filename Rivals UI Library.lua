@@ -1,4 +1,4 @@
- if LPH_OBFUSCATED == nil then
+if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -1118,6 +1118,32 @@ if Mobile ~= Enum.PreferredInput.Touch then
             return nil
         end
 
+        function library:recent_configs()
+            local ok, list = pcall(function()
+                return http_service:JSONDecode(readfile(library.directory .. "/recent_configs.json"))
+            end)
+
+            return ok and type(list) == "table" and list or {}
+        end
+
+        function library:touch_config(name, removed)
+            if type(name) ~= "string" or name == "" then return end
+
+            local list = library:recent_configs()
+
+            for i = #list, 1, -1 do
+                if list[i] == name then
+                    table.remove(list, i)
+                end
+            end
+
+            if not removed then
+                table.insert(list, 1, name)
+            end
+
+            pcall(writefile, library.directory .. "/recent_configs.json", http_service:JSONEncode(list))
+        end
+
         local config_holder;
         function library:update_config_list()
             if not config_holder then
@@ -1136,6 +1162,23 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     list[#list + 1] = name
                 end
             end
+
+            local order = {}
+
+            for index, name in library:recent_configs() do
+                if order[name] == nil then
+                    order[name] = index
+                end
+            end
+
+            table.sort(list, function(a, b)
+                local rank_a, rank_b = order[a], order[b]
+
+                if rank_a and rank_b then return rank_a < rank_b end
+                if rank_a or rank_b then return rank_a ~= nil end
+
+                return a:lower() < b:lower()
+            end)
 
             config_holder.refresh_options(list)
         end
@@ -1362,6 +1405,10 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     local loaded = pcall(function()
                         library:load_config(readfile(path))
                     end)
+
+                    if loaded then
+                        library:touch_config(name)
+                    end
 
                     if getgenv().silent_load_active then
                         silent_hide_menu()
@@ -6068,6 +6115,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                         local config_name = (flags["config_name_text"])
 
                         writefile(library:config_path(config_name), library:get_config())
+                        library:touch_config(config_name)
                         library:update_config_list()
                         notifications:create_notification({
                             name = "configs",
@@ -6091,6 +6139,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                             pcall(delfile, previous)
                         end
 
+                        library:touch_config(config_name)
                         library:update_config_list()
                         notifications:create_notification({
                             name = "configs",
@@ -6117,6 +6166,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                         end
 
                         library:load_config(readfile(path))
+                        library:touch_config(config_name)
                         library:update_config_list()
                         notifications:create_notification({
                             name = "configs",
@@ -6141,6 +6191,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                             end
                         end
 
+                        library:touch_config(config_name, true)
                         library:update_config_list()
                         notifications:create_notification({
                             name = "configs",
@@ -7049,6 +7100,32 @@ if Mobile ~= Enum.PreferredInput.Touch then
             return nil
         end
 
+        function library:recent_configs()
+            local ok, list = pcall(function()
+                return http_service:JSONDecode(readfile(library.directory .. "/recent_configs.json"))
+            end)
+
+            return ok and type(list) == "table" and list or {}
+        end
+
+        function library:touch_config(name, removed)
+            if type(name) ~= "string" or name == "" then return end
+
+            local list = library:recent_configs()
+
+            for i = #list, 1, -1 do
+                if list[i] == name then
+                    table.remove(list, i)
+                end
+            end
+
+            if not removed then
+                table.insert(list, 1, name)
+            end
+
+            pcall(writefile, library.directory .. "/recent_configs.json", http_service:JSONEncode(list))
+        end
+
         local config_holder;
         function library:update_config_list()
             if not config_holder then
@@ -7067,6 +7144,23 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     list[#list + 1] = name
                 end
             end
+
+            local order = {}
+
+            for index, name in library:recent_configs() do
+                if order[name] == nil then
+                    order[name] = index
+                end
+            end
+
+            table.sort(list, function(a, b)
+                local rank_a, rank_b = order[a], order[b]
+
+                if rank_a and rank_b then return rank_a < rank_b end
+                if rank_a or rank_b then return rank_a ~= nil end
+
+                return a:lower() < b:lower()
+            end)
 
             config_holder.refresh_options(list)
         end
@@ -7292,6 +7386,10 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     local loaded = pcall(function()
                         library:load_config(readfile(path))
                     end)
+
+                    if loaded then
+                        library:touch_config(name)
+                    end
 
                     if getgenv().silent_load_active then
                         silent_hide_menu()
@@ -12048,6 +12146,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     local config_name = (flags["config_name_text"])
 
                     writefile(library:config_path(config_name), library:get_config())
+                    library:touch_config(config_name)
                     library:update_config_list()
                     notifications:create_notification({name = "configs", info = "saved config to:\n" .. config_name})
                 end)
@@ -12063,6 +12162,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                         pcall(delfile, previous)
                     end
 
+                    library:touch_config(config_name)
                     library:update_config_list()
                     notifications:create_notification({name = "configs", info = "overwrote config :\n" .. config_name})
                 end)
@@ -12080,6 +12180,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     end
 
                     library:load_config(readfile(path))
+                    library:touch_config(config_name)
                     library:update_config_list()
                     notifications:create_notification({name = "configs", info = "loaded config:\n" .. config_name})
                 end)
@@ -12097,6 +12198,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                         end
                     end
 
+                    library:touch_config(config_name, true)
                     library:update_config_list()
                     notifications:create_notification({name = "configs", info = "deleted config:\n" .. config_name})
                 end)
