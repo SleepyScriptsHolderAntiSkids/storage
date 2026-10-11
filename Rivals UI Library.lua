@@ -1,4 +1,4 @@
-if LPH_OBFUSCATED == nil then
+ if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -105,6 +105,11 @@ function child_of_class(parent, class_name, known_name)
 
     return nil
 end
+
+local function keep_identity()
+    if setthreadidentity then pcall(setthreadidentity, 8) end
+end
+
 Mobile = UserInputService.PreferredInput
 
 Camera = cloneref(Workspace.CurrentCamera)
@@ -328,9 +333,20 @@ end
 print(tostring(math.random(1,10)))
 COMMUNITY_CONFIG_DATA = {
 
-    ["[RAGE; HVH] Curger's Config"] = [==[{"grenade_fuse":true,"PlayerEffects_Particles_Color3":{"Color":"7778ff","Transparency":0},"Visuals_WeaponIconScale":true,"aimbot_fov_outline_color2":{"Color":"000000","Transparency":0},"PlayerVisuals_FilledBoxes_Color2":{"Color":"ffffff","Transparency":0},"shoot_sound_id":"","ragebot_enabled":true,"fly_enabled":false,"anim_start":0,"world_skybox_enabled":true,"third_person_key":{"mode":"Always","key":"NONE","active":false},"world_sky_autorotate":false,"hitmarker_length":22,"MaxRenderDistance_Visuals":693,"auto_ban_first":"Riot Shield","custom_pitch_angle":90,"Visuals_AnimatedBox":true,"PlayerVisuals_TextGradient_Color3":{"Color":"7778ff","Transparency":0},"FakePosition":true,"crosshair_show_text":true,"faster_reload":true,"auto_ban_map_delay":1,"PlayerVisuals_Weapons":true,"anim_end":100,"Visuals_WeaponIconSize":28,"kill_sound_id":"","PlayerVisuals_Rank":false,"rage_dist_v2":10,"fov_outline_color":{"Color":"000000","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve"],"leaderboard_value":"999999","hit_effect_enabled":true,"viewmodel_position_y":-1,"shoot_sound_speed":100,"aimbot_fov_rotation_speed":10,"world_ltg_brightness":true,"mod_detector":true,"VelocitySpeedValue":43,"Visuals_HealthBarGradient":true,"profile_elo_enabled":false,"vm_chams_material":"Neon","hit_notify_duration":1.3,"PlayerVisuals_TextGradient_Color1":{"Color":"7778ff","Transparency":0},"shoot_sound_enabled":false,"crosshair_bounce":0,"aimbot_fov_rotation":0,"menu_background_color":{"Color":"0e0e10","Transparency":0},"viewmodel_position_x":1,"world_dof_focus":116,"void_shoot_time":0.1,"world_ltg_fog_start_val":0,"anim_key":{"mode":"Always","key":"NONE","active":true},"PlayerEffects_Particles_Size":0.5,"auto_ban_weapons":false,"AimlockDropdown_":[],"notif_position":"Top Left","world_ambience_enabled":false,"viewmodel_arm_material":"Default","indicator_lerp":20,"hit_sounds_echo_delay":150,"aimbot_hitmethod":"Camera","silent_aim_hitpart":"HitboxHead","vm_hand_chams_outline":1,"hit_effect_color":{"Color":"ffffff","Transparency":0},"world_shadow_soft_val":20,"profile_level_value":"0","aco_range":60,"shoot_sound_volume":50,"world_bloom_enabled":false,"Visuals_ChamsThermal":true,"world_shadow_soft_enabled":false,"death_sound_url":"","world_sky_lf":"","shoot_sound_start":0,"world_ltg_exposure_val":-0.1,"world_atm_offset":0.2,"flyvalue":5,"crosshair_changer":true,"PlayerVisuals_TeamCheck":true,"aimbot_fov_outline":false,"TriggerbotDropdown_":[],"antiaim_speed":100,"world_weather_size":180,"crosshair_text_color_3":{"Color":"00a2ff","Transparency":0},"anim_preset":"Small / Hide","crosshair_radius":5,"full_auto_enabled":false,"world_sky_sun_size":21,"fov_rotation":0,"aimbot_range_color":{"Color":"ffffff","Transparency":0.75},"world_ambience_type":"Rain","indicator_text_style":"lower","AimbotFilledFov_Color2":{"Color":"000000","Transparency":0},"Noclip":false,"crosshair_width":1,"auto_vote_map":"Arena","NoBobbing":true,"viewmodel_scale_enabled":false,"fov_outline_color2":{"Color":"000000","Transparency":0},"world_skybox_mode":"Stormy","bullet_tracers_enabled":true,"IsInvincible":false,"void_spread":200,"trigger_enabled":false,"aim_lock_range":12,"hit_effect_layout":"Classic","no_bullet_tracer":true,"silent_aim_range_color":{"Color":"ffffff","Transparency":0.75},"world_weather_type":"Snow","world_atm_tint":{"Color":"9b9ba6","Transparency":0},"PlayerVisuals_FilledBoxes_Color1":{"Color":"ffffff","Transparency":0.75},"chat_spam_text":"sleepy.gg","leaderboard_Most Eliminations":false,"crosshair_gradient_animate":false,"world_dof_far":0.25,"silent_aim_range":100,"hitmarker_thickness":1,"aco_only_needed":true,"reload_sound_preset":"Sparkle","KnifeSpecialAbility":true,"aimbot_enabled":false,"kill_sound_enabled":false,"silent_wallbang":true,"unlock_all_enabled":false,"bullet_tracer_outline":false,"aimbot_fov_outline_thickness":2,"world_dof_radius":20,"aimlock_jitter":0,"no_spread_enabled":true,"ammo_text_size":13,"vm_chams":false,"crosshair_resize":false,"vm_chams_transparency":0,"crosshair_spin":true,"indicator_ammo_divider_color":{"Color":"8c8c8c","Transparency":0},"world_sky_bk":"","world_weather_color":{"Color":"fefdff","Transparency":0},"world_dof_enabled":true,"offsetX":0,"ammo_display_current_color":{"Color":"ffffff","Transparency":0},"PlayerVisuals_BoundingBoxes":false,"movement_double_jump_height":100,"AimLock_Key":{"mode":"Hold","key":"Enum.UserInputType.MouseButton2","active":false},"PlayerVisuals_Names":true,"trigger_reaction":40,"menu_size":"100","random_offset_max":8,"ACO":false,"world_marker_duration":0.6,"offsetY":-7,"PlayerVisuals_StateFlags_Color":{"Color":"ffffff","Transparency":0},"aimbot_visualise_filled_range":false,"PlayerVisuals_TextGradient_Speed":60,"world_weather_enabled":true,"world_bloom_intensity":3.1,"crosshair_gradient_speed":60,"VelocitySpeedEnabled":false,"silent_key":{"mode":"Always","key":"NONE","active":false},"vm_hand_chams_fill_color":{"Color":"7778ff","Transparency":0},"hit_effect_lifetime":2.8,"world_ltg_ambient":true,"hit_effect_float_style":"Smooth","no_fire_sound":true,"PlayerEffects_Particles_Color2":{"Color":"ffffff","Transparency":0},"bullet_tracer_thickness":100,"silent_aim_visualise_range":false,"PlayerEffects_Particles_Speed":1,"reload_sound_pitch":100,"hit_effect_outline_color":{"Color":"370028","Transparency":0},"world_sky_stars":0,"kill_sound_preset":"Sparkle","world_sky_dn":"","movement_slideboost":false,"indicator_position":"center","world_sunrays_enabled":false,"death_sound_id":"","rage_dist_v2_nolimit":true,"SwapLowAmmo":true,"crosshair_text_size":13,"anim_enabled":true,"hit_sounds_selected":"Dyssodia","PlayerVisuals_TextGradient_Rotation":0,"rage_dist_v1":10,"void_hide_time":0.3,"viewmodel_wire_mode":"Lines + Glow","indicator_empty_color":{"Color":"ff3c3c","Transparency":0},"crosshair_text_color_1":{"Color":"00a2ff","Transparency":0},"silent_aim_enabled":true,"PlayerVisuals_HealthBar_High_Color":{"Color":"ffffff","Transparency":0},"world_sky_moon_size":11,"trigger_forget_time":1,"world_env_enabled":true,"world_sky_rotate_speed":100,"trigger_reaction_random":80,"world_ltg_fog_color":{"Color":"bfbfbf","Transparency":0},"world_ltg_ambient_color":{"Color":"2f2f2f","Transparency":0},"indicator_offset_y":0,"world_weather_density":115,"PlayerVisuals_Level_Color":{"Color":"ffffff","Transparency":0},"FakePositionWalk":true,"leaderboard_Highest ELO":false,"ammo_display_max_color":{"Color":"ffffff","Transparency":0},"aimlock_delay":0,"fov_rotation_speed":10,"AntiAim_enabled":true,"bullet_tracer_fade":true,"crosshair_resize_max":22,"kill_sound_pitch":100,"PlayerVisuals_BoxOutline_Thickness":1,"world_sky_up":"","PlayerVisuals_BoxOutline":true,"status_display_color":{"Color":"8479ff","Transparency":0},"viewmodel_scale":68,"crosshair_bounce_speed":1,"aimlock_wallcheck":false,"TextSize_Visuals":12,"hitmarker_enabled":true,"camera_fov_enabled":false,"world_weather_speed":138,"world_cc_brightness":-0.1,"hit_sounds_pitch":90,"AntiSmoke":false,"aimlock_jitter_rate":60,"vm_hand_chams_fill":0.5,"hit_effect_transparency":0,"AimbotFilledFov_Color1":{"Color":"ffffff","Transparency":0.75},"PlayerVisuals_Distance":false,"PlayerVisuals_Chams":true,"hit_notify_custom":"hit {NAME} for {DMG} in the {PART}","world_bloom_size":16,"PlayerVisuals_BoxOutline_Color":{"Color":"000000","Transparency":0},"bullet_tracer_shading":0,"hit_effect_shadow_offset":3,"hit_effect_stack":false,"menu_edge_enabled":false,"aco_infinite_range":false,"vm_chams_texture":"","Visuals_WeaponMode":"Text","hit_sounds_volume":1,"PlayerEffects_Particles":false,"PlayerVisuals_BoundingBoxes_Color":{"Color":"ffffff","Transparency":0},"PlayerVisuals_TextGradient_Animate":false,"autoload_enabled_auto_slot":false,"world_sunrays_intensity":0,"no_muzzle_flash":true,"InfiniteJump":false,"aco_interval":200,"menu_outline_color":{"Color":"242425","Transparency":0},"menu_text_color":{"Color":"f5f5f5","Transparency":0},"rotation_speed":0,"profile_username_value":"im feeling dizzy","aimbot_hitpart":"HitboxHead","world_cc_tint":{"Color":"8e8585","Transparency":0},"leaderboard_Current Highest Win Streak":false,"vm_hand_chams_depth":"through walls","kill_sound_url":"","world_ltg_colorshift_bottom_color":{"Color":"c3c3c3","Transparency":0},"world_blur_size":5,"crosshair_color":{"Color":"00a2ff","Transparency":0},"device_spoofer_enabled":false,"aimbot_fov_moving_rotation":false,"noclip_key":{"mode":"Always","key":"NONE","active":false},"bullet_tracer_fade_time":350,"death_sound_preset":"Sparkle","matchmaking_mode":"1v1","hit_effect_glow":false,"FakePositionY":7,"world_ltg_fog_end_val":3643,"world_skybox_disable":[],"leaderboard_Most Wins":false,"fov_position":"position on screen","ammo_outline":true,"vm_chams_color":{"Color":"7778ff","Transparency":0},"crosshair_fade_speed":5,"vm_hand_chams":false,"wallbang_method":"Classic V1","random_offset_min":-8,"world_cc_saturation":-0.5,"world_atm_glare":3.6,"FilledFov_Color3":{"Color":"4669af","Transparency":0},"PlayerEffects_Particles_Lifetime":0.5,"movement_double_jump":false,"fov_outline_thickness":2,"hit_effect_always_on_top":true,"death_sound_enabled":false,"crosshair_length":4,"world_cc_enabled":true,"viewmodel_arm_clothes":false,"viewmodel_yaw":0,"profile_level_enabled":false,"world_skybox_custom_id":"","PlayerVisuals_StateFlags":true,"trigger_hitboxes":["Head","UpperTorso","LowerTorso","HumanoidRootPart","LeftUpperArm","LeftLowerArm","LeftHand","RightUpperArm","RightLowerArm","RightHand","LeftUpperLeg","LeftLowerLeg","LeftFoot","RightUpperLeg","RightLowerLeg","RightFoot"],"viewmodel_wire_enabled":false,"crosshair_outline":true,"movement_double_jump_count":1,"hit_effect_float_speed":7,"auto_ban_second_delay":2,"random_offsets":false,"viewmodel_arm_transparency":0,"mod_detector_evade":false,"world_ltg_fog_end":true,"hit_sounds_echo_enabled":false,"world_ltg_colorshift_bottom":true,"reload_sound_id":"","viewmodel_position_z":-1,"status_display_enabled":false,"world_weather_height":23,"profile_streak_value":"333","camera_fov_amount":90,"fov_outline":false,"world_marker_growth":150,"fov_lerp":100,"death_sound_pitch":100,"viewmodel_position_changer":true,"bullet_tracer_glow":100,"hit_effect_outline":false,"world_sky_ft":"","hitmarker_color":{"Color":"ffffff","Transparency":0},"death_sound_volume":50,"hit_effect_duration":0,"hitmarker_style":"Cross","PlayerVisuals_Enabled":true,"no_recoil_enabled":true,"PlayerVisuals_Chams_Color2":{"Color":"000000","Transparency":0},"yaw_type":"Block","viewmodel_disable_textures":false,"velocity_key":{"mode":"Always","key":"NONE","active":false},"PlayerEffects_Particles_Color1":{"Color":"7778ff","Transparency":0},"PlayerVisuals_CornerBoxes_Color":{"Color":"ffffff","Transparency":0},"void_enabled":false,"crosshair_outline_color":{"Color":"000000","Transparency":0},"fov_moving_rotation":false,"PlayerVisuals_Distance_Color":{"Color":"ffffff","Transparency":0},"viewmodel_arm_color":{"Color":"ffcc99","Transparency":0},"kill_sound_volume":50,"trigger_no_switch_delay":true,"PlayerVisuals_Chams_Color1":{"Color":"ffffff","Transparency":0.19999999999999996},"world_sky_rt":"","hitmarker_gap":1,"aco_health":true,"chat_spam_mode":"custom","Secondary_auto_load":"Spray","world_atm_decay":{"Color":"afafb6","Transparency":0},"pitch_type":"None","hit_effect_scatter":0,"world_ltg_clock_val":14,"world_env_diffuse":0.8,"anim_custom_id":"","mod_detector_leave":true,"void_strike_radius":60,"aimbot_visualise_range":false,"spoof_device_type":"Controller","profile_displayname_enabled":false,"hit_effect_glow_color":{"Color":"ffdbf1","Transparency":0},"bullet_tracer_speed":20,"stretch_amount":71,"bullet_tracers_color_1":{"Color":"a1a6af","Transparency":0.75},"crosshair_custom_text":"O_o","aimbot_fov_lerp":100,"hit_notifications_enabled":false,"world_dof_near":0.14,"hitmarker_duration":200,"profile_elo_value":"67000","world_atm_haze":4,"hitmarker_fade":true,"world_ltg_fog_start":true,"antiaim_key":{"mode":"Always","key":"NONE","active":true},"hit_effect_outline_thickness":2,"world_marker_size":100,"PlayerVisuals_Weapons_Color":{"Color":"ffffff","Transparency":0},"trigger_key":{"mode":"Always","key":"NONE","active":false},"world_marker_enabled":false,"reload_sound_url":"","silent_aim_target_mode":"FOV - Closest","fov_fill_speed":100,"silent_aim_visualise_filled_range":false,"world_weather_opacity":100,"chat_spam_delay":5,"anti_flash_keep_sound":true,"fov_outline_color3":{"Color":"000000","Transparency":0},"custom_yaw_angle":180,"leaderboard_Highest Level":false,"world_ltg_brightness_val":1.6,"trigger_switch_delay":0,"world_marker_thickness":3,"cross_hair_speed":150,"auto_vote_enabled":false,"instant_aim_enabled":true,"anti_aim_speed":100,"FilledFov_Color2":{"Color":"000000","Transparency":0},"PlayerVisuals_WinStreak_Color":{"Color":"ffffff","Transparency":0},"aimbot_fov_outline_color3":{"Color":"000000","Transparency":0},"world_env_specular":1.1,"profile_displayname_value":"fog","world_weather_radius":120,"PlayerEffects_Particles_Rate":10,"PlayerVisuals_HealthText":true,"world_sky_celestial":false,"hit_effect_shadow":false,"ammo_display_reserve_color":{"Color":"969696","Transparency":0},"auto_ban_first_delay":1,"PlayerVisuals_TextGradient":false,"silent_hitchance":100,"stretch_enabled":true,"profile_username_enabled":false,"HideHead_enabled":true,"viewmodel_glow_intensity":28,"bullet_tracer_type":"Beam","reload_sound_volume":50,"FlyKeybind":{"mode":"Toggle","key":"Enum.KeyCode.F2","active":false},"world_blur_enabled":false,"vm_chams_rainbow_speed":100,"PlayerVisuals_CornerBoxes":false,"ragebot_attack_mode":"None","indicator_offset_x":0,"world_sunrays_spread":0,"world_ltg_clock":false,"crosshair_resize_speed":150,"viewmodel_roll":0,"world_ambience_volume":50,"hit_sounds_enabled":true,"chat_spam_trigger":"always","world_marker_color":{"Color":"ffffff","Transparency":0},"menu_accent_color":{"Color":"00a2ff","Transparency":0},"trigger_scoped":["Crossbow","Sniper"],"PlayerVisuals_HealthBar_Low_Color":{"Color":"000000","Transparency":0},"PlayerVisuals_FilledBoxes":true,"RapidBody_enabled":true,"world_cc_contrast":1.2,"game_crosshair":true,"cross_hair_mode":"static","Visuals_HealthTextLerp":true,"PlayerVisuals_HealthBars":true,"crosshair_text_color_2":{"Color":"ffffff","Transparency":0},"menu_edge_opacity":100,"flagnumber519":{"mode":"Toggle","key":"Enum.KeyCode.Insert","active":true},"PanicPositionXMin":7,"SilentaimDropdown_":[],"firerate_multiplier":10,"viewmodel_wire_color":{"Color":"ffffff","Transparency":0},"reload_sound_enabled":false,"quickequip":true,"viewmodel_wire_hide_base":true,"Melee_auto_load":"Chainsaw","auto_ban_random_map":false,"fakepos_key":{"mode":"Always","key":"NONE","active":false},"world_weather_lifetime":100,"bullet_tracer_lifetime":1,"AntiFlash":false,"indicator_ragebot_style":["text","status"],"PanicPositionXMax":7,"menu_element_color":{"Color":"19191d","Transparency":0},"trigger_distance":800,"PlayerVisuals_Names_Color":{"Color":"ffffff","Transparency":0},"menu_inactive_color":{"Color":"484849","Transparency":0},"aco_ammo":true,"rage_dist_v1_nolimit":true,"check_walls":true,"PlayerVisuals_Level":false,"FilledFov_Color1":{"Color":"7778ff","Transparency":0.75},"fov_fill_style":"Inner Fade","world_atm_density":0.2,"PlayerVisuals_TextGradient_Color2":{"Color":"ffffff","Transparency":0},"target_method_ragebot":"Closest","hit_effect_recolor":true,"offsetZ":-5,"Visuals_TextFont":"Code","ammo_display_enabled":true,"ragebot_key":{"mode":"Always","key":"NONE","active":false},"vm_hand_chams_outline_color":{"Color":"ffffff","Transparency":0},"hit_sounds_echo_feedback":45,"shoot_sound_preset":"Custom","primary_auto_load":"Sniper","bullet_tracer_start":0,"auto_ban_second":"Katana","anim_speed":2,"movement_slideboost_value":150,"crosshair_resize_min":5,"world_atm_enabled":true,"aimlock_smoothness":10,"profile_streak_enabled":false,"aimbot_fov_outline_color":{"Color":"000000","Transparency":0},"indicator_font":"Code","crosshair_lerp":20,"hit_effect_float":true,"hit_effect_glow_intensity":85,"viewmodel_glow_color":{"Color":"ffffff","Transparency":0},"auto_queue_enabled":false,"world_ltg_shadows":false,"hit_effect_font":"Ubuntu","third_person_enabled":false,"PlayerVisuals_RoundOnly":false,"world_ltg_colorshift_top":true,"hit_effect_radial_radius":3,"status_text_size":15,"AimbotFilledFov_Color3":{"Color":"4669af","Transparency":0},"world_ltg_exposure":true,"world_bloom_threshold":1.1,"bullet_tracers_color_2":{"Color":"ffffff","Transparency":0.75},"ammo_outline_strength":50,"viewmodel_arm_appearance":false,"world_ltg_colorshift_top_color":{"Color":"000000","Transparency":0},"world_marker_length":25,"hit_effect_scale":115,"PlayerVisuals_Rank_Color":{"Color":"ffffff","Transparency":0},"chat_spam_enabled":false,"PlayerVisuals_WinStreak":false,"trigger_random_reaction":false,"FakePositionPanic":false,"Utility_auto_load":"Grenade","anti_aim_enabled":true} ]==];
+    ["[LEGIT] Magma"] = [==[{"movement_maul_slam":false,"AimbotFilledFov_Color1":{"Color":"f1d983","Transparency":0.94},"AimbotFilledFov_Color2":{"Color":"f1d983","Transparency":0.85},"AimbotFilledFov_Color3":{"Color":"f1d983","Transparency":0.94},"AimlockDropdown_":[],"AntiAim_enabled":false,"AntiFlash":true,"AntiSmoke":false,"FakePosition":false,"FakePositionPanic":false,"FakePositionWalk":false,"FilledFov_Color1":{"Color":"f1d983","Transparency":0.94},"FilledFov_Color2":{"Color":"f1d983","Transparency":0.85},"FilledFov_Color3":{"Color":"f1d983","Transparency":0.94},"HideHead_enabled":false,"InfiniteJump":false,"IsInvincible":true,"NoBobbing":false,"Noclip":false,"RapidBody_enabled":false,"SilentaimDropdown_":[],"TriggerbotDropdown_":["no delay between targets"],"VelocitySpeedEnabled":false,"aim_lock_range":100,"aimbot_closest_part":false,"aimbot_closest_position":false,"aimbot_delay_position":true,"aimbot_enabled":false,"aimbot_fov_lerp":25,"aimbot_fov_moving_rotation":false,"aimbot_fov_outline":true,"aimbot_fov_outline_color":{"Color":"f1d983","Transparency":0.84},"aimbot_fov_outline_color2":{"Color":"fbe186","Transparency":0.7},"aimbot_fov_outline_color3":{"Color":"fbe186","Transparency":0.25},"aimbot_fov_outline_thickness":2,"aimbot_fov_settings":[],"aimbot_hitmethod":"Camera","aimbot_jump_smooth":18,"aimbot_range_color":{"Color":"ffffff","Transparency":0},"aimbot_range_color2":{"Color":"fbe186","Transparency":0},"aimbot_range_color3":{"Color":"f1d983","Transparency":0},"aimbot_smoothing":12,"aimbot_visualise_filled_range":false,"aimbot_visualise_range":false,"aimbot_x_smooth":10,"aimbot_y_smooth":10,"aimlock_delay":0,"aimlock_jitter":0,"aimlock_trigger":"Aiming","aimlock_wallcheck":true,"anti_aim_enabled":false,"anti_flash_keep_sound":true,"arm_override_appearance":false,"camera_fov_amount":95,"camera_fov_enabled":true,"crosshair_bounce":0,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"e3ca71","Transparency":0},"crosshair_color_2":{"Color":"dfc053","Transparency":0},"crosshair_color_3":{"Color":"ddbb43","Transparency":0},"crosshair_color_4":{"Color":"dbb634","Transparency":0},"crosshair_enabled":true,"crosshair_length":8,"crosshair_lerp":0.25,"crosshair_offset":2,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":45,"crosshair_rotation_speed":0,"crosshair_settings":[],"crosshair_thickness":2,"custom_tracer_color":{"Color":"f1d983","Transparency":0},"custom_tracer_color2":{"Color":"dab329","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":5,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"drawing","custom_tracer_speed":2,"custom_tracer_width":0.2,"esp_body_color":false,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"dab329","Transparency":0},"esp_chams_settings":[],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_effects_aura":false,"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"f1d983","Transparency":0},"esp_effects_particle_color2":{"Color":"dab329","Transparency":0},"esp_effects_particle_color3":{"Color":"e5c248","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_flag_health_text":false,"esp_flag_staring_text":false,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"8a6a0c","Transparency":0},"esp_healthbar_color_middle":{"Color":"e5c248","Transparency":0},"esp_healthbar_color_start":{"Color":"fbe186","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_type":"gradient","esp_material":false,"esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"fbe186","Transparency":0},"esp_name_color3":{"Color":"f1d983","Transparency":0},"esp_name_font":"default","esp_name_type":"Name","esp_override_appearance":false,"esp_round_only":true,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_world_distance":true,"esp_world_distance_color":{"Color":"f1d983","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":false,"faster_reload":false,"fly_enabled":false,"fov_fill_speed":100,"fov_fill_style":"Inner Fade","fov_lerp":25,"fov_moving_rotation":true,"fov_outline":true,"fov_outline_color":{"Color":"f1d983","Transparency":0.84},"fov_outline_color2":{"Color":"fbe186","Transparency":0.7},"fov_outline_color3":{"Color":"fbe186","Transparency":0.25},"fov_outline_thickness":2,"fov_position":"position on screen","fov_rotation":0,"fov_rotation_speed":10,"full_auto_enabled":true,"game_crosshair":true,"grenade_options":["explode on impact"],"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"f1d983","Transparency":0},"hit_effects_col_3":{"Color":"dab329","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["slashes","phantom forces"],"hit_effects_settings":["stack damage together"],"hit_effects_weld":false,"hit_notifications_enabled":false,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"impact","hit_sounds_volume":0.9,"hitmarker_enabled":false,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"e3ca71","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve","\"out of ammo\" if empty"],"indicator_empty_color":{"Color":"ff5f5f","Transparency":0},"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":false,"indicator_manipulated_color":{"Color":"e3ca71","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":false,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["text","status"],"indicator_ragebot_text_color":{"Color":"e3ca71","Transparency":0},"indicator_reserve_color":{"Color":"f1d983","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","instant_aim_enabled":false,"item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","manipulation_enabled":false,"movement_double_jump":false,"movement_slideboost":true,"movement_slideboost_value":1.1,"no_fire_sound":false,"no_muzzle_flash":false,"no_recoil_enabled":false,"no_spread_enabled":false,"quickequip":false,"ragebot_enabled":false,"shoot_sound_change":true,"shoot_sound_change_value":"bow","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":0.3,"silent_aim_enabled":true,"silent_aim_range":110,"silent_aim_range_color":{"Color":"ffffff","Transparency":0},"silent_aim_range_color2":{"Color":"fbe186","Transparency":0},"silent_aim_range_color3":{"Color":"f1d983","Transparency":0},"silent_aim_target_mode":"FOV - Closest","silent_aim_visualise_filled_range":true,"silent_aim_visualise_range":true,"silent_closest_part":true,"silent_hitchance":35,"silent_visualize":true,"silent_wallbang":false,"stretch_enabled":false,"target_highlight":false,"target_highlight_fill":{"Color":"dab329","Transparency":0.6},"target_highlight_outline":{"Color":"f1d983","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_tracer":false,"target_tracer_customization":{"Color":"dab329","Transparency":0},"target_ui_enabled":true,"target_ui_item_scale":170,"target_ui_position_x":50,"target_ui_position_y":72,"target_ui_scale":150,"targeting_ignore_protected_settings":["blocked by riot shield","katana deflecting"],"targeting_limitdistance":false,"targeting_part":"Head","third_person_enabled":false,"trigger_distance":250,"trigger_enabled":true,"trigger_forget_time":1.5,"trigger_part_blacklist":[],"trigger_reaction":25,"trigger_reaction_offset":5,"trigger_scoped":["Sniper","Crossbow"],"trigger_shoot_delay":0,"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-0.6,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"ffe7a3","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_frames_override":false,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.5,"viewmodel_options":["sway","bobbing","muzzle flash","idle animation","jump animation","slide animation","sprint animation","shoot animation"],"viewmodel_override_appearance":false,"viewmodel_recoil":0,"viewmodel_scale_enabled":false,"viewmodel_wire_enabled":false,"voidspam_enabled":false,"wallbang_method":"Classic V1","world_ambience_enabled":false,"world_ambience_type":"Rain","world_ambience_volume":35,"world_atm_decay":{"Color":"7a3c12","Transparency":0},"world_atm_density":0.35,"world_atm_enabled":true,"world_atm_glare":2.5,"world_atm_haze":1.5,"world_atm_offset":0.4,"world_atm_tint":{"Color":"ffb35c","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":1.3,"world_bloom_size":40,"world_bloom_threshold":0.9,"world_blur_enabled":false,"world_cc_brightness":-0.05,"world_cc_contrast":0.1,"world_cc_enabled":true,"world_cc_saturation":0.15,"world_cc_tint":{"Color":"ffe9a8","Transparency":0},"world_dof_enabled":false,"world_env_enabled":false,"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"ffffff","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":1.7,"world_ltg_clock":true,"world_ltg_clock_val":17.6,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"ffffff","Transparency":0},"world_ltg_colorshift_top":true,"world_ltg_colorshift_top_color":{"Color":"f1d983","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-1.1,"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_start":false,"world_ltg_shadows":true,"world_marker_enabled":false,"world_shadow_soft_enabled":true,"world_shadow_soft_val":25,"world_sky_autorotate":false,"world_sky_celestial":false,"world_skybox_disable":[],"world_skybox_enabled":true,"world_skybox_mode":"SunSet","world_sunrays_enabled":true,"world_sunrays_intensity":0.2,"world_sunrays_spread":1,"world_weather_color":{"Color":"ffcf4a","Transparency":0},"world_weather_color_end":{"Color":"5a2a0a","Transparency":0},"world_weather_color_mid":{"Color":"ff8a1f","Transparency":0},"world_weather_density":35,"world_weather_enabled":true,"world_weather_lifetime":100,"world_weather_opacity":80,"world_weather_size":100,"world_weather_speed":100,"world_weather_timescale":1,"world_weather_type":"Ash"}]==],
 
-    ["[RAGE; NO HVH] Winter"] = [==[{"grenade_fuse":true,"PlayerEffects_Particles_Color3":{"Color":"7778ff","Transparency":0},"aimbot_fov_outline_color2":{"Color":"000000","Transparency":0},"PlayerVisuals_FilledBoxes_Color2":{"Color":"000000","Transparency":0},"shoot_sound_id":"","ragebot_enabled":true,"fly_enabled":false,"world_skybox_enabled":false,"world_sky_autorotate":false,"hitmarker_length":6,"auto_ban_first":"Riot Shield","Visuals_WeaponIconScale":true,"Visuals_AnimatedBox":true,"PlayerVisuals_TextGradient_Color3":{"Color":"7778ff","Transparency":0},"FakePositionPanic":false,"crosshair_show_text":true,"faster_reload":true,"auto_ban_map_delay":1,"third_person_key":{"mode":"Always","key":"NONE","active":false},"MaxRenderDistance_Visuals":1000,"Visuals_WeaponIconSize":80,"kill_sound_id":"","PlayerVisuals_Rank":false,"rage_dist_v2":10,"custom_pitch_angle":90,"indicator_ammo_style":["ammo","max ammo","reserve"],"leaderboard_value":"9999","anim_speed":20,"viewmodel_position_y":0,"shoot_sound_speed":100,"aimbot_fov_rotation_speed":10,"world_ltg_brightness":false,"mod_detector":true,"VelocitySpeedValue":52,"Visuals_HealthBarGradient":true,"FakePosition":true,"PlayerVisuals_Weapons":true,"hit_notify_duration":1.3,"PlayerVisuals_TextGradient_Color1":{"Color":"7778ff","Transparency":0},"shoot_sound_enabled":true,"crosshair_bounce":0,"aimbot_fov_rotation":0,"menu_background_color":{"Color":"0e0e10","Transparency":0},"anim_end":100,"fov_outline_color":{"Color":"3c4e7c","Transparency":0},"void_shoot_time":0.1,"world_ltg_fog_start_val":0,"profile_elo_enabled":false,"PlayerEffects_Particles_Size":0.5,"auto_ban_weapons":false,"vm_chams_material":"Neon","notif_position":"Top Left","viewmodel_position_x":0,"world_dof_focus":42,"indicator_lerp":20,"hit_sounds_echo_delay":150,"aimbot_hitmethod":"Camera","silent_aim_hitpart":"HitboxHead","vm_hand_chams_outline":-0.5,"hit_effect_color":{"Color":"ff78dc","Transparency":0},"anim_key":{"mode":"Always","key":"NONE","active":true},"profile_level_value":"9999","aco_range":60,"AimlockDropdown_":[],"world_bloom_enabled":true,"world_ambience_enabled":false,"viewmodel_arm_material":"Neon","death_sound_url":"","world_sky_lf":"","world_shadow_soft_val":20,"world_ltg_exposure_val":0.1,"world_atm_offset":0.3,"PlayerVisuals_RoundOnly":true,"Visuals_ChamsThermal":true,"PlayerVisuals_TeamCheck":true,"aimbot_fov_outline":false,"world_shadow_soft_enabled":false,"antiaim_speed":100,"shoot_sound_start":0,"crosshair_text_color_3":{"Color":"00a2ff","Transparency":0},"anim_preset":"Small / Hide","flyvalue":5,"crosshair_changer":true,"world_sky_sun_size":21,"TriggerbotDropdown_":[],"auto_queue_enabled":false,"world_ambience_type":"Rain","crosshair_radius":11,"AimbotFilledFov_Color2":{"Color":"1e285a","Transparency":0},"Noclip":true,"full_auto_enabled":false,"hit_effect_float":true,"NoBobbing":true,"viewmodel_scale_enabled":false,"aimbot_range_color":{"Color":"ffffff","Transparency":0.75},"no_bullet_tracer":true,"bullet_tracers_enabled":true,"crosshair_width":2,"void_spread":50,"hit_effect_scale":65,"aim_lock_range":100,"hit_effect_layout":"Spiral","auto_vote_map":"Arena","PlayerVisuals_WinStreak":false,"world_weather_type":"Snow","crosshair_resize_min":5,"world_skybox_mode":"Realistic","chat_spam_text":"sleepy.gg","IsInvincible":true,"crosshair_gradient_animate":true,"world_dof_far":0.36,"silent_aim_range":245,"hitmarker_thickness":2,"crosshair_resize":true,"reload_sound_preset":"Sparkle","world_atm_tint":{"Color":"c8e1f5","Transparency":0},"aimbot_enabled":false,"hit_effect_enabled":true,"silent_wallbang":true,"unlock_all_enabled":true,"leaderboard_Most Eliminations":false,"aimbot_fov_outline_thickness":2,"aco_only_needed":true,"aimlock_jitter":0,"no_spread_enabled":true,"KnifeSpecialAbility":true,"vm_chams":true,"kill_sound_enabled":true,"vm_chams_transparency":0,"bullet_tracer_outline":false,"indicator_ammo_divider_color":{"Color":"8c8c8c","Transparency":0},"world_sky_bk":"","world_weather_color":{"Color":"ffffff","Transparency":0},"world_dof_enabled":true,"offsetX":0,"ammo_display_current_color":{"Color":"00a2ff","Transparency":0},"PlayerVisuals_BoundingBoxes":true,"world_dof_radius":28,"AimLock_Key":{"mode":"Hold","key":"Enum.KeyCode.LeftControl","active":false},"PlayerVisuals_Names":true,"ammo_text_size":13,"menu_size":"100","random_offset_max":8,"ACO":false,"world_marker_duration":0.6,"PlayerVisuals_TextGradient_Color2":{"Color":"ffffff","Transparency":0},"PlayerVisuals_StateFlags_Color":{"Color":"ffffff","Transparency":0},"crosshair_spin":true,"PlayerVisuals_TextGradient_Speed":60,"movement_double_jump_height":100,"world_bloom_intensity":0.9,"trigger_reaction":40,"VelocitySpeedEnabled":true,"rage_dist_v1_nolimit":true,"aimbot_visualise_filled_range":false,"hit_effect_lifetime":1.2,"world_ltg_ambient":false,"hit_effect_float_style":"Glide","no_fire_sound":true,"PlayerEffects_Particles_Color2":{"Color":"ffffff","Transparency":0},"bullet_tracer_thickness":100,"world_weather_enabled":true,"PlayerEffects_Particles_Speed":1,"reload_sound_pitch":100,"hit_effect_outline_color":{"Color":"000000","Transparency":0},"world_sky_stars":0,"crosshair_gradient_speed":60,"world_sky_dn":"","movement_slideboost":true,"silent_key":{"mode":"Always","key":"NONE","active":false},"world_sunrays_enabled":true,"menu_element_color":{"Color":"19191d","Transparency":0},"silent_aim_visualise_range":true,"SwapLowAmmo":true,"crosshair_text_size":13,"anim_enabled":true,"kill_sound_preset":"Rust","PlayerVisuals_TextGradient_Rotation":205,"rage_dist_v1":10,"void_hide_time":0.25,"viewmodel_wire_mode":"Lines + Glow","indicator_empty_color":{"Color":"ff3c3c","Transparency":0},"indicator_position":"center","death_sound_id":"","PlayerVisuals_HealthBar_High_Color":{"Color":"00ff00","Transparency":0},"world_sky_moon_size":11,"trigger_forget_time":1,"world_env_enabled":true,"world_sky_rotate_speed":100,"trigger_reaction_random":80,"world_ltg_fog_color":{"Color":"bfbfbf","Transparency":0},"rage_dist_v2_nolimit":true,"hit_sounds_selected":"Sparkle","world_weather_density":85,"PlayerVisuals_Level_Color":{"Color":"ffffff","Transparency":0},"fakepos_key":{"mode":"Always","key":"NONE","active":false},"silent_aim_enabled":true,"ammo_display_max_color":{"Color":"ffffff","Transparency":0},"aimlock_delay":0,"world_ltg_ambient_color":{"Color":"7f7f7f","Transparency":0},"AntiAim_enabled":true,"bullet_tracer_fade":true,"crosshair_resize_max":22,"kill_sound_pitch":100,"fov_rotation_speed":12.1,"world_sky_up":"","PlayerVisuals_BoxOutline":true,"status_display_color":{"Color":"00a2ff","Transparency":0},"FakePositionWalk":true,"leaderboard_Highest ELO":false,"aimlock_wallcheck":false,"TextSize_Visuals":12,"hitmarker_enabled":false,"camera_fov_enabled":false,"world_weather_speed":100,"world_cc_brightness":0.1,"hit_sounds_pitch":100,"AntiSmoke":true,"aimlock_jitter_rate":166,"SilentaimDropdown_":["anti katana","anti shield"],"hit_effect_transparency":0,"AimbotFilledFov_Color1":{"Color":"78aaff","Transparency":0.65},"PlayerVisuals_BoxOutline_Thickness":1,"PlayerVisuals_Chams":false,"hit_notify_custom":"Hit {NAME} for {DMG} in the {PART}","world_bloom_size":30,"PlayerVisuals_BoxOutline_Color":{"Color":"000000","Transparency":0},"viewmodel_scale":100,"menu_edge_opacity":100,"vm_hand_chams_fill":1,"PlayerVisuals_Distance":true,"bullet_tracer_shading":0,"vm_chams_texture":"","Visuals_WeaponMode":"Image","hit_sounds_volume":1,"PlayerEffects_Particles":false,"PlayerVisuals_BoundingBoxes_Color":{"Color":"ffffff","Transparency":0},"PlayerVisuals_TextGradient_Animate":true,"autoload_enabled_auto_slot":false,"world_sunrays_intensity":0,"no_muzzle_flash":true,"hit_effect_shadow_offset":3,"hit_effect_stack":true,"world_weather_lifetime":100,"menu_text_color":{"Color":"f5f5f5","Transparency":0},"rotation_speed":0,"profile_username_value":"","aimbot_hitpart":"HitboxHead","world_cc_tint":{"Color":"d2ebff","Transparency":0},"leaderboard_Current Highest Win Streak":false,"vm_hand_chams_depth":"through walls","kill_sound_url":"","world_ltg_colorshift_bottom_color":{"Color":"7f7f7f","Transparency":0},"menu_outline_color":{"Color":"242425","Transparency":0},"world_blur_size":5,"aco_interval":200,"device_spoofer_enabled":false,"trigger_scoped":["Crossbow","Sniper"],"crosshair_color":{"Color":"00a2ff","Transparency":0},"bullet_tracer_fade_time":350,"matchmaking_mode":"1v1","aimbot_fov_moving_rotation":false,"noclip_key":{"mode":"Always","key":"NONE","active":true},"world_ltg_fog_end_val":10000,"death_sound_preset":"Sparkle","leaderboard_Most Wins":false,"fov_position":"position on target","hit_effect_glow":false,"ammo_outline":true,"world_sunrays_spread":1,"vm_hand_chams":false,"world_skybox_disable":[],"random_offset_min":-8,"vm_chams_rainbow_speed":100,"world_atm_glare":0.4,"FilledFov_Color3":{"Color":"002878","Transparency":0.8611111111111112},"vm_chams_color":{"Color":"7778ff","Transparency":0},"crosshair_fade_speed":5,"wallbang_method":"Teleport V2","hit_effect_always_on_top":true,"death_sound_enabled":false,"world_cc_saturation":-0.1,"world_cc_enabled":true,"PlayerEffects_Particles_Lifetime":0.5,"viewmodel_yaw":0,"viewmodel_glow_intensity":28,"HideHead_enabled":true,"PlayerVisuals_StateFlags":true,"profile_username_enabled":false,"viewmodel_arm_clothes":true,"profile_level_enabled":false,"movement_double_jump_count":9,"world_skybox_custom_id":"","auto_ban_second_delay":2,"trigger_hitboxes":[],"hit_effect_shadow":false,"mod_detector_evade":true,"crosshair_outline":true,"hit_sounds_echo_enabled":false,"world_ltg_colorshift_bottom":false,"hit_effect_float_speed":5,"viewmodel_position_z":0,"random_offsets":false,"world_weather_height":22,"profile_streak_value":"9999","camera_fov_amount":90,"fov_outline":false,"viewmodel_arm_transparency":0,"world_ltg_fog_end":false,"death_sound_pitch":100,"viewmodel_position_changer":false,"bullet_tracer_glow":100,"reload_sound_id":"","world_sky_ft":"","void_enabled":false,"death_sound_volume":50,"hit_effect_duration":1.2,"PlayerVisuals_Chams_Color1":{"Color":"7778ff","Transparency":0.19999999999999996},"PlayerVisuals_Enabled":true,"fov_lerp":100,"PlayerVisuals_Chams_Color2":{"Color":"000000","Transparency":0},"yaw_type":"Block","viewmodel_disable_textures":true,"hit_effect_outline":true,"PlayerEffects_Particles_Color1":{"Color":"7778ff","Transparency":0},"PlayerVisuals_CornerBoxes_Color":{"Color":"ffffff","Transparency":0},"hitmarker_color":{"Color":"ffffff","Transparency":0},"crosshair_outline_color":{"Color":"000000","Transparency":0},"hitmarker_style":"Cross","PlayerVisuals_Distance_Color":{"Color":"ffffff","Transparency":0},"viewmodel_arm_color":{"Color":"ffffff","Transparency":0},"no_recoil_enabled":true,"trigger_no_switch_delay":true,"velocity_key":{"mode":"Always","key":"NONE","active":false},"world_sky_rt":"","trigger_switch_delay":0,"fov_moving_rotation":true,"chat_spam_mode":"custom","kill_sound_volume":79,"world_atm_decay":{"Color":"6482a0","Transparency":0},"pitch_type":"None","hit_effect_scatter":0,"world_ltg_clock_val":14,"world_env_diffuse":1.1,"anim_custom_id":"","mod_detector_leave":false,"void_strike_radius":60,"spoof_device_type":"Controller","hitmarker_gap":3,"profile_displayname_enabled":false,"hit_effect_glow_color":{"Color":"ff78dc","Transparency":0},"bullet_tracer_speed":20,"stretch_amount":67,"bullet_tracers_color_1":{"Color":"ffffff","Transparency":0.75},"crosshair_custom_text":"Sleepy.gg","aimbot_fov_lerp":100,"hit_notifications_enabled":true,"aco_health":true,"aimbot_visualise_range":false,"profile_elo_value":"3000","world_atm_haze":1.8,"chat_spam_delay":5,"world_ltg_fog_start":false,"antiaim_key":{"mode":"Always","key":"NONE","active":true},"hit_effect_outline_thickness":0,"hitmarker_duration":200,"PlayerVisuals_Weapons_Color":{"Color":"ffffff","Transparency":0},"trigger_key":{"mode":"Always","key":"Enum.KeyCode.C","active":false},"silent_aim_visualise_filled_range":true,"reload_sound_url":"","hitmarker_fade":true,"fov_fill_speed":400,"world_marker_enabled":false,"world_weather_opacity":85,"silent_aim_target_mode":"FOV - Closest","anti_flash_keep_sound":true,"world_marker_size":100,"custom_yaw_angle":180,"leaderboard_Highest Level":false,"world_ltg_brightness_val":2,"fov_outline_color3":{"Color":"000000","Transparency":0},"world_dof_near":0.1,"cross_hair_speed":150,"auto_vote_enabled":true,"instant_aim_enabled":true,"anti_aim_speed":100,"FilledFov_Color2":{"Color":"00b5ff","Transparency":0},"PlayerVisuals_WinStreak_Color":{"Color":"ffffff","Transparency":0},"aimbot_fov_outline_color3":{"Color":"000000","Transparency":0},"world_env_specular":1.15,"world_marker_thickness":3,"world_weather_radius":50,"PlayerEffects_Particles_Rate":10,"PlayerVisuals_HealthText":true,"profile_displayname_value":"","world_marker_growth":150,"status_display_enabled":true,"auto_ban_first_delay":1,"PlayerVisuals_TextGradient":true,"world_sky_celestial":false,"stretch_enabled":false,"ammo_display_reserve_color":{"Color":"969696","Transparency":0},"silent_hitchance":100,"viewmodel_wire_enabled":false,"bullet_tracer_type":"Lightning","reload_sound_volume":50,"FlyKeybind":{"mode":"Toggle","key":"Enum.KeyCode.F","active":false},"world_blur_enabled":true,"crosshair_length":10,"fov_outline_thickness":1,"ragebot_attack_mode":"None","indicator_offset_x":0,"movement_double_jump":true,"world_ltg_clock":false,"PlayerVisuals_CornerBoxes":true,"viewmodel_roll":0,"world_ambience_volume":5,"crosshair_resize_speed":150,"chat_spam_trigger":"always","world_marker_color":{"Color":"ffffff","Transparency":0},"FakePositionY":7,"hit_sounds_enabled":true,"PlayerVisuals_HealthBar_Low_Color":{"Color":"ff0000","Transparency":0},"menu_accent_color":{"Color":"00a2ff","Transparency":0},"RapidBody_enabled":false,"world_cc_contrast":0.1,"PlayerVisuals_FilledBoxes":true,"cross_hair_mode":"follow muzzle","Visuals_HealthTextLerp":true,"PlayerVisuals_HealthBars":true,"crosshair_text_color_2":{"Color":"ffffff","Transparency":0},"InfiniteJump":false,"aco_infinite_range":false,"PanicPositionXMin":7,"menu_edge_enabled":false,"firerate_multiplier":10,"viewmodel_wire_color":{"Color":"ffffff","Transparency":0},"flagnumber519":{"mode":"Toggle","key":"Enum.KeyCode.Insert","active":true},"quickequip":true,"crosshair_bounce_speed":1,"reload_sound_enabled":false,"auto_ban_random_map":false,"viewmodel_wire_hide_base":false,"indicator_offset_y":0,"bullet_tracer_lifetime":1,"AntiFlash":true,"indicator_ragebot_style":["text","status"],"crosshair_text_color_1":{"Color":"00a2ff","Transparency":0},"game_crosshair":true,"trigger_distance":800,"PanicPositionXMax":7,"menu_inactive_color":{"Color":"484849","Transparency":0},"PlayerVisuals_Names_Color":{"Color":"ffffff","Transparency":0},"vm_hand_chams_fill_color":{"Color":"ffffff","Transparency":0},"check_walls":true,"aco_ammo":true,"FilledFov_Color1":{"Color":"0149c3","Transparency":0.6111111111111112},"fov_fill_style":"Inner Fade","world_atm_density":0.4,"PlayerVisuals_Level":false,"target_method_ragebot":"Closest","hit_effect_recolor":true,"offsetZ":-5,"Visuals_TextFont":"Plex","ammo_display_enabled":true,"ragebot_key":{"mode":"Always","key":"NONE","active":false},"vm_hand_chams_outline_color":{"Color":"ffffff","Transparency":0},"offsetY":-7,"shoot_sound_preset":"AKEY-47","PlayerVisuals_FilledBoxes_Color1":{"Color":"7778ff","Transparency":0.75},"bullet_tracer_start":0,"auto_ban_second":"Katana","fov_outline_color2":{"Color":"000000","Transparency":0},"movement_slideboost_value":207,"hit_sounds_echo_feedback":45,"world_atm_enabled":true,"aimlock_smoothness":3,"profile_streak_enabled":false,"aimbot_fov_outline_color":{"Color":"000000","Transparency":0},"indicator_font":"Code","crosshair_lerp":20,"world_weather_size":100,"hit_effect_glow_intensity":45,"viewmodel_glow_color":{"Color":"c896ff","Transparency":0},"indicator_text_style":"lower","world_ltg_shadows":false,"fov_rotation":360,"hit_effect_font":"Zekton","third_person_enabled":false,"world_ltg_colorshift_top":false,"status_text_size":13,"world_bloom_threshold":0.8,"AimbotFilledFov_Color3":{"Color":"4669af","Transparency":0},"world_ltg_exposure":true,"shoot_sound_volume":80,"bullet_tracers_color_2":{"Color":"ffffff","Transparency":0.75},"hit_effect_radial_radius":3,"ammo_outline_strength":50,"world_ltg_colorshift_top_color":{"Color":"7f7f7f","Transparency":0},"world_marker_length":25,"trigger_enabled":false,"PlayerVisuals_Rank_Color":{"Color":"ffffff","Transparency":0},"chat_spam_enabled":false,"viewmodel_arm_appearance":true,"silent_aim_range_color":{"Color":"ffffff","Transparency":0},"trigger_random_reaction":false,"anim_start":0,"anti_aim_enabled":true} ]==];
+    ["[LEGIT] Sakura"] = [==[{"movement_maul_slam":false,"AimbotFilledFov_Color1":{"Color":"fccbfa","Transparency":0.94},"AimbotFilledFov_Color2":{"Color":"fccbfa","Transparency":0.85},"AimbotFilledFov_Color3":{"Color":"fccbfa","Transparency":0.94},"AimlockDropdown_":[],"AntiAim_enabled":false,"AntiFlash":true,"AntiSmoke":false,"FakePosition":false,"FakePositionPanic":false,"FakePositionWalk":false,"FilledFov_Color1":{"Color":"fccbfa","Transparency":0.94},"FilledFov_Color2":{"Color":"fccbfa","Transparency":0.85},"FilledFov_Color3":{"Color":"fccbfa","Transparency":0.94},"HideHead_enabled":false,"InfiniteJump":false,"IsInvincible":true,"NoBobbing":false,"Noclip":false,"RapidBody_enabled":false,"SilentaimDropdown_":[],"TriggerbotDropdown_":["no delay between targets"],"VelocitySpeedEnabled":false,"aim_lock_range":100,"aimbot_closest_part":false,"aimbot_closest_position":false,"aimbot_delay_position":true,"aimbot_enabled":true,"aimbot_fov_lerp":25,"aimbot_fov_moving_rotation":false,"aimbot_fov_outline":true,"aimbot_fov_outline_color":{"Color":"fccbfa","Transparency":0.84},"aimbot_fov_outline_color2":{"Color":"fde3fc","Transparency":0.7},"aimbot_fov_outline_color3":{"Color":"fde3fc","Transparency":0.25},"aimbot_fov_outline_thickness":2,"aimbot_fov_settings":[],"aimbot_hitmethod":"Camera","aimbot_jump_smooth":18,"aimbot_range_color":{"Color":"ffffff","Transparency":0},"aimbot_range_color2":{"Color":"fde3fc","Transparency":0},"aimbot_range_color3":{"Color":"fccbfa","Transparency":0},"aimbot_smoothing":12,"aimbot_visualise_filled_range":true,"aimbot_visualise_range":true,"aimbot_x_smooth":10,"aimbot_y_smooth":10,"aimlock_delay":0,"aimlock_jitter":0,"aimlock_trigger":"Aiming","aimlock_wallcheck":true,"anti_aim_enabled":false,"anti_flash_keep_sound":true,"arm_override_appearance":false,"camera_fov_amount":95,"camera_fov_enabled":true,"crosshair_bounce":0,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"fccbfa","Transparency":0},"crosshair_color_2":{"Color":"f7b1f4","Transparency":0},"crosshair_color_3":{"Color":"f5a3f1","Transparency":0},"crosshair_color_4":{"Color":"f296ee","Transparency":0},"crosshair_enabled":true,"crosshair_length":8,"crosshair_lerp":0.25,"crosshair_offset":2,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":45,"crosshair_rotation_speed":0,"crosshair_settings":[],"crosshair_thickness":2,"custom_tracer_color":{"Color":"fccbfa","Transparency":0},"custom_tracer_color2":{"Color":"f296ee","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":4,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"lightning","custom_tracer_speed":2,"custom_tracer_width":0.2,"esp_body_color":false,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"f296ee","Transparency":0},"esp_chams_settings":[],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_effects_aura":false,"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"fccbfa","Transparency":0},"esp_effects_particle_color2":{"Color":"f296ee","Transparency":0},"esp_effects_particle_color3":{"Color":"bc75ba","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_flag_health_text":false,"esp_flag_staring_text":false,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"9d539b","Transparency":0},"esp_healthbar_color_middle":{"Color":"bc75ba","Transparency":0},"esp_healthbar_color_start":{"Color":"fde3fc","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_type":"gradient","esp_material":false,"esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"fde3fc","Transparency":0},"esp_name_color3":{"Color":"fccbfa","Transparency":0},"esp_name_font":"default","esp_name_type":"Name","esp_override_appearance":false,"esp_round_only":true,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_world_distance":true,"esp_world_distance_color":{"Color":"fccbfa","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":false,"faster_reload":false,"fly_enabled":false,"fov_fill_speed":100,"fov_fill_style":"Inner Fade","fov_lerp":25,"fov_moving_rotation":true,"fov_outline":true,"fov_outline_color":{"Color":"fccbfa","Transparency":0.84},"fov_outline_color2":{"Color":"fde3fc","Transparency":0.7},"fov_outline_color3":{"Color":"fde3fc","Transparency":0.25},"fov_outline_thickness":2,"fov_position":"position on screen","fov_rotation":0,"fov_rotation_speed":10,"full_auto_enabled":true,"game_crosshair":true,"grenade_options":[],"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"fccbfa","Transparency":0},"hit_effects_col_3":{"Color":"f296ee","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["Electricity","phantom forces"],"hit_effects_settings":["stack damage together"],"hit_effects_weld":false,"hit_notifications_enabled":false,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"sparkle","hit_sounds_volume":0.9,"hitmarker_enabled":false,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"f296ee","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve","\"out of ammo\" if empty"],"indicator_empty_color":{"Color":"ff5f5f","Transparency":0},"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":false,"indicator_manipulated_color":{"Color":"f296ee","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":false,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["text","status"],"indicator_ragebot_text_color":{"Color":"f296ee","Transparency":0},"indicator_reserve_color":{"Color":"fccbfa","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","instant_aim_enabled":false,"item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","manipulation_enabled":false,"movement_double_jump":false,"movement_slideboost":true,"movement_slideboost_value":1.1,"no_fire_sound":false,"no_muzzle_flash":false,"no_recoil_enabled":false,"no_spread_enabled":false,"quickequip":false,"ragebot_enabled":false,"shoot_sound_change":true,"shoot_sound_change_value":"crossbow","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":0.6,"silent_aim_enabled":true,"silent_aim_range":45,"silent_aim_range_color":{"Color":"ffffff","Transparency":0},"silent_aim_range_color2":{"Color":"fde3fc","Transparency":0},"silent_aim_range_color3":{"Color":"fccbfa","Transparency":0},"silent_aim_target_mode":"FOV - Closest","silent_aim_visualise_filled_range":true,"silent_aim_visualise_range":true,"silent_closest_part":true,"silent_hitchance":100,"silent_visualize":true,"silent_wallbang":false,"stretch_enabled":false,"target_highlight":false,"target_highlight_fill":{"Color":"f296ee","Transparency":0.6},"target_highlight_outline":{"Color":"fccbfa","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_tracer":false,"target_tracer_customization":{"Color":"f296ee","Transparency":0},"target_ui_enabled":true,"target_ui_item_scale":170,"target_ui_position_x":50,"target_ui_position_y":72,"target_ui_scale":150,"targeting_ignore_protected_settings":["katana deflecting"],"targeting_limitdistance":false,"targeting_part":"Head","third_person_enabled":false,"trigger_distance":250,"trigger_enabled":true,"trigger_forget_time":1.5,"trigger_part_blacklist":[],"trigger_reaction":25,"trigger_reaction_offset":5,"trigger_scoped":["Sniper","Crossbow"],"trigger_shoot_delay":0,"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-1.2,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"ffd6fb","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_frames_override":false,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.5,"viewmodel_options":["sway","bobbing","muzzle flash","idle animation","jump animation","slide animation","sprint animation","shoot animation"],"viewmodel_override_appearance":false,"viewmodel_recoil":0,"viewmodel_scale_enabled":false,"viewmodel_wire_enabled":false,"voidspam_enabled":false,"wallbang_method":"Classic V1","world_ambience_enabled":true,"world_ambience_type":"Rain","world_ambience_volume":35,"world_atm_decay":{"Color":"b45aa8","Transparency":0},"world_atm_density":0.4,"world_atm_enabled":true,"world_atm_glare":3,"world_atm_haze":2.5,"world_atm_offset":0.4,"world_atm_tint":{"Color":"ffc8fd","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":1.3,"world_bloom_size":40,"world_bloom_threshold":0.9,"world_blur_enabled":false,"world_cc_brightness":-0.05,"world_cc_contrast":0.1,"world_cc_enabled":true,"world_cc_saturation":0.15,"world_cc_tint":{"Color":"ffe3f7","Transparency":0},"world_dof_enabled":false,"world_env_enabled":false,"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"ffffff","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":1.7,"world_ltg_clock":true,"world_ltg_clock_val":17.2,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"ffffff","Transparency":0},"world_ltg_colorshift_top":true,"world_ltg_colorshift_top_color":{"Color":"fccbfa","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-1.1,"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_start":false,"world_ltg_shadows":true,"world_marker_enabled":false,"world_shadow_soft_enabled":true,"world_shadow_soft_val":25,"world_sky_autorotate":false,"world_sky_celestial":false,"world_skybox_disable":[],"world_skybox_enabled":true,"world_skybox_mode":"Pink Clouds","world_sunrays_enabled":false,"world_sunrays_intensity":0.2,"world_sunrays_spread":1,"world_weather_color":{"Color":"ffd1f2","Transparency":0},"world_weather_color_end":{"Color":"c85ab8","Transparency":0},"world_weather_color_mid":{"Color":"f296ee","Transparency":0},"world_weather_density":60,"world_weather_enabled":true,"world_weather_lifetime":100,"world_weather_opacity":80,"world_weather_size":100,"world_weather_speed":100,"world_weather_timescale":1,"world_weather_type":"Cherry Blossom"}]==],
+
+    ["[RAGE; HVH] Curger's Config"] = [==[{"movement_maul_slam":false,"ACO":false,"AimLock_Key":{"active":false,"key":"Enum.UserInputType.MouseButton2","mode":"Hold"},"AimbotFilledFov_Color1":{"Color":"ffffff","Transparency":0.75},"AimbotFilledFov_Color2":{"Color":"000000","Transparency":0},"AimbotFilledFov_Color3":{"Color":"4669af","Transparency":0},"AimlockDropdown_":[],"AntiAim_enabled":true,"AntiFlash":false,"AntiSmoke":false,"FakePosition":true,"FakePositionPanic":false,"FakePositionWalk":true,"FakePositionY":7,"FilledFov_Color1":{"Color":"7778ff","Transparency":0.75},"FilledFov_Color2":{"Color":"000000","Transparency":0},"FilledFov_Color3":{"Color":"4669af","Transparency":0},"FlyKeybind":{"active":false,"key":"Enum.KeyCode.F2","mode":"Toggle"},"HideHead_enabled":true,"InfiniteJump":false,"IsInvincible":false,"Melee_auto_load":"Chainsaw","NoBobbing":true,"Noclip":false,"PanicPositionXMax":7,"PanicPositionXMin":7,"RapidBody_enabled":true,"Secondary_auto_load":"Spray","SilentaimDropdown_":[],"TriggerbotDropdown_":[],"Utility_auto_load":"Grenade","VelocitySpeedEnabled":false,"VelocitySpeedValue":43,"aco_ammo":true,"aco_health":true,"aco_infinite_range":false,"aco_interval":200,"aco_only_needed":true,"aco_range":60,"aim_lock_range":12,"aimbot_enabled":false,"aimbot_fov_lerp":100,"aimbot_fov_moving_rotation":false,"aimbot_fov_outline":false,"aimbot_fov_outline_color":{"Color":"000000","Transparency":0},"aimbot_fov_outline_color2":{"Color":"000000","Transparency":0},"aimbot_fov_outline_color3":{"Color":"000000","Transparency":0},"aimbot_fov_outline_thickness":2,"aimbot_fov_rotation":0,"aimbot_fov_rotation_speed":10,"aimbot_fov_settings":[],"aimbot_hitmethod":"Camera","aimbot_range_color":{"Color":"ffffff","Transparency":0.75},"aimbot_visualise_filled_range":false,"aimbot_visualise_range":false,"aimlock_delay":0,"aimlock_jitter":0,"aimlock_jitter_rate":60,"aimlock_wallcheck":false,"anim_custom_id":"","anim_enabled":true,"anim_end":100,"anim_key":{"active":true,"key":"NONE","mode":"Always"},"anim_preset":"small / hide","anim_speed":2,"anim_start":0,"anti_aim_enabled":true,"anti_aim_speed":100,"anti_flash_keep_sound":true,"antiaim_key":{"active":true,"key":"NONE","mode":"Always"},"antiaim_speed":100,"arm_override_appearance":false,"auto_ban_first":"Riot Shield","auto_ban_first_delay":1,"auto_ban_map_delay":1,"auto_ban_random_map":false,"auto_ban_second":"Katana","auto_ban_second_delay":2,"auto_ban_weapons":false,"auto_queue_enabled":false,"auto_vote_enabled":false,"auto_vote_map":"Arena","autoload_enabled_auto_slot":false,"camera_fov_amount":90,"camera_fov_enabled":false,"chat_spam_delay":5,"chat_spam_enabled":false,"chat_spam_mode":"custom","chat_spam_list":["sleepy.gg"],"chat_spam_trigger":"always","crosshair_bounce":5,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"c9caff","Transparency":0},"crosshair_color_2":{"Color":"a9aaff","Transparency":0},"crosshair_color_3":{"Color":"8f90ff","Transparency":0},"crosshair_color_4":{"Color":"7778ff","Transparency":0},"crosshair_enabled":true,"crosshair_length":13,"crosshair_lerp":0.25,"crosshair_offset":5,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":0,"crosshair_rotation_speed":0.2,"crosshair_settings":["position on target"],"crosshair_thickness":2,"custom_pitch_angle":90,"custom_tracer_color":{"Color":"b3b4ff","Transparency":0},"custom_tracer_color2":{"Color":"7778ff","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":4,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"lightning","custom_tracer_speed":2,"custom_tracer_width":0.2,"custom_yaw_angle":180,"death_sound_enabled":false,"death_sound_id":"","death_sound_pitch":100,"death_sound_preset":"Sparkle","death_sound_url":"","death_sound_volume":50,"device_spoofer_enabled":false,"esp_body_color":false,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"7778ff","Transparency":0},"esp_chams_settings":["through walls"],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_effects_aura":false,"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"b3b4ff","Transparency":0},"esp_effects_particle_color2":{"Color":"7778ff","Transparency":0},"esp_effects_particle_color3":{"Color":"5a5bdc","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_flag_health_text":false,"esp_flag_staring_text":true,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"3e3fb8","Transparency":0},"esp_healthbar_color_middle":{"Color":"5a5bdc","Transparency":0},"esp_healthbar_color_start":{"Color":"d6d6ff","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_type":"gradient","esp_material":false,"esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"d6d6ff","Transparency":0},"esp_name_color3":{"Color":"b3b4ff","Transparency":0},"esp_name_font":"default","esp_name_type":"Name","esp_override_appearance":false,"esp_round_only":true,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_world_distance":true,"esp_world_distance_color":{"Color":"b3b4ff","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":true,"fakepos_key":{"active":false,"key":"NONE","mode":"Always"},"faster_reload":true,"firerate_multiplier":10,"fly_enabled":false,"flyvalue":50,"fov_fill_speed":100,"fov_fill_style":"Inner Fade","fov_lerp":100,"fov_moving_rotation":false,"fov_outline":false,"fov_outline_color":{"Color":"000000","Transparency":0},"fov_outline_color2":{"Color":"000000","Transparency":0},"fov_outline_color3":{"Color":"000000","Transparency":0},"fov_outline_thickness":2,"fov_position":"position on screen","fov_rotation":0,"fov_rotation_speed":10,"full_auto_enabled":false,"game_crosshair":true,"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"b3b4ff","Transparency":0},"hit_effects_col_3":{"Color":"7778ff","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["Electricity","phantom forces"],"hit_effects_settings":["stack damage together"],"hit_effects_weld":false,"hit_notifications_enabled":false,"hit_notify_list":["hit {NAME} for {DMG} in the {PART}"],"hit_notify_duration":1.3,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"neverlose","hit_sounds_volume":0.9,"hitmarker_color":{"Color":"ffffff","Transparency":0},"hitmarker_duration":200,"hitmarker_enabled":false,"hitmarker_fade":true,"hitmarker_gap":1,"hitmarker_length":22,"hitmarker_style":"Cross","hitmarker_thickness":1,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"9a9bff","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve","\"out of ammo\" if empty"],"indicator_empty_color":{"Color":"ff5f5f","Transparency":0},"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":true,"indicator_manipulated_color":{"Color":"9a9bff","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":true,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["text","status"],"indicator_ragebot_text_color":{"Color":"9a9bff","Transparency":0},"indicator_reserve_color":{"Color":"b3b4ff","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","instant_aim_enabled":true,"item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","kill_sound_enabled":false,"kill_sound_id":"","kill_sound_pitch":100,"kill_sound_preset":"Sparkle","kill_sound_url":"","kill_sound_volume":50,"leaderboard_Current Highest Win Streak":false,"leaderboard_Highest ELO":false,"leaderboard_Highest Level":false,"leaderboard_Most Eliminations":false,"leaderboard_Most Wins":false,"leaderboard_value":"999999","matchmaking_mode":"1v1","mod_detector":true,"mod_detector_evade":false,"mod_detector_leave":true,"movement_double_jump":false,"movement_double_jump_height":1,"movement_slideboost":false,"movement_slideboost_value":1.5,"no_bullet_tracer":true,"no_fire_sound":true,"no_muzzle_flash":true,"no_recoil_enabled":true,"no_spread_enabled":true,"noclip_key":{"active":false,"key":"NONE","mode":"Always"},"offsetX":0,"offsetY":-7,"offsetZ":-5,"pitch_type":"None","primary_auto_load":"Sniper","profile_displayname_enabled":false,"profile_displayname_value":"fog","profile_elo_enabled":false,"profile_elo_value":"67000","profile_level_enabled":false,"profile_level_value":"0","profile_streak_enabled":false,"profile_streak_value":"333","profile_username_enabled":false,"profile_username_value":"im feeling dizzy","quickequip":true,"ragebot_enabled":true,"ragebot_key":{"active":false,"key":"NONE","mode":"Always"},"ragebot_method":"Advanced","ragebot_mode":"gun","ragebot_settings":["swap weapons when empty"],"ragebot_weapon":"primary","random_offset_max":8,"random_offset_min":-8,"reload_sound_enabled":false,"reload_sound_id":"","reload_sound_pitch":100,"reload_sound_preset":"Sparkle","reload_sound_url":"","reload_sound_volume":50,"shoot_sound_change":true,"shoot_sound_change_value":"plasma pistol","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":0.4,"silent_aim_enabled":true,"silent_aim_range":100,"silent_aim_range_color":{"Color":"ffffff","Transparency":0.75},"silent_aim_target_mode":"FOV - Closest","silent_aim_visualise_filled_range":false,"silent_aim_visualise_range":false,"silent_hitchance":100,"silent_key":{"active":false,"key":"NONE","mode":"Always"},"silent_wallbang":true,"spoof_device_type":"Controller","stretch_amount":71,"stretch_enabled":false,"target_highlight":true,"target_highlight_fill":{"Color":"7778ff","Transparency":0.6},"target_highlight_outline":{"Color":"b3b4ff","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_method_ragebot":"Closest","target_tracer":true,"target_tracer_customization":{"Color":"7778ff","Transparency":0},"target_ui_enabled":true,"target_ui_item_scale":170,"target_ui_position_x":50,"target_ui_position_y":72,"target_ui_scale":150,"targeting_ignore_protected_settings":[],"targeting_limitdistance":false,"targeting_part":"Head","third_person_enabled":false,"third_person_key":{"active":false,"key":"NONE","mode":"Always"},"trigger_distance":500,"trigger_enabled":false,"trigger_forget_time":1,"trigger_key":{"active":false,"key":"NONE","mode":"Always"},"trigger_reaction":40,"trigger_scoped":["Crossbow","Sniper"],"unlock_all_enabled":false,"velocity_key":{"active":false,"key":"NONE","mode":"Always"},"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-0.8,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"c9caff","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_disable_textures":false,"viewmodel_frames_override":false,"viewmodel_glow_color":{"Color":"ffffff","Transparency":0},"viewmodel_glow_intensity":28,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.5,"viewmodel_options":["sway","bobbing","muzzle flash","idle animation","jump animation","slide animation","sprint animation","shoot animation","tilt","aiming animation","equip animation"],"viewmodel_override_appearance":false,"viewmodel_recoil":0,"viewmodel_scale":68,"viewmodel_scale_enabled":false,"viewmodel_wire_color":{"Color":"ffffff","Transparency":0},"viewmodel_wire_enabled":false,"viewmodel_wire_hide_base":true,"viewmodel_wire_mode":"Lines + Glow","voidspam_enabled":false,"wallbang_method":"Classic V1","world_ambience_enabled":false,"world_ambience_type":"Rain","world_ambience_volume":35,"world_atm_decay":{"Color":"3a2a7a","Transparency":0},"world_atm_density":0.3,"world_atm_enabled":true,"world_atm_glare":1,"world_atm_haze":1,"world_atm_offset":0.4,"world_atm_tint":{"Color":"9a8cff","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":0.8,"world_bloom_size":40,"world_bloom_threshold":0.9,"world_blur_enabled":false,"world_blur_size":5,"world_cc_brightness":-0.05,"world_cc_contrast":0.1,"world_cc_enabled":true,"world_cc_saturation":0.15,"world_cc_tint":{"Color":"e6e3ff","Transparency":0},"world_dof_enabled":false,"world_dof_far":0.25,"world_dof_focus":116,"world_dof_near":0.14,"world_dof_radius":20,"world_env_diffuse":0.8,"world_env_enabled":false,"world_env_specular":1.1,"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"ffffff","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":1.7,"world_ltg_clock":true,"world_ltg_clock_val":0,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"ffffff","Transparency":0},"world_ltg_colorshift_top":true,"world_ltg_colorshift_top_color":{"Color":"b3b4ff","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-0.6,"world_ltg_fog_color":{"Color":"bfbfbf","Transparency":0},"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_end_val":3643,"world_ltg_fog_start":false,"world_ltg_fog_start_val":0,"world_ltg_shadows":true,"world_marker_color":{"Color":"ffffff","Transparency":0},"world_marker_duration":0.6,"world_marker_enabled":false,"world_marker_growth":150,"world_marker_length":25,"world_marker_size":100,"world_marker_thickness":3,"world_shadow_soft_enabled":true,"world_shadow_soft_val":25,"world_sky_autorotate":false,"world_sky_bk":"","world_sky_celestial":false,"world_sky_dn":"","world_sky_ft":"","world_sky_lf":"","world_sky_moon_size":11,"world_sky_rotate_speed":100,"world_sky_rt":"","world_sky_stars":0,"world_sky_sun_size":21,"world_sky_up":"","world_skybox_custom_id":"","world_skybox_disable":[],"world_skybox_enabled":true,"world_skybox_mode":"PurpleNight","world_sunrays_enabled":false,"world_sunrays_intensity":0.2,"world_sunrays_spread":1,"world_weather_color":{"Color":"ffffff","Transparency":0},"world_weather_color_end":{"Color":"7778ff","Transparency":0},"world_weather_color_mid":{"Color":"b3b4ff","Transparency":0},"world_weather_density":40,"world_weather_enabled":false,"world_weather_height":23,"world_weather_lifetime":100,"world_weather_opacity":80,"world_weather_radius":120,"world_weather_size":100,"world_weather_speed":100,"world_weather_timescale":1,"world_weather_type":"Snow","yaw_type":"Block"}]==],
+
+    ["[RAGE; HVH] Sakura"] = [==[{"movement_maul_slam":false,"AntiAim_enabled":true,"AntiFlash":true,"AntiSmoke":true,"FakePosition":false,"FakePositionPanic":false,"FakePositionWalk":false,"FilledFov_Color1":{"Color":"fccbfa","Transparency":0.94},"FilledFov_Color2":{"Color":"fccbfa","Transparency":0.85},"FilledFov_Color3":{"Color":"fccbfa","Transparency":0.94},"HideHead_enabled":true,"InfiniteJump":true,"IsInvincible":true,"NoBobbing":false,"Noclip":false,"RapidBody_enabled":false,"SilentaimDropdown_":[],"VelocitySpeedEnabled":false,"aimbot_enabled":false,"aimbot_fov_settings":[],"anti_aim_enabled":false,"anti_flash_keep_sound":true,"antiaim_speed":100,"arm_override_appearance":false,"camera_fov_amount":100,"camera_fov_enabled":true,"crosshair_bounce":5,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"fccbfa","Transparency":0},"crosshair_color_2":{"Color":"f7b1f4","Transparency":0},"crosshair_color_3":{"Color":"f5a3f1","Transparency":0},"crosshair_color_4":{"Color":"f296ee","Transparency":0},"crosshair_enabled":true,"crosshair_length":13,"crosshair_lerp":0.25,"crosshair_offset":5,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":0,"crosshair_rotation_speed":0.2,"crosshair_settings":["position on target"],"crosshair_thickness":2,"custom_tracer_color":{"Color":"fccbfa","Transparency":0},"custom_tracer_color2":{"Color":"f296ee","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":4,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"lightning","custom_tracer_speed":2,"custom_tracer_width":0.2,"esp_body_color":false,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"f296ee","Transparency":0},"esp_chams_settings":["through walls"],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_effects_aura":false,"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"fccbfa","Transparency":0},"esp_effects_particle_color2":{"Color":"f296ee","Transparency":0},"esp_effects_particle_color3":{"Color":"bc75ba","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_flag_health_text":false,"esp_flag_staring_text":true,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"9d539b","Transparency":0},"esp_healthbar_color_middle":{"Color":"bc75ba","Transparency":0},"esp_healthbar_color_start":{"Color":"fde3fc","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_type":"gradient","esp_material":false,"esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"fde3fc","Transparency":0},"esp_name_color3":{"Color":"fccbfa","Transparency":0},"esp_name_font":"default","esp_name_type":"Name","esp_override_appearance":false,"esp_round_only":true,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_world_distance":true,"esp_world_distance_color":{"Color":"fccbfa","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":true,"faster_reload":true,"fly_enabled":false,"fov_fill_speed":100,"fov_fill_style":"Inner Fade","fov_lerp":25,"fov_moving_rotation":true,"fov_outline":true,"fov_outline_color":{"Color":"fccbfa","Transparency":0.84},"fov_outline_color2":{"Color":"fde3fc","Transparency":0.7},"fov_outline_color3":{"Color":"fde3fc","Transparency":0.25},"fov_outline_thickness":2,"fov_position":"position on screen","fov_rotation":0,"fov_rotation_speed":10,"full_auto_enabled":true,"game_crosshair":true,"grenade_options":["explode on impact"],"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"fccbfa","Transparency":0},"hit_effects_col_3":{"Color":"f296ee","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["Electricity","phantom forces"],"hit_effects_settings":["stack damage together"],"hit_effects_weld":false,"hit_notifications_enabled":true,"hit_notify_duration":1.3,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"sparkle","hit_sounds_volume":0.9,"hitmarker_enabled":false,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"f296ee","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve","\"out of ammo\" if empty"],"indicator_empty_color":{"Color":"ff5f5f","Transparency":0},"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":true,"indicator_manipulated_color":{"Color":"f296ee","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":true,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["text","status"],"indicator_ragebot_text_color":{"Color":"f296ee","Transparency":0},"indicator_reserve_color":{"Color":"fccbfa","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","instant_aim_enabled":true,"item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","manipulation_enabled":true,"movement_double_jump":false,"movement_slideboost":true,"movement_slideboost_value":2.5,"no_fire_sound":false,"no_muzzle_flash":false,"no_recoil_enabled":true,"no_spread_enabled":true,"pitch_type":"Up & Down","quickequip":true,"ragebot_enabled":true,"ragebot_method":"Lite","ragebot_mode":"gun","ragebot_priority":true,"ragebot_priority_notification":true,"ragebot_priority_settings":["attackers","voided players"],"ragebot_settings":["swap weapons when empty"],"ragebot_weapon":"primary","shoot_sound_change":true,"shoot_sound_change_value":"crossbow","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":0.6,"silent_aim_enabled":true,"silent_aim_range":300,"silent_aim_range_color":{"Color":"ffffff","Transparency":0},"silent_aim_range_color2":{"Color":"fde3fc","Transparency":0},"silent_aim_range_color3":{"Color":"fccbfa","Transparency":0},"silent_aim_target_mode":"FOV - Closest","silent_aim_visualise_filled_range":true,"silent_aim_visualise_range":true,"silent_closest_part":false,"silent_hitchance":100,"silent_visualize":true,"silent_wallbang":true,"stretch_enabled":false,"target_highlight":true,"target_highlight_fill":{"Color":"f296ee","Transparency":0.6},"target_highlight_outline":{"Color":"fccbfa","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_method_ragebot":"Closest","target_tracer":true,"target_tracer_customization":{"Color":"f296ee","Transparency":0},"target_ui_enabled":true,"target_ui_item_scale":170,"target_ui_position_x":50,"target_ui_position_y":72,"target_ui_scale":150,"targeting_ignore_protected_settings":["blocked by riot shield","katana deflecting"],"targeting_limitdistance":false,"targeting_part":"Head","third_person_enabled":true,"trigger_enabled":false,"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-1.2,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"ffd6fb","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_frames_override":false,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.5,"viewmodel_options":["sway","bobbing","muzzle flash","idle animation","jump animation","slide animation","sprint animation","shoot animation","tilt","aiming animation","equip animation"],"viewmodel_override_appearance":false,"viewmodel_recoil":0,"viewmodel_scale_enabled":false,"viewmodel_wire_enabled":false,"voidspam_enabled":true,"voidspam_hide_time":0.25,"voidspam_shoot_attempts":2,"voidspam_shoot_time":0.01,"wallbang_method":"Classic V1","world_ambience_enabled":false,"world_ambience_type":"Rain","world_ambience_volume":35,"world_atm_decay":{"Color":"b45aa8","Transparency":0},"world_atm_density":0.4,"world_atm_enabled":true,"world_atm_glare":3,"world_atm_haze":2.5,"world_atm_offset":0.4,"world_atm_tint":{"Color":"ffc8fd","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":0.8,"world_bloom_size":40,"world_bloom_threshold":0.9,"world_blur_enabled":false,"world_cc_brightness":-0.05,"world_cc_contrast":0.1,"world_cc_enabled":true,"world_cc_saturation":0.15,"world_cc_tint":{"Color":"ffe3f7","Transparency":0},"world_dof_enabled":false,"world_env_enabled":false,"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"ffffff","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":1.7,"world_ltg_clock":true,"world_ltg_clock_val":17.2,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"ffffff","Transparency":0},"world_ltg_colorshift_top":true,"world_ltg_colorshift_top_color":{"Color":"fccbfa","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-1.1,"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_start":false,"world_ltg_shadows":true,"world_marker_enabled":false,"world_shadow_soft_enabled":true,"world_shadow_soft_val":25,"world_sky_autorotate":false,"world_sky_celestial":false,"world_skybox_disable":[],"world_skybox_enabled":true,"world_skybox_mode":"Pink Clouds","world_sunrays_enabled":false,"world_sunrays_intensity":0.2,"world_sunrays_spread":1,"world_weather_color":{"Color":"ffd1f2","Transparency":0},"world_weather_color_end":{"Color":"c85ab8","Transparency":0},"world_weather_color_mid":{"Color":"f296ee","Transparency":0},"world_weather_density":60,"world_weather_enabled":false,"world_weather_lifetime":100,"world_weather_opacity":80,"world_weather_size":100,"world_weather_speed":100,"world_weather_timescale":1,"world_weather_type":"Cherry Blossom","yaw_type":"Random"}]==],
+
+    ["[RAGE; NO HVH] Winter"] = [==[{"movement_maul_slam":false,"ACO":false,"AimLock_Key":{"active":false,"key":"Enum.KeyCode.LeftControl","mode":"Hold"},"AimbotFilledFov_Color1":{"Color":"78aaff","Transparency":0.65},"AimbotFilledFov_Color2":{"Color":"1e285a","Transparency":0},"AimbotFilledFov_Color3":{"Color":"4669af","Transparency":0},"AimlockDropdown_":[],"AntiAim_enabled":true,"AntiFlash":true,"AntiSmoke":true,"FakePosition":true,"FakePositionPanic":false,"FakePositionWalk":true,"FakePositionY":7,"FilledFov_Color1":{"Color":"0149c3","Transparency":0.6111111111111112},"FilledFov_Color2":{"Color":"00b5ff","Transparency":0},"FilledFov_Color3":{"Color":"002878","Transparency":0.8611111111111112},"FlyKeybind":{"active":false,"key":"Enum.KeyCode.F","mode":"Toggle"},"HideHead_enabled":true,"InfiniteJump":false,"IsInvincible":true,"NoBobbing":true,"Noclip":true,"PanicPositionXMax":7,"PanicPositionXMin":7,"RapidBody_enabled":false,"SilentaimDropdown_":[],"TriggerbotDropdown_":[],"VelocitySpeedEnabled":true,"VelocitySpeedValue":52,"aco_ammo":true,"aco_health":true,"aco_infinite_range":false,"aco_interval":200,"aco_only_needed":true,"aco_range":60,"aim_lock_range":100,"aimbot_enabled":false,"aimbot_fov_lerp":100,"aimbot_fov_moving_rotation":false,"aimbot_fov_outline":false,"aimbot_fov_outline_color":{"Color":"000000","Transparency":0},"aimbot_fov_outline_color2":{"Color":"000000","Transparency":0},"aimbot_fov_outline_color3":{"Color":"000000","Transparency":0},"aimbot_fov_outline_thickness":2,"aimbot_fov_rotation":0,"aimbot_fov_rotation_speed":10,"aimbot_fov_settings":[],"aimbot_hitmethod":"Camera","aimbot_range_color":{"Color":"ffffff","Transparency":0.75},"aimbot_visualise_filled_range":false,"aimbot_visualise_range":false,"aimlock_delay":0,"aimlock_jitter":0,"aimlock_jitter_rate":166,"aimlock_wallcheck":false,"anim_custom_id":"","anim_enabled":true,"anim_end":100,"anim_key":{"active":true,"key":"NONE","mode":"Always"},"anim_preset":"small / hide","anim_speed":10,"anim_start":0,"anti_aim_enabled":true,"anti_aim_speed":100,"anti_flash_keep_sound":true,"antiaim_key":{"active":true,"key":"NONE","mode":"Always"},"antiaim_speed":100,"arm_override_appearance":false,"auto_ban_first":"Riot Shield","auto_ban_first_delay":1,"auto_ban_map_delay":1,"auto_ban_random_map":false,"auto_ban_second":"Katana","auto_ban_second_delay":2,"auto_ban_weapons":false,"auto_queue_enabled":false,"auto_vote_enabled":true,"auto_vote_map":"Arena","autoload_enabled_auto_slot":false,"camera_fov_amount":90,"camera_fov_enabled":false,"chat_spam_delay":5,"chat_spam_enabled":false,"chat_spam_mode":"custom","chat_spam_list":["sleepy.gg"],"chat_spam_trigger":"always","crosshair_bounce":5,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"d1e9ff","Transparency":0},"crosshair_color_2":{"Color":"bbdfff","Transparency":0},"crosshair_color_3":{"Color":"b1d9ff","Transparency":0},"crosshair_color_4":{"Color":"a6d4ff","Transparency":0},"crosshair_enabled":true,"crosshair_length":13,"crosshair_lerp":0.25,"crosshair_offset":5,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":0,"crosshair_rotation_speed":0.2,"crosshair_settings":["position on target"],"crosshair_thickness":2,"custom_pitch_angle":90,"custom_tracer_color":{"Color":"d1e9ff","Transparency":0},"custom_tracer_color2":{"Color":"a6d4ff","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":5,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"lightning","custom_tracer_speed":2,"custom_tracer_width":0.2,"custom_yaw_angle":180,"death_sound_enabled":false,"death_sound_id":"","death_sound_pitch":100,"death_sound_preset":"Sparkle","death_sound_url":"","death_sound_volume":50,"device_spoofer_enabled":false,"esp_body_color":false,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"a6d4ff","Transparency":0},"esp_chams_settings":["through walls"],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_effects_aura":false,"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"d1e9ff","Transparency":0},"esp_effects_particle_color2":{"Color":"a6d4ff","Transparency":0},"esp_effects_particle_color3":{"Color":"4e99de","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_flag_health_text":false,"esp_flag_staring_text":true,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"227bce","Transparency":0},"esp_healthbar_color_middle":{"Color":"4e99de","Transparency":0},"esp_healthbar_color_start":{"Color":"e6f3ff","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_type":"gradient","esp_material":false,"esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"e6f3ff","Transparency":0},"esp_name_color3":{"Color":"d1e9ff","Transparency":0},"esp_name_font":"default","esp_name_type":"Name","esp_override_appearance":false,"esp_round_only":true,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_world_distance":true,"esp_world_distance_color":{"Color":"d1e9ff","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":true,"fakepos_key":{"active":false,"key":"NONE","mode":"Always"},"faster_reload":true,"firerate_multiplier":10,"fly_enabled":false,"flyvalue":50,"fov_fill_speed":400,"fov_fill_style":"Inner Fade","fov_lerp":100,"fov_moving_rotation":true,"fov_outline":false,"fov_outline_color":{"Color":"3c4e7c","Transparency":0},"fov_outline_color2":{"Color":"000000","Transparency":0},"fov_outline_color3":{"Color":"000000","Transparency":0},"fov_outline_thickness":1,"fov_position":"position on screen","fov_rotation":360,"fov_rotation_speed":12.1,"full_auto_enabled":false,"game_crosshair":true,"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"d1e9ff","Transparency":0},"hit_effects_col_3":{"Color":"a6d4ff","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["fortnite damage","slashes"],"hit_effects_settings":["stack damage together"],"hit_effects_weld":false,"hit_notifications_enabled":true,"hit_notify_list":["Hit {NAME} for {DMG} in the {PART}"],"hit_notify_duration":1.3,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"sparkle","hit_sounds_volume":0.9,"hitmarker_color":{"Color":"ffffff","Transparency":0},"hitmarker_duration":200,"hitmarker_enabled":false,"hitmarker_fade":true,"hitmarker_gap":3,"hitmarker_length":6,"hitmarker_style":"Cross","hitmarker_thickness":2,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"a6d4ff","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve","\"out of ammo\" if empty"],"indicator_empty_color":{"Color":"ff5f5f","Transparency":0},"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":true,"indicator_manipulated_color":{"Color":"a6d4ff","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":true,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["text","status"],"indicator_ragebot_text_color":{"Color":"a6d4ff","Transparency":0},"indicator_reserve_color":{"Color":"d1e9ff","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","instant_aim_enabled":true,"item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","kill_sound_enabled":true,"kill_sound_id":"","kill_sound_pitch":100,"kill_sound_preset":"Rust","kill_sound_url":"","kill_sound_volume":79,"leaderboard_Current Highest Win Streak":false,"leaderboard_Highest ELO":false,"leaderboard_Highest Level":false,"leaderboard_Most Eliminations":false,"leaderboard_Most Wins":false,"leaderboard_value":"9999","matchmaking_mode":"1v1","mod_detector":true,"mod_detector_evade":true,"mod_detector_leave":false,"movement_double_jump":true,"movement_double_jump_height":1,"movement_slideboost":true,"movement_slideboost_value":2.1,"no_bullet_tracer":true,"no_fire_sound":true,"no_muzzle_flash":true,"no_recoil_enabled":true,"no_spread_enabled":true,"noclip_key":{"active":true,"key":"NONE","mode":"Always"},"offsetX":0,"offsetY":-7,"offsetZ":-5,"pitch_type":"None","profile_displayname_enabled":false,"profile_displayname_value":"","profile_elo_enabled":false,"profile_elo_value":"3000","profile_level_enabled":false,"profile_level_value":"9999","profile_streak_enabled":false,"profile_streak_value":"9999","profile_username_enabled":false,"profile_username_value":"","quickequip":true,"ragebot_enabled":true,"ragebot_key":{"active":false,"key":"NONE","mode":"Always"},"ragebot_method":"Advanced","ragebot_mode":"gun","ragebot_settings":["swap weapons when empty"],"ragebot_weapon":"primary","random_offset_max":8,"random_offset_min":-8,"reload_sound_enabled":false,"reload_sound_id":"","reload_sound_pitch":100,"reload_sound_preset":"Sparkle","reload_sound_url":"","reload_sound_volume":50,"shoot_sound_change":true,"shoot_sound_change_value":"crossbow","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":0.6,"silent_aim_enabled":true,"silent_aim_range":245,"silent_aim_range_color":{"Color":"ffffff","Transparency":0},"silent_aim_target_mode":"FOV - Closest","silent_aim_visualise_filled_range":true,"silent_aim_visualise_range":true,"silent_hitchance":100,"silent_key":{"active":false,"key":"NONE","mode":"Always"},"silent_wallbang":true,"spoof_device_type":"Controller","stretch_amount":67,"stretch_enabled":false,"target_highlight":true,"target_highlight_fill":{"Color":"a6d4ff","Transparency":0.6},"target_highlight_outline":{"Color":"d1e9ff","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_method_ragebot":"Closest","target_tracer":true,"target_tracer_customization":{"Color":"a6d4ff","Transparency":0},"target_ui_enabled":true,"target_ui_item_scale":170,"target_ui_position_x":50,"target_ui_position_y":72,"target_ui_scale":150,"targeting_ignore_protected_settings":["blocked by riot shield","katana deflecting"],"targeting_limitdistance":false,"targeting_part":"Head","third_person_enabled":false,"third_person_key":{"active":false,"key":"NONE","mode":"Always"},"trigger_distance":500,"trigger_enabled":false,"trigger_forget_time":1,"trigger_key":{"active":false,"key":"Enum.KeyCode.C","mode":"Always"},"trigger_reaction":40,"trigger_scoped":["Crossbow","Sniper"],"unlock_all_enabled":true,"velocity_key":{"active":false,"key":"NONE","mode":"Always"},"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-0.4,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"d8e9ff","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_disable_textures":true,"viewmodel_frames_override":false,"viewmodel_glow_color":{"Color":"c896ff","Transparency":0},"viewmodel_glow_intensity":28,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.5,"viewmodel_options":["sway","bobbing","muzzle flash","idle animation","jump animation","slide animation","sprint animation","shoot animation","tilt","aiming animation","equip animation"],"viewmodel_override_appearance":false,"viewmodel_recoil":0,"viewmodel_scale":100,"viewmodel_scale_enabled":false,"viewmodel_wire_color":{"Color":"ffffff","Transparency":0},"viewmodel_wire_enabled":false,"viewmodel_wire_hide_base":false,"viewmodel_wire_mode":"Lines + Glow","voidspam_enabled":false,"wallbang_method":"Teleport V2","world_ambience_enabled":false,"world_ambience_type":"Windy Day","world_ambience_volume":35,"world_atm_decay":{"Color":"6f8fb3","Transparency":0},"world_atm_density":0.4,"world_atm_enabled":true,"world_atm_glare":1.5,"world_atm_haze":1.2,"world_atm_offset":0.4,"world_atm_tint":{"Color":"cfe6ff","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":0.8,"world_bloom_size":40,"world_bloom_threshold":0.9,"world_blur_enabled":false,"world_blur_size":5,"world_cc_brightness":-0.05,"world_cc_contrast":0.1,"world_cc_enabled":true,"world_cc_saturation":0.15,"world_cc_tint":{"Color":"dceeff","Transparency":0},"world_dof_enabled":false,"world_dof_far":0.36,"world_dof_focus":42,"world_dof_near":0.1,"world_dof_radius":28,"world_env_diffuse":1.1,"world_env_enabled":false,"world_env_specular":1.15,"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"ffffff","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":1.7,"world_ltg_clock":true,"world_ltg_clock_val":9.2,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"ffffff","Transparency":0},"world_ltg_colorshift_top":true,"world_ltg_colorshift_top_color":{"Color":"d1e9ff","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-1.1,"world_ltg_fog_color":{"Color":"bfbfbf","Transparency":0},"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_end_val":10000,"world_ltg_fog_start":false,"world_ltg_fog_start_val":0,"world_ltg_shadows":true,"world_marker_color":{"Color":"ffffff","Transparency":0},"world_marker_duration":0.6,"world_marker_enabled":false,"world_marker_growth":150,"world_marker_length":25,"world_marker_size":100,"world_marker_thickness":3,"world_shadow_soft_enabled":true,"world_shadow_soft_val":25,"world_sky_autorotate":false,"world_sky_bk":"","world_sky_celestial":false,"world_sky_dn":"","world_sky_ft":"","world_sky_lf":"","world_sky_moon_size":11,"world_sky_rotate_speed":100,"world_sky_rt":"","world_sky_stars":0,"world_sky_sun_size":21,"world_sky_up":"","world_skybox_custom_id":"","world_skybox_disable":[],"world_skybox_enabled":true,"world_skybox_mode":"Winter","world_sunrays_enabled":true,"world_sunrays_intensity":0.2,"world_sunrays_spread":1,"world_weather_color":{"Color":"ffffff","Transparency":0},"world_weather_color_end":{"Color":"a6d4ff","Transparency":0},"world_weather_color_mid":{"Color":"d1e9ff","Transparency":0},"world_weather_density":70,"world_weather_enabled":false,"world_weather_height":22,"world_weather_lifetime":100,"world_weather_opacity":80,"world_weather_radius":50,"world_weather_size":100,"world_weather_speed":100,"world_weather_timescale":1,"world_weather_type":"Snow","yaw_type":"Block"}]==],
+
+    ["[RAGE] Rem's Config"] = [==[{"movement_maul_slam":false,"ACO":true,"AimLock_Key":{"active":false,"key":"Enum.UserInputType.MouseButton2","mode":"Hold"},"AimbotFilledFov_Color1":{"Color":"000000","Transparency":0.8181818181818181},"AimbotFilledFov_Color2":{"Color":"000000","Transparency":1},"AimbotFilledFov_Color3":{"Color":"000000","Transparency":0.8181818181818181},"AimlockDropdown_":[],"AntiAim_enabled":true,"AntiFlash":true,"FakePosition":true,"FakePositionWalk":true,"FakePositionY":5,"FilledFov_Color1":{"Color":"823b75","Transparency":0.85},"FilledFov_Color2":{"Color":"d7a6d5","Transparency":0.7},"FilledFov_Color3":{"Color":"9f83a0","Transparency":0.6},"FlyKeybind":{"active":false,"key":"Enum.KeyCode.X","mode":"Toggle"},"InfiniteJump":true,"IsInvincible":true,"Noclip":true,"SilentaimDropdown_":[],"TriggerbotDropdown_":["no delay between targets"],"VelocitySpeedEnabled":true,"VelocitySpeedValue":50,"aim_lock_range":1000,"aimbot_closest_part":false,"aimbot_closest_position":false,"aimbot_delay_position":false,"aimbot_enabled":false,"aimbot_fov_lerp":25,"aimbot_fov_moving_rotation":false,"aimbot_fov_outline":true,"aimbot_fov_outline_color":{"Color":"c576bd","Transparency":0.7863636363636364},"aimbot_fov_outline_color2":{"Color":"e38bde","Transparency":0.7},"aimbot_fov_outline_color3":{"Color":"f296ee","Transparency":0.2681818181818182},"aimbot_fov_rotation":0,"aimbot_fov_rotation_speed":100,"aimbot_fov_settings":[],"aimbot_jump_smooth":10,"aimbot_range_color":{"Color":"ffffff","Transparency":1},"aimbot_range_color2":{"Color":"e4c4ca","Transparency":0},"aimbot_range_color3":{"Color":"d7a6c3","Transparency":0},"aimbot_smoothing":100,"aimbot_visualise_filled_range":true,"aimbot_visualise_range":false,"aimbot_x_smooth":4,"aimbot_y_smooth":4,"aimlock_wallcheck":true,"anim_custom_id":"","anim_enabled":true,"anim_end":100,"anim_key":{"active":false,"key":"NONE","mode":"Toggle"},"anim_preset":"solar system","anim_speed":1,"anim_start":0,"anti_aim_enabled":true,"auto_ban_first":"Riot Shield","auto_ban_random_map":true,"auto_ban_second":"Katana","auto_ban_weapons":true,"auto_queue_enabled":false,"camera_fov_amount":100,"camera_fov_enabled":true,"chat_spam_enabled":false,"chat_spam_mode":"custom","crosshair_bounce":5,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"fccbfa","Transparency":0},"crosshair_color_2":{"Color":"f7b1f4","Transparency":0},"crosshair_color_3":{"Color":"f5a3f1","Transparency":0},"crosshair_color_4":{"Color":"f296ee","Transparency":0},"crosshair_enabled":true,"crosshair_length":13,"crosshair_lerp":0.25,"crosshair_offset":5,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":0,"crosshair_rotation_speed":0.2,"crosshair_settings":["position on target"],"crosshair_thickness":2,"custom_tracer_color":{"Color":"c47cc1","Transparency":0},"custom_tracer_color2":{"Color":"c47cc1","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":4,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"lightning","custom_tracer_speed":2,"custom_tracer_width":0.2,"device_spoofer_enabled":false,"esp_body_color":false,"esp_body_color_value":{"Color":"ffffff","Transparency":0},"esp_body_disables":[],"esp_body_transparency":100,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_box_color1":{"Color":"ffffff","Transparency":0},"esp_box_color2":{"Color":"ffffff","Transparency":0},"esp_box_color3":{"Color":"ffffff","Transparency":0},"esp_box_moving":false,"esp_box_rotation":0,"esp_box_rotation_speed":0.1,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"ff4ded","Transparency":0},"esp_chams_settings":[],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_distance_rotation":0,"esp_effects_aura":false,"esp_effects_aura_color1":{"Color":"f296ee","Transparency":0},"esp_effects_aura_color2":{"Color":"f296ee","Transparency":0},"esp_effects_aura_color3":{"Color":"f296ee","Transparency":0},"esp_effects_aura_value":[],"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"f296ee","Transparency":0},"esp_effects_particle_color2":{"Color":"f296ee","Transparency":0},"esp_effects_particle_color3":{"Color":"f296ee","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_fill_color1":{"Color":"f296ee","Transparency":0.5727272727272728},"esp_fill_color2":{"Color":"320055","Transparency":0.9409090909090909},"esp_fill_color3":{"Color":"000000","Transparency":1},"esp_fill_moving":true,"esp_fill_rotation":45,"esp_fill_rotation_speed":0.5,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"9d539b","Transparency":0},"esp_healthbar_color_middle":{"Color":"bc75ba","Transparency":0},"esp_healthbar_color_start":{"Color":"fbb8f8","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_slices":1,"esp_healthbar_speed":1,"esp_healthbar_type":"gradient","esp_material":false,"esp_material_value":"Neon","esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"ffffff","Transparency":0},"esp_name_color3":{"Color":"ffffff","Transparency":0},"esp_name_rotation":0,"esp_name_type":"Name","esp_override_appearance":false,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_weapon_rotation":0,"esp_world_distance":true,"esp_world_distance_color":{"Color":"ffffff","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":true,"fakepos_key":{"active":true,"key":"NONE","mode":"Always"},"firerate_multiplier":6.7,"fly_enabled":true,"flyvalue":100,"fov_lerp":25,"fov_moving_rotation":true,"fov_outline":true,"fov_outline_color":{"Color":"c576bd","Transparency":0.7863636363636364},"fov_outline_color2":{"Color":"e38cde","Transparency":0.7},"fov_outline_color3":{"Color":"f296ee","Transparency":0.2681818181818182},"fov_position":"position on screen","fov_rotation":0,"fov_rotation_speed":10,"full_auto_enabled":true,"game_crosshair":true,"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"f6b9f4","Transparency":0},"hit_effects_col_3":{"Color":"f296ee","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["Electricity","phantom forces"],"hit_effects_settings":[],"hit_effects_weld":false,"hit_notifications_enabled":false,"hit_notify_duration":1,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"sparkle","hit_sounds_volume":0.9,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"f296ee","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve"],"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":true,"indicator_manipulated_color":{"Color":"ffffff","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":true,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["status","text"],"indicator_ragebot_text_color":{"Color":"f296ee","Transparency":0},"indicator_reserve_color":{"Color":"ffffff","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","manipulation_enabled":true,"matchmaking_mode":"1v1","movement_double_jump":true,"movement_double_jump_height":2,"movement_slideboost":true,"movement_slideboost_value":2.5,"no_spread_enabled":true,"noclip_key":{"active":false,"key":"Enum.KeyCode.X","mode":"Toggle"},"pitch_type":"Random","ragebot_enabled":true,"ragebot_key":{"active":true,"key":"NONE","mode":"Always"},"ragebot_method":"Lite","ragebot_mode":"gun","ragebot_priority":true,"ragebot_priority_notification":true,"ragebot_priority_settings":["voided players","attackers"],"ragebot_settings":["swap weapons when empty"],"ragebot_weapon":"primary","shoot_sound_change":true,"shoot_sound_change_value":"crossbow","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":1,"silent_aim_enabled":true,"silent_aim_range":300,"silent_aim_range_color":{"Color":"ffffff","Transparency":1},"silent_aim_range_color2":{"Color":"e4c4ca","Transparency":0},"silent_aim_range_color3":{"Color":"d7a6c3","Transparency":0},"silent_aim_visualise_filled_range":true,"silent_aim_visualise_range":true,"silent_closest_part":false,"silent_hitchance":100,"silent_key":{"active":true,"key":"Enum.KeyCode.LeftAlt","mode":"Always"},"silent_visualize":true,"silent_wallbang":false,"spoof_device_type":"Controller","stretch_enabled":false,"target_highlight":false,"target_highlight_fill":{"Color":"ffffff","Transparency":0},"target_highlight_outline":{"Color":"ffffff","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_tracer":false,"target_tracer_customization":{"Color":"ffffff","Transparency":0},"targeting_disableflash":false,"targeting_ignore_protected_settings":["blocked by riot shield","katana deflecting"],"targeting_limitdistance":false,"targeting_maxdistance":250,"targeting_part":"Head","third_person_enabled":true,"third_person_key":{"active":false,"key":"Enum.KeyCode.H","mode":"Toggle"},"trigger_distance":250,"trigger_enabled":false,"trigger_forget_time":1.5,"trigger_key":{"active":false,"key":"Enum.UserInputType.MouseButton2","mode":"Hold"},"trigger_part_blacklist":[],"trigger_reaction":25,"trigger_reaction_offset":5,"trigger_scoped":["Sniper","Crossbow"],"trigger_shoot_delay":0,"velocity_key":{"active":true,"key":"Enum.KeyCode.G","mode":"Always"},"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-1.6,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"d8e9ff","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_frames_override":false,"viewmodel_frames_value":1,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.7,"viewmodel_options":["tilt","aiming animation","sway","equip animation","bobbing","jump animation","muzzle flash","shoot animation","idle animation","sprint animation","slide animation"],"viewmodel_recoil":0,"voidspam_enabled":true,"voidspam_hide_time":0.25,"voidspam_shoot_attempts":2,"voidspam_shoot_time":0.01,"world_ambience_enabled":true,"world_ambience_type":"Rain","world_ambience_volume":50,"world_atm_decay":{"Color":"fecaff","Transparency":0},"world_atm_density":0.4,"world_atm_enabled":true,"world_atm_glare":4.1,"world_atm_haze":10,"world_atm_offset":0.4,"world_atm_tint":{"Color":"ffc8fd","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":1.38,"world_bloom_size":50,"world_bloom_threshold":0.85,"world_blur_enabled":false,"world_cc_brightness":-0.09,"world_cc_contrast":0,"world_cc_enabled":true,"world_cc_saturation":1,"world_cc_tint":{"Color":"ffffff","Transparency":0},"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"ffffff","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":1.7,"world_ltg_clock":true,"world_ltg_clock_val":0,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"ffffff","Transparency":0},"world_ltg_colorshift_top":false,"world_ltg_colorshift_top_color":{"Color":"ffffff","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-1.1,"world_ltg_fog_color":{"Color":"ffffff","Transparency":0},"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_end_val":2500,"world_ltg_fog_start":false,"world_ltg_fog_start_val":0,"world_ltg_shadows":true,"world_skybox_enabled":true,"world_skybox_mode":"Heaven","world_sunrays_enabled":false,"world_sunrays_intensity":0.25,"world_sunrays_spread":1,"world_weather_color":{"Color":"ffffff","Transparency":0},"world_weather_color_end":{"Color":"ffffff","Transparency":0},"world_weather_color_mid":{"Color":"ffffff","Transparency":0},"world_weather_density":100,"world_weather_enabled":true,"world_weather_lifetime":100,"world_weather_timescale":1,"world_weather_type":"Rain","yaw_type":"Random"}]==],
+    ["[RAGE] Halloween"] = [==[{"movement_maul_slam":false,"AntiAim_enabled":true,"AntiFlash":true,"AntiSmoke":true,"FakePosition":false,"FakePositionPanic":false,"FakePositionWalk":false,"FilledFov_Color1":{"Color":"ff7a1a","Transparency":0.94},"FilledFov_Color2":{"Color":"ff7a1a","Transparency":0.85},"FilledFov_Color3":{"Color":"ff7a1a","Transparency":0.94},"HideHead_enabled":true,"InfiniteJump":true,"IsInvincible":true,"NoBobbing":false,"Noclip":false,"RapidBody_enabled":false,"SilentaimDropdown_":[],"VelocitySpeedEnabled":false,"aimbot_enabled":false,"aimbot_fov_settings":[],"anti_aim_enabled":false,"anti_flash_keep_sound":true,"antiaim_speed":100,"arm_override_appearance":false,"camera_fov_amount":100,"camera_fov_enabled":true,"crosshair_bounce":5,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"ff7a1a","Transparency":0},"crosshair_color_2":{"Color":"ff6a0f","Transparency":0},"crosshair_color_3":{"Color":"f25a00","Transparency":0},"crosshair_color_4":{"Color":"a855f7","Transparency":0},"crosshair_enabled":true,"crosshair_length":13,"crosshair_lerp":0.25,"crosshair_offset":5,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":0,"crosshair_rotation_speed":0.2,"crosshair_settings":["position on target"],"crosshair_thickness":2,"custom_tracer_color":{"Color":"ff7a1a","Transparency":0},"custom_tracer_color2":{"Color":"a855f7","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":4,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"lightning","custom_tracer_speed":2,"custom_tracer_width":0.2,"esp_body_color":false,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"a855f7","Transparency":0},"esp_chams_settings":["through walls"],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_effects_aura":false,"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"ff7a1a","Transparency":0},"esp_effects_particle_color2":{"Color":"a855f7","Transparency":0},"esp_effects_particle_color3":{"Color":"7e22ce","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_flag_health_text":false,"esp_flag_staring_text":true,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"4c1d95","Transparency":0},"esp_healthbar_color_middle":{"Color":"7e22ce","Transparency":0},"esp_healthbar_color_start":{"Color":"ffc285","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_type":"gradient","esp_material":false,"esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"ffc285","Transparency":0},"esp_name_color3":{"Color":"ff7a1a","Transparency":0},"esp_name_font":"default","esp_name_type":"Name","esp_override_appearance":false,"esp_round_only":true,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_world_distance":true,"esp_world_distance_color":{"Color":"ff7a1a","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":true,"faster_reload":true,"fly_enabled":false,"fov_fill_speed":100,"fov_fill_style":"Inner Fade","fov_lerp":25,"fov_moving_rotation":true,"fov_outline":true,"fov_outline_color":{"Color":"ff7a1a","Transparency":0.84},"fov_outline_color2":{"Color":"ffc285","Transparency":0.7},"fov_outline_color3":{"Color":"ffc285","Transparency":0.25},"fov_outline_thickness":2,"fov_position":"position on screen","fov_rotation":0,"fov_rotation_speed":10,"full_auto_enabled":true,"game_crosshair":true,"grenade_options":["explode on impact"],"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"ff7a1a","Transparency":0},"hit_effects_col_3":{"Color":"a855f7","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["Electricity","phantom forces"],"hit_effects_settings":["stack damage together"],"hit_effects_weld":false,"hit_notifications_enabled":true,"hit_notify_duration":1.3,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"sparkle","hit_sounds_volume":0.9,"hitmarker_enabled":false,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"a855f7","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve","\"out of ammo\" if empty"],"indicator_empty_color":{"Color":"ff5f5f","Transparency":0},"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":true,"indicator_manipulated_color":{"Color":"a855f7","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":true,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["text","status"],"indicator_ragebot_text_color":{"Color":"a855f7","Transparency":0},"indicator_reserve_color":{"Color":"ff7a1a","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","instant_aim_enabled":true,"item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","manipulation_enabled":true,"movement_double_jump":false,"movement_slideboost":true,"movement_slideboost_value":2.5,"no_fire_sound":false,"no_muzzle_flash":false,"no_recoil_enabled":true,"no_spread_enabled":true,"pitch_type":"Up & Down","quickequip":true,"ragebot_enabled":true,"ragebot_method":"Lite","ragebot_mode":"gun","ragebot_priority":true,"ragebot_priority_notification":true,"ragebot_priority_settings":["attackers","voided players"],"ragebot_settings":["swap weapons when empty"],"ragebot_weapon":"primary","shoot_sound_change":true,"shoot_sound_change_value":"crossbow","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":0.6,"silent_aim_enabled":true,"silent_aim_range":300,"silent_aim_range_color":{"Color":"ffffff","Transparency":0},"silent_aim_range_color2":{"Color":"ffc285","Transparency":0},"silent_aim_range_color3":{"Color":"ff7a1a","Transparency":0},"silent_aim_target_mode":"FOV - Closest","silent_aim_visualise_filled_range":true,"silent_aim_visualise_range":true,"silent_closest_part":false,"silent_hitchance":100,"silent_visualize":true,"silent_wallbang":true,"stretch_enabled":false,"target_highlight":true,"target_highlight_fill":{"Color":"a855f7","Transparency":0.6},"target_highlight_outline":{"Color":"ff7a1a","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_method_ragebot":"Closest","target_tracer":true,"target_tracer_customization":{"Color":"a855f7","Transparency":0},"target_ui_enabled":true,"target_ui_item_scale":170,"target_ui_position_x":50,"target_ui_position_y":72,"target_ui_scale":150,"targeting_ignore_protected_settings":["blocked by riot shield","katana deflecting"],"targeting_limitdistance":false,"targeting_part":"Head","third_person_enabled":true,"trigger_enabled":false,"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-1.2,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"ffd9b3","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_frames_override":false,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.5,"viewmodel_options":["sway","bobbing","muzzle flash","idle animation","jump animation","slide animation","sprint animation","shoot animation","tilt","aiming animation","equip animation"],"viewmodel_override_appearance":false,"viewmodel_recoil":0,"viewmodel_scale_enabled":false,"viewmodel_wire_enabled":false,"voidspam_enabled":true,"voidspam_hide_time":0.25,"voidspam_shoot_attempts":2,"voidspam_shoot_time":0.01,"wallbang_method":"Classic V1","world_ambience_enabled":true,"world_ambience_type":"Thunder","world_ambience_volume":30,"world_atm_decay":{"Color":"3b0764","Transparency":0},"world_atm_density":0.38,"world_atm_enabled":true,"world_atm_glare":2.5,"world_atm_haze":2.2,"world_atm_offset":0.35,"world_atm_tint":{"Color":"ff8c42","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":1.2,"world_bloom_size":40,"world_bloom_threshold":0.9,"world_blur_enabled":false,"world_cc_brightness":-0.08,"world_cc_contrast":0.18,"world_cc_enabled":true,"world_cc_saturation":0.3,"world_cc_tint":{"Color":"ffd9b8","Transparency":0},"world_dof_enabled":false,"world_env_enabled":false,"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"5b2186","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":2,"world_ltg_clock":true,"world_ltg_clock_val":0.5,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"7e22ce","Transparency":0},"world_ltg_colorshift_top":true,"world_ltg_colorshift_top_color":{"Color":"ff7518","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-0.6,"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_start":false,"world_ltg_shadows":true,"world_marker_enabled":false,"world_shadow_soft_enabled":true,"world_shadow_soft_val":25,"world_sky_autorotate":false,"world_sky_celestial":false,"world_skybox_disable":[],"world_skybox_enabled":true,"world_skybox_mode":"PurpleNight","world_sunrays_enabled":false,"world_sunrays_intensity":0.2,"world_sunrays_spread":1,"world_weather_color":{"Color":"ff9a3c","Transparency":0},"world_weather_color_end":{"Color":"4c1d95","Transparency":0},"world_weather_color_mid":{"Color":"ff6a00","Transparency":0},"world_weather_density":45,"world_weather_enabled":true,"world_weather_lifetime":100,"world_weather_opacity":85,"world_weather_size":110,"world_weather_speed":80,"world_weather_timescale":1,"world_weather_type":"Ash","yaw_type":"Random","cosmetics_changer_save_data":"{\"Assault Rifle\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Boneclaw Rifle\"},\"wrap\":{\"enabled\":true}},\"Battle Axe\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"Bow\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Bat Bow\"},\"wrap\":{\"enabled\":true}},\"Burst Rifle\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Spectral Burst\"},\"wrap\":{\"enabled\":true}},\"Chainsaw\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"Crossbow\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Crossbone\"},\"wrap\":{\"enabled\":true}},\"Daggers\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Bat Daggers\"},\"wrap\":{\"enabled\":true}},\"Distortion\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"Energy Pistols\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Soul Pistols\"},\"wrap\":{\"enabled\":true}},\"Energy Rifle\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Soul Rifle\"},\"wrap\":{\"enabled\":true}},\"Exogun\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Exogourd\"},\"wrap\":{\"enabled\":true}},\"Fists\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Pumpkin Claws\"},\"wrap\":{\"enabled\":true}},\"Flamethrower\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Jack O'Thrower\"},\"wrap\":{\"enabled\":true}},\"Flare Gun\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Vexed Flare Gun\"},\"wrap\":{\"enabled\":true}},\"Flashbang\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Skullbang\"},\"wrap\":{\"enabled\":true}},\"Freeze Ray\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Spider Ray\"},\"wrap\":{\"enabled\":true}},\"Grappler\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"Grenade\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Soul Grenade\"},\"wrap\":{\"enabled\":true}},\"Grenade Launcher\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Skull Launcher\"},\"wrap\":{\"enabled\":true}},\"Gunblade\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Boneblade\"},\"wrap\":{\"enabled\":true}},\"Handgun\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Pumpkin Handgun\"},\"wrap\":{\"enabled\":true}},\"Jump Pad\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Spider Web\"},\"wrap\":{\"enabled\":true}},\"Katana\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Evil Trident\"},\"wrap\":{\"enabled\":true}},\"Knife\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"Maul\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"Medkit\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Bucket of Candy\"},\"wrap\":{\"enabled\":true}},\"Minigun\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Pumpkin Minigun\"},\"wrap\":{\"enabled\":true}},\"Molotov\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Vexed Candle\"},\"wrap\":{\"enabled\":true}},\"Paintball Gun\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"Permafrost\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"RPG\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Pumpkin Launcher\"},\"wrap\":{\"enabled\":true}},\"Revolver\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Boneclaw Revolver\"},\"wrap\":{\"enabled\":true}},\"Riot Shield\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Tombstone Shield\"},\"wrap\":{\"enabled\":true}},\"Satchel\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Potion Satchel\"},\"wrap\":{\"enabled\":true}},\"Scythe\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Bat Scythe\"},\"wrap\":{\"enabled\":true}},\"Shorty\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Demon Shorty\"},\"wrap\":{\"enabled\":true}},\"Shotgun\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Broomstick\"},\"wrap\":{\"enabled\":true}},\"Slingshot\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Boneshot\"},\"wrap\":{\"enabled\":true}},\"Smoke Grenade\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Eyeball\"},\"wrap\":{\"enabled\":true}},\"Sniper\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Eyething Sniper\"},\"wrap\":{\"enabled\":true}},\"Spear\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"Spray\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Boneclaw Spray\"},\"wrap\":{\"enabled\":true}},\"Subspace Tripmine\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Trick or Treat\"},\"wrap\":{\"enabled\":true}},\"Trowel\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Pumpkin Carver\"},\"wrap\":{\"enabled\":true}},\"Uzi\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Demon Uzi\"},\"wrap\":{\"enabled\":true}},\"War Horn\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Boneclaw Horn\"},\"wrap\":{\"enabled\":true}},\"Warper\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}},\"Warpstone\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true,\"name\":\"Warpbone\"},\"wrap\":{\"enabled\":true}},\"Wildcat\":{\"charm\":{\"enabled\":true,\"name\":\"Pumpkin Cat\"},\"finisher\":{\"enabled\":true,\"name\":\"Reaper\"},\"skin\":{\"enabled\":true},\"wrap\":{\"enabled\":true,\"name\":\"Hallow\"}}}"}]==],
+    ["[LEGIT] Ocean"] = [==[{"movement_maul_slam":false,"AimbotFilledFov_Color1":{"Color":"38bdf8","Transparency":0.94},"AimbotFilledFov_Color2":{"Color":"38bdf8","Transparency":0.85},"AimbotFilledFov_Color3":{"Color":"38bdf8","Transparency":0.94},"AimlockDropdown_":[],"AntiAim_enabled":false,"AntiFlash":true,"AntiSmoke":false,"FakePosition":false,"FakePositionPanic":false,"FakePositionWalk":false,"FilledFov_Color1":{"Color":"38bdf8","Transparency":0.94},"FilledFov_Color2":{"Color":"38bdf8","Transparency":0.85},"FilledFov_Color3":{"Color":"38bdf8","Transparency":0.94},"HideHead_enabled":false,"InfiniteJump":false,"IsInvincible":true,"NoBobbing":false,"Noclip":false,"RapidBody_enabled":false,"SilentaimDropdown_":[],"TriggerbotDropdown_":["no delay between targets"],"VelocitySpeedEnabled":false,"aim_lock_range":100,"aimbot_closest_part":false,"aimbot_closest_position":false,"aimbot_delay_position":true,"aimbot_enabled":false,"aimbot_fov_lerp":25,"aimbot_fov_moving_rotation":false,"aimbot_fov_outline":true,"aimbot_fov_outline_color":{"Color":"38bdf8","Transparency":0.84},"aimbot_fov_outline_color2":{"Color":"7dd3fc","Transparency":0.7},"aimbot_fov_outline_color3":{"Color":"7dd3fc","Transparency":0.25},"aimbot_fov_outline_thickness":2,"aimbot_fov_settings":[],"aimbot_hitmethod":"Camera","aimbot_jump_smooth":18,"aimbot_range_color":{"Color":"ffffff","Transparency":0},"aimbot_range_color2":{"Color":"7dd3fc","Transparency":0},"aimbot_range_color3":{"Color":"38bdf8","Transparency":0},"aimbot_smoothing":12,"aimbot_visualise_filled_range":false,"aimbot_visualise_range":false,"aimbot_x_smooth":10,"aimbot_y_smooth":10,"aimlock_delay":0,"aimlock_jitter":0,"aimlock_trigger":"Aiming","aimlock_wallcheck":true,"anti_aim_enabled":false,"anti_flash_keep_sound":true,"arm_override_appearance":false,"camera_fov_amount":95,"camera_fov_enabled":true,"crosshair_bounce":0,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"4cc9f0","Transparency":0},"crosshair_color_2":{"Color":"22b8e6","Transparency":0},"crosshair_color_3":{"Color":"0ea5e9","Transparency":0},"crosshair_color_4":{"Color":"0891d1","Transparency":0},"crosshair_enabled":true,"crosshair_length":8,"crosshair_lerp":0.25,"crosshair_offset":2,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":45,"crosshair_rotation_speed":0,"crosshair_settings":[],"crosshair_thickness":2,"custom_tracer_color":{"Color":"38bdf8","Transparency":0},"custom_tracer_color2":{"Color":"0284c7","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":5,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"drawing","custom_tracer_speed":2,"custom_tracer_width":0.2,"esp_body_color":false,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"0284c7","Transparency":0},"esp_chams_settings":[],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_effects_aura":false,"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"38bdf8","Transparency":0},"esp_effects_particle_color2":{"Color":"0284c7","Transparency":0},"esp_effects_particle_color3":{"Color":"0ea5e9","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_flag_health_text":false,"esp_flag_staring_text":false,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"0c4a6e","Transparency":0},"esp_healthbar_color_middle":{"Color":"0ea5e9","Transparency":0},"esp_healthbar_color_start":{"Color":"7dd3fc","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_type":"gradient","esp_material":false,"esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"7dd3fc","Transparency":0},"esp_name_color3":{"Color":"38bdf8","Transparency":0},"esp_name_font":"default","esp_name_type":"Name","esp_override_appearance":false,"esp_round_only":true,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_world_distance":true,"esp_world_distance_color":{"Color":"38bdf8","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":false,"faster_reload":false,"fly_enabled":false,"fov_fill_speed":100,"fov_fill_style":"Inner Fade","fov_lerp":25,"fov_moving_rotation":true,"fov_outline":true,"fov_outline_color":{"Color":"38bdf8","Transparency":0.84},"fov_outline_color2":{"Color":"7dd3fc","Transparency":0.7},"fov_outline_color3":{"Color":"7dd3fc","Transparency":0.25},"fov_outline_thickness":2,"fov_position":"position on screen","fov_rotation":0,"fov_rotation_speed":10,"full_auto_enabled":true,"game_crosshair":true,"grenade_options":["explode on impact"],"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"38bdf8","Transparency":0},"hit_effects_col_3":{"Color":"0284c7","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["slashes","phantom forces"],"hit_effects_settings":["stack damage together"],"hit_effects_weld":false,"hit_notifications_enabled":false,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"impact","hit_sounds_volume":0.9,"hitmarker_enabled":false,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"4cc9f0","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve","\"out of ammo\" if empty"],"indicator_empty_color":{"Color":"ff5f5f","Transparency":0},"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":false,"indicator_manipulated_color":{"Color":"4cc9f0","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":false,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["text","status"],"indicator_ragebot_text_color":{"Color":"4cc9f0","Transparency":0},"indicator_reserve_color":{"Color":"38bdf8","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","instant_aim_enabled":false,"item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","manipulation_enabled":false,"movement_double_jump":false,"movement_slideboost":true,"movement_slideboost_value":1.1,"no_fire_sound":false,"no_muzzle_flash":false,"no_recoil_enabled":false,"no_spread_enabled":false,"quickequip":false,"ragebot_enabled":false,"shoot_sound_change":true,"shoot_sound_change_value":"bow","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":0.3,"silent_aim_enabled":true,"silent_aim_range":110,"silent_aim_range_color":{"Color":"ffffff","Transparency":0},"silent_aim_range_color2":{"Color":"7dd3fc","Transparency":0},"silent_aim_range_color3":{"Color":"38bdf8","Transparency":0},"silent_aim_target_mode":"FOV - Closest","silent_aim_visualise_filled_range":true,"silent_aim_visualise_range":true,"silent_closest_part":true,"silent_hitchance":35,"silent_visualize":true,"silent_wallbang":false,"stretch_enabled":false,"target_highlight":false,"target_highlight_fill":{"Color":"0284c7","Transparency":0.6},"target_highlight_outline":{"Color":"38bdf8","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_tracer":false,"target_tracer_customization":{"Color":"0284c7","Transparency":0},"target_ui_enabled":true,"target_ui_item_scale":170,"target_ui_position_x":50,"target_ui_position_y":72,"target_ui_scale":150,"targeting_ignore_protected_settings":["blocked by riot shield","katana deflecting"],"targeting_limitdistance":false,"targeting_part":"Head","third_person_enabled":false,"trigger_distance":250,"trigger_enabled":true,"trigger_forget_time":1.5,"trigger_part_blacklist":[],"trigger_reaction":25,"trigger_reaction_offset":5,"trigger_scoped":["Sniper","Crossbow"],"trigger_shoot_delay":0,"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-0.6,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"bae6fd","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_frames_override":false,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.5,"viewmodel_options":["sway","bobbing","muzzle flash","idle animation","jump animation","slide animation","sprint animation","shoot animation"],"viewmodel_override_appearance":false,"viewmodel_recoil":0,"viewmodel_scale_enabled":false,"viewmodel_wire_enabled":false,"voidspam_enabled":false,"wallbang_method":"Classic V1","world_ambience_enabled":false,"world_ambience_type":"Rain","world_ambience_volume":35,"world_atm_decay":{"Color":"0c4a6e","Transparency":0},"world_atm_density":0.32,"world_atm_enabled":true,"world_atm_glare":2.2,"world_atm_haze":1.8,"world_atm_offset":0.4,"world_atm_tint":{"Color":"9fd8ff","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":1.1,"world_bloom_size":36,"world_bloom_threshold":0.92,"world_blur_enabled":false,"world_cc_brightness":-0.02,"world_cc_contrast":0.1,"world_cc_enabled":true,"world_cc_saturation":0.2,"world_cc_tint":{"Color":"d9f1ff","Transparency":0},"world_dof_enabled":false,"world_env_enabled":false,"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"c7e9ff","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":2,"world_ltg_clock":true,"world_ltg_clock_val":14.5,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"e0f2fe","Transparency":0},"world_ltg_colorshift_top":true,"world_ltg_colorshift_top_color":{"Color":"7dd3fc","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-0.4,"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_start":false,"world_ltg_shadows":true,"world_marker_enabled":false,"world_shadow_soft_enabled":true,"world_shadow_soft_val":25,"world_sky_autorotate":false,"world_sky_celestial":false,"world_skybox_disable":[],"world_skybox_enabled":true,"world_skybox_mode":"Ocean Sky","world_sunrays_enabled":true,"world_sunrays_intensity":0.15,"world_sunrays_spread":0.8,"world_weather_color":{"Color":"ffcf4a","Transparency":0},"world_weather_color_end":{"Color":"5a2a0a","Transparency":0},"world_weather_color_mid":{"Color":"ff8a1f","Transparency":0},"world_weather_density":35,"world_weather_enabled":false,"world_weather_lifetime":100,"world_weather_opacity":80,"world_weather_size":100,"world_weather_speed":100,"world_weather_timescale":1,"world_weather_type":"Ash"}]==],
+    ["[LEGIT] Snow White"] = [==[{"movement_maul_slam":false,"AimbotFilledFov_Color1":{"Color":"e8f4ff","Transparency":0.94},"AimbotFilledFov_Color2":{"Color":"e8f4ff","Transparency":0.85},"AimbotFilledFov_Color3":{"Color":"e8f4ff","Transparency":0.94},"AimlockDropdown_":[],"AntiAim_enabled":false,"AntiFlash":true,"AntiSmoke":false,"FakePosition":false,"FakePositionPanic":false,"FakePositionWalk":false,"FilledFov_Color1":{"Color":"e8f4ff","Transparency":0.94},"FilledFov_Color2":{"Color":"e8f4ff","Transparency":0.85},"FilledFov_Color3":{"Color":"e8f4ff","Transparency":0.94},"HideHead_enabled":false,"InfiniteJump":false,"IsInvincible":true,"NoBobbing":false,"Noclip":false,"RapidBody_enabled":false,"SilentaimDropdown_":[],"TriggerbotDropdown_":["no delay between targets"],"VelocitySpeedEnabled":false,"aim_lock_range":100,"aimbot_closest_part":false,"aimbot_closest_position":false,"aimbot_delay_position":true,"aimbot_enabled":true,"aimbot_fov_lerp":25,"aimbot_fov_moving_rotation":false,"aimbot_fov_outline":true,"aimbot_fov_outline_color":{"Color":"e8f4ff","Transparency":0.84},"aimbot_fov_outline_color2":{"Color":"ffffff","Transparency":0.7},"aimbot_fov_outline_color3":{"Color":"ffffff","Transparency":0.25},"aimbot_fov_outline_thickness":2,"aimbot_fov_settings":[],"aimbot_hitmethod":"Camera","aimbot_jump_smooth":18,"aimbot_range_color":{"Color":"ffffff","Transparency":0},"aimbot_range_color2":{"Color":"ffffff","Transparency":0},"aimbot_range_color3":{"Color":"e8f4ff","Transparency":0},"aimbot_smoothing":12,"aimbot_visualise_filled_range":true,"aimbot_visualise_range":true,"aimbot_x_smooth":10,"aimbot_y_smooth":10,"aimlock_delay":0,"aimlock_jitter":0,"aimlock_trigger":"Aiming","aimlock_wallcheck":true,"anti_aim_enabled":false,"anti_flash_keep_sound":true,"arm_override_appearance":false,"camera_fov_amount":95,"camera_fov_enabled":true,"crosshair_bounce":0,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"e8f4ff","Transparency":0},"crosshair_color_2":{"Color":"dbeeff","Transparency":0},"crosshair_color_3":{"Color":"cde6ff","Transparency":0},"crosshair_color_4":{"Color":"a5d8ff","Transparency":0},"crosshair_enabled":true,"crosshair_length":8,"crosshair_lerp":0.25,"crosshair_offset":2,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":45,"crosshair_rotation_speed":0,"crosshair_settings":[],"crosshair_thickness":2,"custom_tracer_color":{"Color":"e8f4ff","Transparency":0},"custom_tracer_color2":{"Color":"a5d8ff","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":4,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"lightning","custom_tracer_speed":2,"custom_tracer_width":0.2,"esp_body_color":false,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"a5d8ff","Transparency":0},"esp_chams_settings":[],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_effects_aura":false,"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"e8f4ff","Transparency":0},"esp_effects_particle_color2":{"Color":"a5d8ff","Transparency":0},"esp_effects_particle_color3":{"Color":"7fb8e6","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_flag_health_text":false,"esp_flag_staring_text":false,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"5b8fbf","Transparency":0},"esp_healthbar_color_middle":{"Color":"7fb8e6","Transparency":0},"esp_healthbar_color_start":{"Color":"ffffff","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_type":"gradient","esp_material":false,"esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"ffffff","Transparency":0},"esp_name_color3":{"Color":"e8f4ff","Transparency":0},"esp_name_font":"default","esp_name_type":"Name","esp_override_appearance":false,"esp_round_only":true,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_world_distance":true,"esp_world_distance_color":{"Color":"e8f4ff","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":false,"faster_reload":false,"fly_enabled":false,"fov_fill_speed":100,"fov_fill_style":"Inner Fade","fov_lerp":25,"fov_moving_rotation":true,"fov_outline":true,"fov_outline_color":{"Color":"e8f4ff","Transparency":0.84},"fov_outline_color2":{"Color":"ffffff","Transparency":0.7},"fov_outline_color3":{"Color":"ffffff","Transparency":0.25},"fov_outline_thickness":2,"fov_position":"position on screen","fov_rotation":0,"fov_rotation_speed":10,"full_auto_enabled":true,"game_crosshair":true,"grenade_options":[],"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"e8f4ff","Transparency":0},"hit_effects_col_3":{"Color":"a5d8ff","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["Electricity","phantom forces"],"hit_effects_settings":["stack damage together"],"hit_effects_weld":false,"hit_notifications_enabled":false,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"sparkle","hit_sounds_volume":0.9,"hitmarker_enabled":false,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"a5d8ff","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve","\"out of ammo\" if empty"],"indicator_empty_color":{"Color":"ff5f5f","Transparency":0},"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":false,"indicator_manipulated_color":{"Color":"a5d8ff","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":false,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["text","status"],"indicator_ragebot_text_color":{"Color":"a5d8ff","Transparency":0},"indicator_reserve_color":{"Color":"e8f4ff","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","instant_aim_enabled":false,"item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","manipulation_enabled":false,"movement_double_jump":false,"movement_slideboost":true,"movement_slideboost_value":1.1,"no_fire_sound":false,"no_muzzle_flash":false,"no_recoil_enabled":false,"no_spread_enabled":false,"quickequip":false,"ragebot_enabled":false,"shoot_sound_change":true,"shoot_sound_change_value":"crossbow","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":0.6,"silent_aim_enabled":true,"silent_aim_range":45,"silent_aim_range_color":{"Color":"ffffff","Transparency":0},"silent_aim_range_color2":{"Color":"ffffff","Transparency":0},"silent_aim_range_color3":{"Color":"e8f4ff","Transparency":0},"silent_aim_target_mode":"FOV - Closest","silent_aim_visualise_filled_range":true,"silent_aim_visualise_range":true,"silent_closest_part":true,"silent_hitchance":100,"silent_visualize":true,"silent_wallbang":false,"stretch_enabled":false,"target_highlight":false,"target_highlight_fill":{"Color":"a5d8ff","Transparency":0.6},"target_highlight_outline":{"Color":"e8f4ff","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_tracer":false,"target_tracer_customization":{"Color":"a5d8ff","Transparency":0},"target_ui_enabled":true,"target_ui_item_scale":170,"target_ui_position_x":50,"target_ui_position_y":72,"target_ui_scale":150,"targeting_ignore_protected_settings":["katana deflecting"],"targeting_limitdistance":false,"targeting_part":"Head","third_person_enabled":false,"trigger_distance":250,"trigger_enabled":true,"trigger_forget_time":1.5,"trigger_part_blacklist":[],"trigger_reaction":25,"trigger_reaction_offset":5,"trigger_scoped":["Sniper","Crossbow"],"trigger_shoot_delay":0,"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-1.2,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"f5fbff","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_frames_override":false,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.5,"viewmodel_options":["sway","bobbing","muzzle flash","idle animation","jump animation","slide animation","sprint animation","shoot animation"],"viewmodel_override_appearance":false,"viewmodel_recoil":0,"viewmodel_scale_enabled":false,"viewmodel_wire_enabled":false,"voidspam_enabled":false,"wallbang_method":"Classic V1","world_ambience_enabled":true,"world_ambience_type":"Windy Day","world_ambience_volume":30,"world_atm_decay":{"Color":"b9d7f0","Transparency":0},"world_atm_density":0.4,"world_atm_enabled":true,"world_atm_glare":1.5,"world_atm_haze":3,"world_atm_offset":0.4,"world_atm_tint":{"Color":"ffffff","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":1.0,"world_bloom_size":45,"world_bloom_threshold":0.88,"world_blur_enabled":false,"world_cc_brightness":0.03,"world_cc_contrast":0.12,"world_cc_enabled":true,"world_cc_saturation":-0.12,"world_cc_tint":{"Color":"f2f8ff","Transparency":0},"world_dof_enabled":false,"world_env_enabled":false,"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"dbeeff","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":2.2,"world_ltg_clock":true,"world_ltg_clock_val":10,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"ffffff","Transparency":0},"world_ltg_colorshift_top":true,"world_ltg_colorshift_top_color":{"Color":"e8f4ff","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-0.3,"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_start":false,"world_ltg_shadows":true,"world_marker_enabled":false,"world_shadow_soft_enabled":true,"world_shadow_soft_val":25,"world_sky_autorotate":false,"world_sky_celestial":false,"world_skybox_disable":[],"world_skybox_enabled":true,"world_skybox_mode":"Winter","world_sunrays_enabled":true,"world_sunrays_intensity":0.12,"world_sunrays_spread":1,"world_weather_color":{"Color":"ffffff","Transparency":0},"world_weather_color_end":{"Color":"cde6ff","Transparency":0},"world_weather_color_mid":{"Color":"e8f4ff","Transparency":0},"world_weather_density":70,"world_weather_enabled":true,"world_weather_lifetime":100,"world_weather_opacity":90,"world_weather_size":100,"world_weather_speed":100,"world_weather_timescale":1,"world_weather_type":"Snow"}]==]
 
 }
 
@@ -1146,6 +1162,21 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
         function library:load_config(config_json)
             local config = http_service:JSONDecode(config_json)
+
+            if type(config) == "table" and type(library.default_config) == "string" and config_json ~= library.default_config then
+                local decoded, defaults = pcall(http_service.JSONDecode, http_service, library.default_config)
+
+                if decoded and type(defaults) == "table" then
+                    local menu = library.menu_flags or {}
+
+                    for key, value in defaults do
+                        if config[key] == nil and not menu[key] and not (type(value) == "table" and value["key"] ~= nil) then
+                            config[key] = value
+                        end
+                    end
+                end
+            end
+
             local applied = 0
 
             for _, v in config do
@@ -1494,6 +1525,13 @@ if Mobile ~= Enum.PreferredInput.Touch then
                         original = value,
                         key = key
                     })
+
+                    local current = themes.preset[key]
+                    local base = THEME_BASES[key]
+
+                    if current and base and current ~= base then
+                        instance[property] = theme_shade(base, value, current)
+                    end
                 end
             end
         end
@@ -1576,10 +1614,11 @@ if Mobile ~= Enum.PreferredInput.Touch then
             ["Ultraviolet"]= { accent = rgb(190, 90, 255),  background = rgb(14, 10, 18),  element = rgb(26, 20, 34),  outline = rgb(44, 34, 56),  text = rgb(244, 238, 252), inactive = rgb(88, 72, 104) },
             ["Monochrome"] = { accent = rgb(225, 225, 225), background = rgb(12, 12, 12),  element = rgb(24, 24, 24),  outline = rgb(42, 42, 42),  text = rgb(245, 245, 245), inactive = rgb(96, 96, 96) },
             ["Ocean"]      = { accent = rgb(0, 200, 220),   background = rgb(8, 14, 18),   element = rgb(16, 26, 32),  outline = rgb(28, 44, 54),  text = rgb(234, 248, 252), inactive = rgb(64, 92, 104) },
-            ["Rose"]       = { accent = rgb(255, 105, 170), background = rgb(18, 12, 15),  element = rgb(30, 20, 26),  outline = rgb(50, 34, 42),  text = rgb(252, 240, 246), inactive = rgb(100, 74, 86) }
+            ["Rose"]       = { accent = rgb(255, 105, 170), background = rgb(18, 12, 15),  element = rgb(30, 20, 26),  outline = rgb(50, 34, 42),  text = rgb(252, 240, 246), inactive = rgb(100, 74, 86) },
+            ["Halloween"]  = { accent = rgb(255, 117, 24),  background = rgb(13, 9, 15),   element = rgb(26, 17, 28),  outline = rgb(52, 30, 48),  text = rgb(255, 236, 214), inactive = rgb(110, 78, 96) }
         }
 
-        THEME_PRESET_NAMES = { "Sleepy", "Midnight", "Crimson", "Emerald", "Amber", "Ultraviolet", "Monochrome", "Ocean", "Rose" }
+        THEME_PRESET_NAMES = { "Sleepy", "Midnight", "Crimson", "Emerald", "Amber", "Ultraviolet", "Monochrome", "Ocean", "Rose", "Halloween" }
 
         function library:apply_theme_preset(name)
             local preset = THEME_PRESETS[name]
@@ -1620,6 +1659,12 @@ if Mobile ~= Enum.PreferredInput.Touch then
             end
 
             themes.preset[theme] = color
+
+            if theme == "accent" and library.accent_refreshers then
+                for _, refresh in library.accent_refreshers do
+                    pcall(refresh)
+                end
+            end
         end
 
         function library:connection(signal, callback)
@@ -2705,7 +2750,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                         fit_retry = 0
 
-                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 50) / available)
+                        items[ "outline" ]:SetAttribute("FitScale", ((cfg.active_layout or layout).AbsoluteContentSize.Y + 50) / available)
 
                         local frames = {}
 
@@ -2756,6 +2801,8 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                     library.autosize_refresh = library.autosize_refresh or {}
                     library.autosize_refresh[#library.autosize_refresh + 1] = queue_fit
+
+                    cfg.queue_fit = queue_fit
 
                     queue_fit()
                 end
@@ -2920,6 +2967,234 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     library:tween(items[ "toggle_circle" ], {BackgroundColor3 = bool and rgb(255, 255, 255) or rgb(86, 86, 88), Position = bool and dim2(1, -14, 0, 2) or dim2(0, 2, 0, 2)}, Enum.EasingStyle.Quad)
                     library:tween(items[ "fade" ], {BackgroundTransparency = bool and 1 or 0.8}, Enum.EasingStyle.Quad)
                 end)
+            end
+
+            local tab_names = properties.tabs or properties.Tabs
+
+            if type(tab_names) == "table" and #tab_names > 0 then
+                local pages, layouts, buttons, accents, proxies, paddings = {}, {}, {}, {}, {}, {}
+                local tab_pad, tab_gap, tab_fit_queued = 9, 4, false
+
+                items[ "section_title" ].Visible = false
+
+                items[ "tab_holder" ] = library:create( "Frame" , {
+                    Parent = items[ "button" ];
+                    Name = "\0";
+                    BackgroundTransparency = 1;
+                    Position = dim2(0, 36, 0, 0);
+                    Size = dim2(1, -44, 1, -1);
+                    BorderSizePixel = 0;
+                    ClipsDescendants = true;
+                    BackgroundColor3 = rgb(255, 255, 255)
+                });
+
+                library:create( "UIListLayout" , {
+                    Parent = items[ "tab_holder" ];
+                    FillDirection = Enum.FillDirection.Horizontal;
+                    VerticalAlignment = Enum.VerticalAlignment.Center;
+                    SortOrder = Enum.SortOrder.LayoutOrder;
+                    Padding = dim(0, tab_gap)
+                });
+
+                items[ "tab_fade" ] = library:create( "Frame" , {
+                    Parent = items[ "inline" ];
+                    Name = "\0";
+                    BackgroundTransparency = 1;
+                    Position = dim2(0, 0, 0, 28);
+                    Size = dim2(1, 0, 1, -28);
+                    BorderSizePixel = 0;
+                    ZIndex = 2;
+                    BackgroundColor3 = rgb(22, 22, 24)
+                });
+
+                library:create( "UICorner" , {
+                    Parent = items[ "tab_fade" ];
+                    CornerRadius = dim(0, 7)
+                });
+
+                local function fit_tabs()
+                    tab_fit_queued = false
+
+                    local holder = items[ "tab_holder" ]
+                    local unit = (holder.AbsolutePosition.X - items[ "button" ].AbsolutePosition.X) / 36
+                    local available = holder.AbsoluteSize.X
+
+                    if unit <= 0 or available <= 0 or #buttons == 0 then return end
+
+                    local text = 0
+
+                    for i = 1, #buttons do
+                        text = text + buttons[i].AbsoluteSize.X / unit - tab_pad * 2
+                    end
+
+                    local pad = math.clamp(math.floor((available / unit - text - tab_gap * (#buttons - 1)) / (#buttons * 2)), 3, 9)
+
+                    if pad == tab_pad then return end
+
+                    tab_pad = pad
+
+                    for i = 1, #paddings do
+                        paddings[i].PaddingLeft = dim(0, pad)
+                        paddings[i].PaddingRight = dim(0, pad)
+                    end
+                end
+
+                local function queue_tabs()
+                    if tab_fit_queued then return end
+
+                    tab_fit_queued = true
+
+                    task.defer(fit_tabs)
+                end
+
+                local function paint(index)
+                    for i = 1, #pages do
+                        local active = i == index
+
+                        library:tween(buttons[i], {TextColor3 = library:theme_text(active and 1 or 0.29)})
+                        library:tween(accents[i], {BackgroundTransparency = active and 0 or 1})
+                    end
+                end
+
+                function cfg.select_tab(index)
+                    if not pages[index] then return end
+
+                    local switching = cfg.active_tab ~= nil and cfg.active_tab ~= index
+
+                    cfg.active_tab = index
+                    cfg.active_layout = layouts[index]
+
+                    for i = 1, #pages do
+                        pages[i].Visible = i == index
+                    end
+
+                    items[ "scrolling" ].CanvasPosition = vec2(0, 0)
+
+                    paint(index)
+
+                    if switching then
+                        items[ "tab_fade" ].BackgroundTransparency = 0
+                        library:tween(items[ "tab_fade" ], {BackgroundTransparency = 1}, Enum.EasingStyle.Quad, 0.4)
+
+                        library:close_element()
+                    end
+
+                    if cfg.queue_fit then cfg.queue_fit() end
+
+                    library:relayout_sections()
+                end
+
+                for index, tab_name in ipairs(tab_names) do
+                    local page = items[ "elements" ]
+                    local layout
+
+                    if index == 1 then
+                        layout = child_of_class(page, "UIListLayout")
+                    else
+                        page = library:create( "Frame" , {
+                            BorderColor3 = rgb(0, 0, 0);
+                            Parent = items[ "scrolling" ];
+                            Name = "\0";
+                            BackgroundTransparency = 1;
+                            Position = dim2(0, 10, 0, 10);
+                            Size = dim2(1, -20, 0, 0);
+                            BorderSizePixel = 0;
+                            AutomaticSize = Enum.AutomaticSize.Y;
+                            Visible = false;
+                            BackgroundColor3 = rgb(255, 255, 255)
+                        });
+
+                        layout = library:create( "UIListLayout" , {
+                            Parent = page;
+                            Padding = dim(0, 6);
+                            SortOrder = Enum.SortOrder.LayoutOrder
+                        });
+
+                        if cfg.queue_fit then
+                            layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(cfg.queue_fit)
+                            page.ChildAdded:Connect(cfg.queue_fit)
+                        end
+                    end
+
+                    local button = library:create( "TextButton" , {
+                        FontFace = fonts.font;
+                        Text = tostring(tab_name);
+                        TextColor3 = library:theme_text(index == 1 and 1 or 0.29);
+                        AutoButtonColor = false;
+                        Parent = items[ "tab_holder" ];
+                        Name = "\0";
+                        LayoutOrder = index;
+                        AutomaticSize = Enum.AutomaticSize.X;
+                        Size = dim2(0, 0, 1, 0);
+                        BackgroundTransparency = 1;
+                        BorderSizePixel = 0;
+                        TextSize = 16;
+                        BackgroundColor3 = rgb(255, 255, 255)
+                    });
+
+                    paddings[index] = library:create( "UIPadding" , {
+                        Parent = button;
+                        PaddingLeft = dim(0, tab_pad);
+                        PaddingRight = dim(0, tab_pad)
+                    });
+
+                    button:GetPropertyChangedSignal("TextBounds"):Connect(queue_tabs)
+
+                    local accent = library:create( "Frame" , {
+                        Parent = button;
+                        Name = "\0";
+                        AnchorPoint = vec2(0, 1);
+                        Position = dim2(0, 0, 1, 0);
+                        Size = dim2(1, 0, 0, 2);
+                        BorderSizePixel = 0;
+                        BackgroundTransparency = index == 1 and 0 or 1;
+                        BackgroundColor3 = themes.preset.accent
+                    }); library:apply_theme(accent, "accent", "BackgroundColor3");
+
+                    library:create( "UICorner" , {
+                        Parent = accent;
+                        CornerRadius = dim(0, 999)
+                    });
+
+                    pages[index], layouts[index], buttons[index], accents[index] = page, layout, button, accent
+
+                    if library.on_tap then
+                        library:on_tap(button, function()
+                            cfg.select_tab(index)
+                        end)
+                    else
+                        button.MouseButton1Click:Connect(function()
+                            cfg.select_tab(index)
+                        end)
+                    end
+
+                    if index > 1 then
+                        proxies[#proxies + 1] = setmetatable({
+                            name = tostring(tab_name);
+                            parent_section = cfg;
+                            items = {
+                                elements = page;
+                                outline = items[ "outline" ];
+                                inline = items[ "inline" ];
+                                scrolling = items[ "scrolling" ];
+                                button = items[ "button" ]
+                            }
+                        }, library)
+                    end
+                end
+
+                items[ "tab_holder" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(queue_tabs)
+                queue_tabs()
+
+                cfg.tab_pages = pages
+                cfg.active_tab = 1
+                cfg.active_layout = layouts[1]
+
+                library:on_theme(function(key)
+                    if key == "text" then paint(cfg.active_tab or 1) end
+                end)
+
+                return setmetatable(cfg, library), table.unpack(proxies)
             end
 
             return setmetatable(cfg, library)
@@ -3151,12 +3426,27 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     end
             end;
 
+             library.accent_refreshers = library.accent_refreshers or {}
+
+             insert(library.accent_refreshers, function()
+                 if not cfg.enabled or not items[ "toggle_button" ] or not items[ "toggle_button" ].Parent then return end
+
+                 library:tween(items[ "toggle_button" ], {BackgroundColor3 = themes.preset.accent}, Enum.EasingStyle.Quad, 0.15)
+
+                 if cfg.type == "checkbox" and items[ "outline" ] then
+                     library:tween(items[ "outline" ], {BackgroundColor3 = themes.preset.accent}, Enum.EasingStyle.Quad, 0.15)
+                 elseif items[ "inline" ] then
+                     library:tween(items[ "inline" ], {BackgroundColor3 = themes.preset.accent}, Enum.EasingStyle.Quad, 0.15)
+                 end
+             end)
+
              cfg.set = LPH_NO_VIRTUALIZE(function(bool)
                 cfg.enabled = bool
                 flags[cfg.flag] = bool
                 library.armed[cfg.flag] = bool
 
                 cfg.callback(bool)
+                keep_identity()
 
                 if cfg.bound_key then
                     cfg.bound_key.apply_owner()
@@ -3378,6 +3668,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 flags[cfg.flag] = cfg.value
                 cfg.callback(flags[cfg.flag])
+                keep_identity()
 
                 library:tween(items[ "fill" ], {Size = dim2((cfg.value - cfg.min) / (cfg.max - cfg.min), 0, 1, 0)}, Enum.EasingStyle.Linear, 0.05)
 
@@ -3848,6 +4139,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 flags[cfg.flag] = isTable and selected or selected[1]
 
                 cfg.callback(flags[cfg.flag])
+                keep_identity()
             end
 
             function cfg.changetext(text)
@@ -4402,6 +4694,14 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     });
             end;
 
+            for _, object in items[ "colorpicker_holder" ]:GetDescendants() do
+                if object:IsA("GuiObject") then
+                    object.ZIndex += 200
+                end
+            end
+
+            items[ "colorpicker_holder" ].ZIndex += 200
+
             function cfg.set_visible(bool)
                 items[ "colorpicker_fade" ].BackgroundTransparency = 0
                 items[ "colorpicker_holder" ].Parent = bool and library[ "items" ] or library[ "other" ]
@@ -4454,6 +4754,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 items[ "input" ].Text ..= library:round(1 - a, 0.01)
 
                 cfg.callback(Color, a)
+                keep_identity()
             end
 
             function cfg.update_color()
@@ -4639,6 +4940,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 items[ "input" ].Text = text
 
                 cfg.callback(text)
+                keep_identity()
             end
 
             items[ "input" ]:GetPropertyChangedSignal("Text"):Connect(function()
@@ -4956,6 +5258,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     cfg.apply_owner()
                 else
                     cfg.callback(cfg.active)
+                    keep_identity()
                 end
 
                 local text = tostring(cfg.key) ~= "Enums" and (keys[cfg.key] or tostring(cfg.key):gsub("Enum.", "")) or nil
@@ -4975,6 +5278,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 if not toggle or not toggle.flag then
                     cfg.callback(cfg.active)
+                    keep_identity()
 
                     return
                 end
@@ -4986,6 +5290,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 if flags[toggle.flag] == live then
                     cfg.callback(live)
+                    keep_identity()
 
                     return
                 end
@@ -4993,6 +5298,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 flags[toggle.flag] = live
 
                 cfg.callback(live)
+                keep_identity()
 
                 local owner_callback = toggle.raw_callback or toggle.callback
 
@@ -5211,6 +5517,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 end
 
                 cfg.callback()
+                keep_identity()
             end
 
             items[ "button" ].MouseButton1Click:Connect(function()
@@ -5411,6 +5718,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                         flags[cfg.flag] = option_data
                         cfg.callback(option_data)
+                        keep_identity()
 
                         library:tween(name, {TextColor3 = library:theme_text(1)})
 
@@ -5447,8 +5755,14 @@ if Mobile ~= Enum.PreferredInput.Touch then
         end
 
         function library:init_config(window)
+            local game_flags = {}
+
+            for key in library.config_flags do
+                game_flags[key] = true
+            end
+
             window:seperator({name = "settings"})
-            local main = window:tab({name = "settings", tabs = {"main"}})
+            local main, menu_page = window:tab({name = "settings", tabs = {"configs", "menu"}})
 
             local column = main:column({})
             local section = column:section({name = "configs", size = 1, default = false, icon = "rbxassetid://139628202576511"})
@@ -5503,8 +5817,249 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 end
             })
 
+            library.notif_style = library.notif_style or {}
+
+            local notif_style = library.notif_style
+            local menu_left = menu_page:column({})
+            local menu_right = menu_page:column({})
+            local menu_section = menu_left:section({name = "menu", size = 1, default = false, icon = GetImage("Settings.png")})
+            local server_section = menu_left:section({name = "server", size = 1, default = false, icon = GetImage("Settings.png")})
+            local notif_section = menu_right:section({name = "notifications", size = 1, default = false, icon = GetImage("Settings.png")})
+            notif_section:dropdown({name = "position", flag = "notif_position", width = 100, items = {"Center", "Top Center", "Top Left", "Top Right", "Bottom Left", "Bottom Right", "Custom"}, multi = false, default = "Center", callback = function(state)
+                library.notif_position = state
+                library.notifications:refresh_notifs()
+            end})
+
+            local function notif_set(key, value)
+                notif_style[key] = value
+                notifications:refresh_notifs()
+            end
+
+            notif_section:toggle({type = "toggle", name = "clip descendants", flag = "notif_clip", default = true, callback = function(state)
+                notif_set("clip", state)
+            end})
+
+            notif_section:slider({name = "clip past distance", flag = "notif_clip_distance", min = 100, max = 1000, default = 200, suffix = "px", seperator = true, callback = function(value)
+                notif_set("clip_distance", value)
+            end})
+
+            local notif_force = notif_section:toggle({type = "toggle", name = "force color", flag = "notif_force_color", default = false, callback = function(state)
+                notif_style.force = state
+            end})
+
+            local notif_pickers = {}
+            local notif_defaults = {main = rgb(14, 14, 16), accent = themes.preset.accent, outline = rgb(23, 23, 29), font = rgb(255, 255, 255)}
+
+            for _, key in ipairs({"main", "accent", "outline", "font"}) do
+                notif_style[key] = notif_defaults[key]
+                notif_pickers[key] = notif_force:colorpicker({name = key, flag = "notif_color_" .. key, color = notif_defaults[key], no_alpha = true, callback = function(color)
+                    notif_style[key] = color
+                end})
+            end
+
+            notif_section:button({name = "copy colors", seperator = true, callback = function()
+                local copy = {main = themes.preset.background, accent = themes.preset.accent, outline = themes.preset.outline, font = themes.preset.text}
+
+                for key, picker in pairs(notif_pickers) do
+                    if copy[key] and type(picker) == "table" and picker.set then
+                        pcall(picker.set, copy[key], picker.alpha)
+                    end
+                end
+            end})
+
+            notif_section:slider({name = "position x", flag = "notif_position_x", min = 0, max = 100, default = 50, suffix = "%", half = true, callback = function(value)
+                notif_set("x", value)
+            end})
+
+            notif_section:slider({name = "position y", flag = "notif_position_y", min = 0, max = 100, default = 60, suffix = "%", half = true, callback = function(value)
+                notif_set("y", value)
+            end})
+
+            notif_section:slider({name = "transparency", flag = "notif_transparency", min = 0, max = 100, default = 0, suffix = "%", callback = function(value)
+                notif_style.transparency = value
+            end})
+
+            notif_section:dropdown({name = "alignment", flag = "notif_alignment", width = 100, items = {"Left", "Right", "Center"}, multi = false, default = "Left", callback = function(state)
+                notif_style.align = state
+            end})
+
+            notif_section:dropdown({name = "bar side", flag = "notif_bar_side", width = 100, items = {"Left", "Right", "Top", "Bottom"}, multi = false, default = "Bottom", callback = function(state)
+                notif_style.bar = state
+            end})
+
+            notif_section:dropdown({name = "sort order", flag = "notif_sort_order", width = 100, items = {"Text Length", "Default"}, multi = false, default = "Default", seperator = true, callback = function(state)
+                notif_set("sort", state)
+            end})
+
+            notif_section:button({name = "send notification", callback = function()
+                notifications:create_notification({name = "sleepy.gg", info = "this is a test notification"})
+            end})
+
+            local backdrop = {parts = {}, open = not getgenv().silent_load_active}
+
+            library.backdrop = backdrop
+
+            backdrop.blur = Instance.new("BlurEffect")
+            backdrop.blur.Name = "\0"
+            backdrop.blur.Enabled = false
+            backdrop.color = Instance.new("ColorCorrectionEffect")
+            backdrop.color.Name = "\0"
+            backdrop.color.Enabled = false
+
+            function backdrop.refresh()
+                local active = backdrop.open and flags.menu_bg_enabled and true or false
+                local camera = workspace.CurrentCamera
+
+                if camera and backdrop.blur.Parent ~= camera then
+                    backdrop.blur.Parent = camera
+                    backdrop.color.Parent = camera
+                end
+
+                backdrop.blur.Size = tonumber(flags.menu_bg_blur) or 15
+                backdrop.blur.Enabled = active and backdrop.blur.Size > 0
+                backdrop.color.Contrast = tonumber(flags.menu_bg_contrast) or 0
+                backdrop.color.Saturation = tonumber(flags.menu_bg_saturation) or 0
+                backdrop.color.Brightness = tonumber(flags.menu_bg_brightness) or 0
+                backdrop.color.Enabled = active
+
+                if not backdrop.gui then return end
+
+                local back_color = flags.menu_bg_color
+                local item_color = flags.menu_bg_item_color
+                local material = Enum.Material[flags.menu_bg_material or "Neon"]
+
+                backdrop.gui.Enabled = active
+                backdrop.outer.BackgroundColor3 = type(back_color) == "table" and back_color.Color or rgb(0, 0, 0)
+                backdrop.outer.BackgroundTransparency = flags.menu_bg_dim == false and 1 or (tonumber(flags.menu_bg_transparency) or 0.7)
+                backdrop.inner.ImageColor3 = type(item_color) == "table" and item_color.Color or rgb(255, 255, 255)
+
+                for _, part in pairs(backdrop.parts) do
+                    part.Transparency = tonumber(flags.menu_bg_item_transparency) or 0
+                    part.Reflectance = tonumber(flags.menu_bg_item_reflectance) or 0
+                    part.Material = material
+                end
+            end
+
+            local function back_refresh()
+                pcall(backdrop.refresh)
+            end
+
+            local backdrop_toggle = window.toggle_menu
+
+            if type(backdrop_toggle) == "function" then
+                window.toggle_menu = function(bool, ...)
+                    backdrop.open = bool and true or false
+
+                    back_refresh()
+
+                    return backdrop_toggle(bool, ...)
+                end
+            end
+
+            task.spawn(function()
+                local ok, gui = pcall(function()
+                    return game:GetObjects("rbxassetid://93615626116769")[1]
+                end)
+
+                if not ok or typeof(gui) ~= "Instance" then
+                    ok, gui = pcall(function()
+                        return cloneref(game:GetService("InsertService")):LoadLocalAsset("rbxassetid://93615626116769")
+                    end)
+                end
+
+                if not ok or typeof(gui) ~= "Instance" then
+                    warn("[Sleepy.gg] background items failed to load: " .. tostring(gui))
+
+                    return
+                end
+
+                if not gui:IsA("ScreenGui") then
+                    gui = gui:FindFirstChildWhichIsA("ScreenGui", true) or gui
+                end
+
+                local outer = gui:FindFirstChild("ViewportFrame") or gui:FindFirstChildWhichIsA("ViewportFrame", true)
+                local inner = outer and (outer:FindFirstChild("ViewportFrame") or outer:FindFirstChildWhichIsA("ViewportFrame", true))
+
+                if not gui:IsA("ScreenGui") or not inner then
+                    warn("[Sleepy.gg] background items asset has an unexpected layout: " .. gui.ClassName .. " / " .. tostring(outer and outer.ClassName) .. " / " .. tostring(inner and inner.ClassName))
+
+                    gui:Destroy()
+
+                    return
+                end
+
+                for _, child in ipairs(inner:GetChildren()) do
+                    if child.Name == "Overlay V2" then
+                        child:Destroy()
+                    elseif child:IsA("BasePart") then
+                        child.Position = Vector3.new(0, 1000, 0)
+                        backdrop.parts[child.Name] = child
+                    end
+                end
+
+                if next(backdrop.parts) == nil then
+                    local found = {}
+
+                    for _, child in ipairs(inner:GetChildren()) do
+                        found[#found + 1] = child.Name .. ":" .. child.ClassName
+                    end
+
+                    warn("[Sleepy.gg] background items asset has no usable parts: " .. table.concat(found, ", "))
+                end
+
+                gui.Name = "\0"
+                gui.Enabled = false
+                gui.DisplayOrder = (library[ "items" ].DisplayOrder or 0) - 1
+                gui.Parent = library[ "items" ].Parent
+
+                backdrop.gui, backdrop.outer, backdrop.inner = gui, outer, inner
+
+                back_refresh()
+            end)
+
+            run_service.RenderStepped:Connect(function(dt)
+                if not (backdrop.gui and backdrop.gui.Enabled) then return end
+
+                local wanted = backdrop.parts[flags.menu_bg_item or ""]
+
+                if wanted ~= backdrop.current then
+                    if backdrop.current then backdrop.current.Position = Vector3.new(0, 1000, 0) end
+                    if wanted then wanted.Position = Vector3.new(0, 10, 10) end
+
+                    backdrop.current = wanted
+                end
+
+                if wanted then
+                    wanted.CFrame = wanted.CFrame * CFrame.Angles(0, (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60, 0)
+                end
+            end)
+
+            local back_section = menu_right:section({name = "background", size = 1, default = false, icon = GetImage("Settings.png")})
+
+            local back_toggle = back_section:toggle({type = "toggle", name = "enabled", flag = "menu_bg_enabled", default = false, callback = back_refresh})
+
+            back_toggle:colorpicker({name = "item color", flag = "menu_bg_item_color", color = rgb(255, 255, 255), no_alpha = true, callback = back_refresh})
+
+            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sword"})
+
+            back_section:slider({name = "transparency", flag = "menu_bg_item_transparency", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
+            back_section:slider({name = "reflectance", flag = "menu_bg_item_reflectance", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
+            back_section:slider({name = "speed", flag = "menu_bg_speed", min = 0.1, max = 1, decimal = 0.01, default = 0.15})
+
+            back_section:dropdown({name = "material", flag = "menu_bg_material", width = 100, items = {"ForceField", "Neon", "Plastic", "SmoothPlastic", "Wood", "WoodPlanks", "Marble", "Slate", "Concrete", "Granite", "Brick", "Pebble", "Cobblestone", "Rock", "Sandstone", "Basalt", "CrackedLava", "Limestone", "Pavement", "CorrodedMetal", "DiamondPlate", "Foil", "Metal", "Grass", "LeafyGrass", "Sand", "Fabric", "Snow", "Mud", "Ground", "Asphalt", "Salt", "Ice", "Glacier", "Glass"}, multi = false, default = "Neon", seperator = true, callback = back_refresh})
+
+            local back_dim = back_section:toggle({type = "toggle", name = "background color", flag = "menu_bg_dim", default = true, callback = back_refresh})
+
+            back_dim:colorpicker({name = "background color", flag = "menu_bg_color", color = rgb(0, 0, 0), no_alpha = true, callback = back_refresh})
+
+            back_section:slider({name = "transparency", flag = "menu_bg_transparency", min = 0, max = 1, decimal = 0.01, default = 0.7, half = true, callback = back_refresh})
+            back_section:slider({name = "blur", flag = "menu_bg_blur", min = 0, max = 50, default = 15, half = true, callback = back_refresh})
+            back_section:slider({name = "contrast", flag = "menu_bg_contrast", min = -10, max = 10, decimal = 0.1, default = 0, half = true, callback = back_refresh})
+            back_section:slider({name = "saturation", flag = "menu_bg_saturation", min = -10, max = 10, decimal = 0.1, default = 0, half = true, callback = back_refresh})
+            back_section:slider({name = "brightness", flag = "menu_bg_brightness", min = -1, max = 1, decimal = 0.1, default = 0, callback = back_refresh})
+
             local column = main:column({})
-            local section = column:section({name = "settings", side = "right", size = 1, default = false, icon = GetImage("Settings.png")})
+            local section = column:section({name = "config", side = "right", size = 1, default = false, icon = GetImage("Settings.png")})
             section:textbox({name = "config name:", flag = "config_name_text", tall = true,})
             section:button({
                 name = "save",
@@ -5737,30 +6292,25 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 write_startup_data("silent_load", state)
             end})
 
-            section:textbox({name = "menu size %", flag = "menu_size", default = "100", placeholder = "100", callback = function(text)
+            menu_section:textbox({name = "menu size %", flag = "menu_size", default = "100", placeholder = "100", callback = function(text)
                 local value = tonumber(text)
                 if not value or not library.ui_scale then return end
                 library.ui_scale.Scale = math.clamp(value, 50, 150) / 100
             end})
 
-            section:dropdown({name = "notifications", flag = "notif_position", width = 100, items = {"Center", "Top Center", "Top Left", "Top Right", "Bottom Left", "Bottom Right"}, multi = false, default = "Center", callback = function(state)
-                library.notif_position = state
-                library.notifications:refresh_notifs()
-            end})
-
             library.theme_pickers = library.theme_pickers or {}
 
-            library.theme_pickers.accent = section:colorpicker({name = "menu accent", flag = "menu_accent_color", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
-            library.theme_pickers.background = section:colorpicker({name = "background", flag = "menu_background_color", callback = function(color) library:paint_theme("background", color) end, color = themes.preset.background})
-            library.theme_pickers.element = section:colorpicker({name = "elements", flag = "menu_element_color", callback = function(color) library:paint_theme("element", color) end, color = themes.preset.element})
-            library.theme_pickers.outline = section:colorpicker({name = "outlines", flag = "menu_outline_color", callback = function(color) library:paint_theme("outline", color) end, color = themes.preset.outline})
-            library.theme_pickers.text = section:colorpicker({name = "text", flag = "menu_text_color", callback = function(color) library:paint_theme("text", color) end, color = themes.preset.text})
-            library.theme_pickers.inactive = section:colorpicker({name = "inactive", flag = "menu_inactive_color", callback = function(color) library:paint_theme("inactive", color) end, color = themes.preset.inactive})
+            library.theme_pickers.accent = menu_section:colorpicker({name = "menu accent", flag = "menu_accent_color", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
+            library.theme_pickers.background = menu_section:colorpicker({name = "background", flag = "menu_background_color", callback = function(color) library:paint_theme("background", color) end, color = themes.preset.background})
+            library.theme_pickers.element = menu_section:colorpicker({name = "elements", flag = "menu_element_color", callback = function(color) library:paint_theme("element", color) end, color = themes.preset.element})
+            library.theme_pickers.outline = menu_section:colorpicker({name = "outlines", flag = "menu_outline_color", callback = function(color) library:paint_theme("outline", color) end, color = themes.preset.outline})
+            library.theme_pickers.text = menu_section:colorpicker({name = "text", flag = "menu_text_color", callback = function(color) library:paint_theme("text", color) end, color = themes.preset.text})
+            library.theme_pickers.inactive = menu_section:colorpicker({name = "inactive", flag = "menu_inactive_color", callback = function(color) library:paint_theme("inactive", color) end, color = themes.preset.inactive})
 
-            section:dropdown({name = "theme preset", flag = "menu_theme_preset", width = 100, items = THEME_PRESET_NAMES, multi = false, default = "Sleepy", seperator = true, callback = function(state)
+            menu_section:dropdown({name = "theme preset", flag = "menu_theme_preset", width = 100, items = THEME_PRESET_NAMES, multi = false, default = "Sleepy", seperator = true, callback = function(state)
                 library:apply_theme_preset(state)
             end})
-            section:toggle({
+            menu_section:toggle({
                 type = "toggle",
                 name = "card outlines",
                 flag = "menu_edge_enabled",
@@ -5770,7 +6320,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 end
             })
 
-            section:slider({
+            menu_section:slider({
                 name = "outline opacity",
                 flag = "menu_edge_opacity",
                 min = 0,
@@ -5785,11 +6335,11 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             library:refresh_edges()
 
-            library.menu_bind = section:keybind({name = "menu bind", key = Enum.KeyCode.Insert, mode = "Toggle", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
+            library.menu_bind = menu_section:keybind({name = "menu bind", key = Enum.KeyCode.Insert, mode = "Toggle", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
 
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
 
-            section:button({name = "join lowest server", callback = function()
+            server_section:button({name = "join lowest server", callback = function()
                 local Servers = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", tostring(game.PlaceId))
 
                 local ListServers = function(cursor)
@@ -5815,7 +6365,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(game.PlaceId, Server.id)
             end})
 
-            section:button({name = "server hop", callback = function()
+            server_section:button({name = "server hop", callback = function()
                 local Servers = {}
                 local Request = _request({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", tostring(game.PlaceId))})
                 local Body = cloneref(game:GetService("HttpService")):JSONDecode(Request.Body)
@@ -5834,14 +6384,14 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 )
                     end})
 
-            section:button({name = "rejoin", callback = function()
+            server_section:button({name = "rejoin", callback = function()
             cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(
                 game.PlaceId,
                 game.JobId
             )
             end})
 
-            section:button({name = "panic", callback = function()
+            server_section:button({name = "panic", callback = function()
                 if not library.default_config then return end
 
                 notifications:create_notification({
@@ -5852,10 +6402,26 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 library:load_config(library.default_config)
             end})
 
+            library.menu_flags = {}
+
+            for key in library.config_flags do
+                if not game_flags[key] then
+                    library.menu_flags[key] = true
+                end
+            end
+
             library.setup_complete = true
         end
 
         function notifications:anchor_for(mode)
+            if mode == "Custom" then
+                local style = library.notif_style or {}
+                local x = math.clamp((tonumber(style.x) or 50) / 100, 0, 1)
+                local y = math.clamp((tonumber(style.y) or 60) / 100, 0, 1)
+
+                return vec2(x, y), 0, 0, y > 0.5 and -1 or 1
+            end
+
             if mode == "Top Left" then return vec2(0, 0), 20, 20, 1 end
             if mode == "Top Right" then return vec2(1, 0), -20, 20, 1 end
             if mode == "Bottom Left" then return vec2(0, 1), 20, -20, -1 end
@@ -5867,13 +6433,27 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
         function notifications:refresh_notifs(instant)
             local mode = library.notif_position or "Center"
+            local style = library.notif_style or {}
             local anchor, pad_x, pad_y, direction = notifications:anchor_for(mode)
             local offset = pad_y
+            local ordered = {}
 
-            for _, v in notifications.notifs do
+            for index, v in notifications.notifs do
+                ordered[#ordered + 1] = {v, index}
+            end
+
+            if style.sort == "Text Length" then
+                table.sort(ordered, function(a, b) return a[1].AbsoluteSize.X > b[1].AbsoluteSize.X end)
+            else
+                table.sort(ordered, function(a, b) return a[2] < b[2] end)
+            end
+
+            for _, entry in ordered do
+                local v = entry[1]
                 local goal = dim2(anchor.X, pad_x, anchor.Y, offset)
 
                 v.AnchorPoint = anchor
+                v.Visible = not (style.clip ~= false and math.abs(offset - pad_y) > (tonumber(style.clip_distance) or 200))
 
                 if v == instant then
                     v.Position = goal
@@ -5888,7 +6468,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
         end
 
         function notifications:fade(path, is_fading, instant)
-            local fading = is_fading and 1 or 0
+            local fading = is_fading and 1 or math.clamp((tonumber((library.notif_style or {}).transparency) or 0) / 100, 0, 1)
 
             if instant then
                 path.BackgroundTransparency = fading
@@ -5915,7 +6495,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     else
                         library:tween(instance, {TextTransparency = fading})
                     end
-                elseif instance:IsA("Frame") then
+                elseif instance:IsA("Frame") and not instance:GetAttribute("fade_skip") then
                     local target = is_fading and 1 or 0.6
 
                     if instant then
@@ -5951,7 +6531,24 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     BackgroundColor3 = rgb(14, 14, 16)
                 });
 
-                library:create( "UIStroke" , {
+                items[ "content" ] = library:create( "Frame" , {
+                    Parent = items[ "notification" ];
+                    Name = "\0";
+                    BackgroundTransparency = 1;
+                    BorderSizePixel = 0;
+                    AutomaticSize = Enum.AutomaticSize.XY;
+                    Size = dim2(0, 0, 0, 0)
+                });
+
+                items[ "content" ]:SetAttribute("fade_skip", true)
+
+                library:create( "UIListLayout" , {
+                    Parent = items[ "content" ];
+                    SortOrder = Enum.SortOrder.LayoutOrder;
+                    HorizontalAlignment = Enum.HorizontalAlignment[(library.notif_style or {}).align or "Left"] or Enum.HorizontalAlignment.Left
+                });
+
+                items[ "stroke" ] = library:create( "UIStroke" , {
                     Color = rgb(23, 23, 29);
                     Parent = items[ "notification" ];
                     Transparency = 1;
@@ -5963,7 +6560,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     TextColor3 = rgb(255, 255, 255);
                     BorderColor3 = rgb(0, 0, 0);
                     Text = cfg.name;
-                    Parent = items[ "notification" ];
+                    Parent = items[ "content" ];
                     Name = "\0";
                     BackgroundTransparency = 1;
                     Position = dim2(0, 0, 0, 0);
@@ -5984,7 +6581,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     TextColor3 = rgb(145, 145, 145);
                     BorderColor3 = rgb(0, 0, 0);
                     Text = cfg.info;
-                    Parent = items[ "notification" ];
+                    Parent = items[ "content" ];
                     Name = "\0";
                     Position = dim2(0, 0, 0, 15);
                     BorderSizePixel = 0;
@@ -6027,6 +6624,34 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 });
             end
 
+            local style = library.notif_style or {}
+            local align = Enum.TextXAlignment[style.align or "Left"] or Enum.TextXAlignment.Left
+            local bar_goal = dim2(1, 0, 0, 2)
+
+            items[ "title" ].LayoutOrder = 1
+            items[ "info" ].LayoutOrder = 2
+            items[ "title" ].TextXAlignment = align
+            items[ "info" ].TextXAlignment = align
+
+            if style.force then
+                items[ "notification" ].BackgroundColor3 = style.main or items[ "notification" ].BackgroundColor3
+                items[ "stroke" ].Color = style.outline or items[ "stroke" ].Color
+                items[ "title" ].TextColor3 = style.font or items[ "title" ].TextColor3
+                items[ "bar" ].BackgroundColor3 = style.accent or items[ "bar" ].BackgroundColor3
+            end
+
+            if style.bar == "Top" then
+                items[ "bar" ].AnchorPoint = vec2(0, 0)
+                items[ "bar" ].Position = dim2(0, 0, 0, 0)
+            elseif style.bar == "Left" or style.bar == "Right" then
+                local right = style.bar == "Right"
+
+                items[ "bar" ].AnchorPoint = vec2(right and 1 or 0, 1)
+                items[ "bar" ].Position = dim2(right and 1 or 0, right and 12 or -12, 1, 0)
+                items[ "bar" ].Size = dim2(0, 2, 0, 0)
+                bar_goal = dim2(0, 2, 1, 0)
+            end
+
             local index = #notifications.notifs + 1
             notifications.notifs[index] = items[ "notification" ]
 
@@ -6035,7 +6660,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
             task.defer(function()
                 notifications:refresh_notifs(items[ "notification" ])
             end)
-            library:tween(items[ "bar" ], {Size = dim2(1, 0, 0, 2)}, Enum.EasingStyle.Quad, cfg.lifetime)
+            library:tween(items[ "bar" ], {Size = bar_goal}, Enum.EasingStyle.Quad, cfg.lifetime)
 
             task.spawn(LPH_NO_VIRTUALIZE(function()
                 task.wait(cfg.lifetime)
@@ -6469,6 +7094,20 @@ if Mobile ~= Enum.PreferredInput.Touch then
         function library:load_config(config_json)
             local config = http_service:JSONDecode(config_json)
 
+            if type(config) == "table" and type(library.default_config) == "string" and config_json ~= library.default_config then
+                local decoded, defaults = pcall(http_service.JSONDecode, http_service, library.default_config)
+
+                if decoded and type(defaults) == "table" then
+                    local menu = library.menu_flags or {}
+
+                    for key, value in defaults do
+                        if config[key] == nil and not menu[key] and not (type(value) == "table" and value["key"] ~= nil) then
+                            config[key] = value
+                        end
+                    end
+                end
+            end
+
             local applied = 0
 
             for _, v in config do
@@ -6862,6 +7501,13 @@ if Mobile ~= Enum.PreferredInput.Touch then
                         original = value,
                         key = key
                     })
+
+                    local current = themes.preset[key]
+                    local base = THEME_BASES[key]
+
+                    if current and base and current ~= base then
+                        instance[property] = theme_shade(base, value, current)
+                    end
                 end
             end
         end
@@ -6944,10 +7590,11 @@ if Mobile ~= Enum.PreferredInput.Touch then
             ["Ultraviolet"]= { accent = rgb(190, 90, 255),  background = rgb(14, 10, 18),  element = rgb(26, 20, 34),  outline = rgb(44, 34, 56),  text = rgb(244, 238, 252), inactive = rgb(88, 72, 104) },
             ["Monochrome"] = { accent = rgb(225, 225, 225), background = rgb(12, 12, 12),  element = rgb(24, 24, 24),  outline = rgb(42, 42, 42),  text = rgb(245, 245, 245), inactive = rgb(96, 96, 96) },
             ["Ocean"]      = { accent = rgb(0, 200, 220),   background = rgb(8, 14, 18),   element = rgb(16, 26, 32),  outline = rgb(28, 44, 54),  text = rgb(234, 248, 252), inactive = rgb(64, 92, 104) },
-            ["Rose"]       = { accent = rgb(255, 105, 170), background = rgb(18, 12, 15),  element = rgb(30, 20, 26),  outline = rgb(50, 34, 42),  text = rgb(252, 240, 246), inactive = rgb(100, 74, 86) }
+            ["Rose"]       = { accent = rgb(255, 105, 170), background = rgb(18, 12, 15),  element = rgb(30, 20, 26),  outline = rgb(50, 34, 42),  text = rgb(252, 240, 246), inactive = rgb(100, 74, 86) },
+            ["Halloween"]  = { accent = rgb(255, 117, 24),  background = rgb(13, 9, 15),   element = rgb(26, 17, 28),  outline = rgb(52, 30, 48),  text = rgb(255, 236, 214), inactive = rgb(110, 78, 96) }
         }
 
-        THEME_PRESET_NAMES = { "Sleepy", "Midnight", "Crimson", "Emerald", "Amber", "Ultraviolet", "Monochrome", "Ocean", "Rose" }
+        THEME_PRESET_NAMES = { "Sleepy", "Midnight", "Crimson", "Emerald", "Amber", "Ultraviolet", "Monochrome", "Ocean", "Rose", "Halloween" }
 
         function library:apply_theme_preset(name)
             local preset = THEME_PRESETS[name]
@@ -6988,6 +7635,12 @@ if Mobile ~= Enum.PreferredInput.Touch then
             end
 
             themes.preset[theme] = color
+
+            if theme == "accent" and library.accent_refreshers then
+                for _, refresh in library.accent_refreshers do
+                    pcall(refresh)
+                end
+            end
         end
 
         function library:connection(signal, callback)
@@ -8061,7 +8714,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                         fit_retry = 0
 
-                        items[ "outline" ]:SetAttribute("FitScale", (layout.AbsoluteContentSize.Y + 50) / available)
+                        items[ "outline" ]:SetAttribute("FitScale", ((cfg.active_layout or layout).AbsoluteContentSize.Y + 50) / available)
 
                         local frames = {}
 
@@ -8112,6 +8765,8 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                     library.autosize_refresh = library.autosize_refresh or {}
                     library.autosize_refresh[#library.autosize_refresh + 1] = queue_fit
+
+                    cfg.queue_fit = queue_fit
 
                     queue_fit()
                 end
@@ -8278,6 +8933,234 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     library:tween(items[ "toggle_circle" ], {BackgroundColor3 = bool and rgb(255, 255, 255) or rgb(86, 86, 88), Position = bool and dim2(1, -14, 0, 2) or dim2(0, 2, 0, 2)}, Enum.EasingStyle.Quad)
                     library:tween(items[ "fade" ], {BackgroundTransparency = bool and 1 or 0.8}, Enum.EasingStyle.Quad)
                 end
+            end
+
+            local tab_names = properties.tabs or properties.Tabs
+
+            if type(tab_names) == "table" and #tab_names > 0 then
+                local pages, layouts, buttons, accents, proxies, paddings = {}, {}, {}, {}, {}, {}
+                local tab_pad, tab_gap, tab_fit_queued = 9, 4, false
+
+                items[ "section_title" ].Visible = false
+
+                items[ "tab_holder" ] = library:create( "Frame" , {
+                    Parent = items[ "button" ];
+                    Name = "\0";
+                    BackgroundTransparency = 1;
+                    Position = dim2(0, 36, 0, 0);
+                    Size = dim2(1, -44, 1, -1);
+                    BorderSizePixel = 0;
+                    ClipsDescendants = true;
+                    BackgroundColor3 = rgb(255, 255, 255)
+                });
+
+                library:create( "UIListLayout" , {
+                    Parent = items[ "tab_holder" ];
+                    FillDirection = Enum.FillDirection.Horizontal;
+                    VerticalAlignment = Enum.VerticalAlignment.Center;
+                    SortOrder = Enum.SortOrder.LayoutOrder;
+                    Padding = dim(0, tab_gap)
+                });
+
+                items[ "tab_fade" ] = library:create( "Frame" , {
+                    Parent = items[ "inline" ];
+                    Name = "\0";
+                    BackgroundTransparency = 1;
+                    Position = dim2(0, 0, 0, 28);
+                    Size = dim2(1, 0, 1, -28);
+                    BorderSizePixel = 0;
+                    ZIndex = 2;
+                    BackgroundColor3 = rgb(22, 22, 24)
+                });
+
+                library:create( "UICorner" , {
+                    Parent = items[ "tab_fade" ];
+                    CornerRadius = dim(0, 7)
+                });
+
+                local function fit_tabs()
+                    tab_fit_queued = false
+
+                    local holder = items[ "tab_holder" ]
+                    local unit = (holder.AbsolutePosition.X - items[ "button" ].AbsolutePosition.X) / 36
+                    local available = holder.AbsoluteSize.X
+
+                    if unit <= 0 or available <= 0 or #buttons == 0 then return end
+
+                    local text = 0
+
+                    for i = 1, #buttons do
+                        text = text + buttons[i].AbsoluteSize.X / unit - tab_pad * 2
+                    end
+
+                    local pad = math.clamp(math.floor((available / unit - text - tab_gap * (#buttons - 1)) / (#buttons * 2)), 3, 9)
+
+                    if pad == tab_pad then return end
+
+                    tab_pad = pad
+
+                    for i = 1, #paddings do
+                        paddings[i].PaddingLeft = dim(0, pad)
+                        paddings[i].PaddingRight = dim(0, pad)
+                    end
+                end
+
+                local function queue_tabs()
+                    if tab_fit_queued then return end
+
+                    tab_fit_queued = true
+
+                    task.defer(fit_tabs)
+                end
+
+                local function paint(index)
+                    for i = 1, #pages do
+                        local active = i == index
+
+                        library:tween(buttons[i], {TextColor3 = library:theme_text(active and 1 or 0.29)})
+                        library:tween(accents[i], {BackgroundTransparency = active and 0 or 1})
+                    end
+                end
+
+                function cfg.select_tab(index)
+                    if not pages[index] then return end
+
+                    local switching = cfg.active_tab ~= nil and cfg.active_tab ~= index
+
+                    cfg.active_tab = index
+                    cfg.active_layout = layouts[index]
+
+                    for i = 1, #pages do
+                        pages[i].Visible = i == index
+                    end
+
+                    items[ "scrolling" ].CanvasPosition = vec2(0, 0)
+
+                    paint(index)
+
+                    if switching then
+                        items[ "tab_fade" ].BackgroundTransparency = 0
+                        library:tween(items[ "tab_fade" ], {BackgroundTransparency = 1}, Enum.EasingStyle.Quad, 0.4)
+
+                        library:close_element()
+                    end
+
+                    if cfg.queue_fit then cfg.queue_fit() end
+
+                    library:relayout_sections()
+                end
+
+                for index, tab_name in ipairs(tab_names) do
+                    local page = items[ "elements" ]
+                    local layout
+
+                    if index == 1 then
+                        layout = child_of_class(page, "UIListLayout")
+                    else
+                        page = library:create( "Frame" , {
+                            BorderColor3 = rgb(0, 0, 0);
+                            Parent = items[ "scrolling" ];
+                            Name = "\0";
+                            BackgroundTransparency = 1;
+                            Position = dim2(0, 10, 0, 10);
+                            Size = dim2(1, -20, 0, 0);
+                            BorderSizePixel = 0;
+                            AutomaticSize = Enum.AutomaticSize.Y;
+                            Visible = false;
+                            BackgroundColor3 = rgb(255, 255, 255)
+                        });
+
+                        layout = library:create( "UIListLayout" , {
+                            Parent = page;
+                            Padding = dim(0, 6);
+                            SortOrder = Enum.SortOrder.LayoutOrder
+                        });
+
+                        if cfg.queue_fit then
+                            layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(cfg.queue_fit)
+                            page.ChildAdded:Connect(cfg.queue_fit)
+                        end
+                    end
+
+                    local button = library:create( "TextButton" , {
+                        FontFace = fonts.font;
+                        Text = tostring(tab_name);
+                        TextColor3 = library:theme_text(index == 1 and 1 or 0.29);
+                        AutoButtonColor = false;
+                        Parent = items[ "tab_holder" ];
+                        Name = "\0";
+                        LayoutOrder = index;
+                        AutomaticSize = Enum.AutomaticSize.X;
+                        Size = dim2(0, 0, 1, 0);
+                        BackgroundTransparency = 1;
+                        BorderSizePixel = 0;
+                        TextSize = 16;
+                        BackgroundColor3 = rgb(255, 255, 255)
+                    });
+
+                    paddings[index] = library:create( "UIPadding" , {
+                        Parent = button;
+                        PaddingLeft = dim(0, tab_pad);
+                        PaddingRight = dim(0, tab_pad)
+                    });
+
+                    button:GetPropertyChangedSignal("TextBounds"):Connect(queue_tabs)
+
+                    local accent = library:create( "Frame" , {
+                        Parent = button;
+                        Name = "\0";
+                        AnchorPoint = vec2(0, 1);
+                        Position = dim2(0, 0, 1, 0);
+                        Size = dim2(1, 0, 0, 2);
+                        BorderSizePixel = 0;
+                        BackgroundTransparency = index == 1 and 0 or 1;
+                        BackgroundColor3 = themes.preset.accent
+                    }); library:apply_theme(accent, "accent", "BackgroundColor3");
+
+                    library:create( "UICorner" , {
+                        Parent = accent;
+                        CornerRadius = dim(0, 999)
+                    });
+
+                    pages[index], layouts[index], buttons[index], accents[index] = page, layout, button, accent
+
+                    if library.on_tap then
+                        library:on_tap(button, function()
+                            cfg.select_tab(index)
+                        end)
+                    else
+                        button.MouseButton1Click:Connect(function()
+                            cfg.select_tab(index)
+                        end)
+                    end
+
+                    if index > 1 then
+                        proxies[#proxies + 1] = setmetatable({
+                            name = tostring(tab_name);
+                            parent_section = cfg;
+                            items = {
+                                elements = page;
+                                outline = items[ "outline" ];
+                                inline = items[ "inline" ];
+                                scrolling = items[ "scrolling" ];
+                                button = items[ "button" ]
+                            }
+                        }, library)
+                    end
+                end
+
+                items[ "tab_holder" ]:GetPropertyChangedSignal("AbsoluteSize"):Connect(queue_tabs)
+                queue_tabs()
+
+                cfg.tab_pages = pages
+                cfg.active_tab = 1
+                cfg.active_layout = layouts[1]
+
+                library:on_theme(function(key)
+                    if key == "text" then paint(cfg.active_tab or 1) end
+                end)
+
+                return setmetatable(cfg, library), table.unpack(proxies)
             end
 
             return setmetatable(cfg, library)
@@ -8509,12 +9392,27 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     end
             end;
 
+            library.accent_refreshers = library.accent_refreshers or {}
+
+            insert(library.accent_refreshers, function()
+                if not cfg.enabled or not items[ "toggle_button" ] or not items[ "toggle_button" ].Parent then return end
+
+                library:tween(items[ "toggle_button" ], {BackgroundColor3 = themes.preset.accent}, Enum.EasingStyle.Quad, 0.15)
+
+                if cfg.type == "checkbox" and items[ "outline" ] then
+                    library:tween(items[ "outline" ], {BackgroundColor3 = themes.preset.accent}, Enum.EasingStyle.Quad, 0.15)
+                elseif items[ "inline" ] then
+                    library:tween(items[ "inline" ], {BackgroundColor3 = themes.preset.accent}, Enum.EasingStyle.Quad, 0.15)
+                end
+            end)
+
             function cfg.set(bool)
                 cfg.enabled = bool
                 flags[cfg.flag] = bool
                 library.armed[cfg.flag] = bool
 
                 cfg.callback(bool)
+                keep_identity()
 
                 if cfg.bound_key then
                     cfg.bound_key.apply_owner()
@@ -8729,6 +9627,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 flags[cfg.flag] = cfg.value
                 cfg.callback(flags[cfg.flag])
+                keep_identity()
 
                 library:tween(items[ "fill" ], {Size = dim2((cfg.value - cfg.min) / (cfg.max - cfg.min), 0, 1, 0)}, Enum.EasingStyle.Linear, 0.05)
 
@@ -9200,6 +10099,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 flags[cfg.flag] = isTable and selected or selected[1]
 
                 cfg.callback(flags[cfg.flag])
+                keep_identity()
             end
 
             function cfg.refresh_options(list)
@@ -9753,6 +10653,14 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     });
             end;
 
+            for _, object in items[ "colorpicker_holder" ]:GetDescendants() do
+                if object:IsA("GuiObject") then
+                    object.ZIndex += 200
+                end
+            end
+
+            items[ "colorpicker_holder" ].ZIndex += 200
+
             function cfg.set_visible(bool)
                 items[ "colorpicker_fade" ].BackgroundTransparency = 0
                 items[ "colorpicker_holder" ].Parent = bool and library[ "items" ] or library[ "other" ]
@@ -9805,6 +10713,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 items[ "input" ].Text ..= library:round(1 - a, 0.01)
 
                 cfg.callback(Color, a)
+                keep_identity()
             end
 
             function cfg.update_color()
@@ -9993,6 +10902,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 items[ "input" ].Text = text
 
                 cfg.callback(text)
+                keep_identity()
             end
 
             items[ "input" ]:GetPropertyChangedSignal("Text"):Connect(LPH_NO_VIRTUALIZE(function()
@@ -10310,6 +11220,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     cfg.apply_owner()
                 else
                     cfg.callback(cfg.active)
+                    keep_identity()
                 end
 
                 local text = tostring(cfg.key) ~= "Enums" and (keys[cfg.key] or tostring(cfg.key):gsub("Enum.", "")) or nil
@@ -10329,6 +11240,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 if not toggle or not toggle.flag then
                     cfg.callback(cfg.active)
+                    keep_identity()
 
                     return
                 end
@@ -10340,6 +11252,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 if flags[toggle.flag] == live then
                     cfg.callback(live)
+                    keep_identity()
 
                     return
                 end
@@ -10347,6 +11260,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 flags[toggle.flag] = live
 
                 cfg.callback(live)
+                keep_identity()
 
                 local owner_callback = toggle.raw_callback or toggle.callback
 
@@ -10563,6 +11477,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 end
 
                 cfg.callback()
+                keep_identity()
             end
 
             library:on_tap(items[ "button" ], LPH_NO_VIRTUALIZE(function(input)
@@ -10773,6 +11688,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                             flags[cfg.flag] = option_data
                             cfg.callback(option_data)
+                            keep_identity()
 
                             library:tween(name, {TextColor3 = library:theme_text(1)})
 
@@ -10816,9 +11732,15 @@ if Mobile ~= Enum.PreferredInput.Touch then
         end
 
         function library:init_config(window)
+            local game_flags = {}
+
+            for key in library.config_flags do
+                game_flags[key] = true
+            end
+
             local text;
             window:seperator({name = "settings"})
-            local main = window:tab({name = "settings", tabs = {"main"}})
+            local main, menu_page = window:tab({name = "settings", tabs = {"configs", "menu"}})
 
             local column = main:column({})
             local section = column:section({name = "configs", size = 1, default = true, icon = "rbxassetid://139628202576511"})
@@ -10877,8 +11799,249 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 end
             })
 
+            library.notif_style = library.notif_style or {}
+
+            local notif_style = library.notif_style
+            local menu_left = menu_page:column({})
+            local menu_right = menu_page:column({})
+            local menu_section = menu_left:section({name = "menu", size = 1, default = false, icon = GetImage("Settings.png")})
+            local server_section = menu_left:section({name = "server", size = 1, default = false, icon = GetImage("Settings.png")})
+            local notif_section = menu_right:section({name = "notifications", size = 1, default = false, icon = GetImage("Settings.png")})
+            notif_section:dropdown({name = "position", flag = "notif_position", width = 100, items = {"Center", "Top Center", "Top Left", "Top Right", "Bottom Left", "Bottom Right", "Custom"}, multi = false, default = "Center", callback = function(state)
+                library.notif_position = state
+                library.notifications:refresh_notifs()
+            end})
+
+            local function notif_set(key, value)
+                notif_style[key] = value
+                notifications:refresh_notifs()
+            end
+
+            notif_section:toggle({type = "toggle", name = "clip descendants", flag = "notif_clip", default = true, callback = function(state)
+                notif_set("clip", state)
+            end})
+
+            notif_section:slider({name = "clip past distance", flag = "notif_clip_distance", min = 100, max = 1000, default = 200, suffix = "px", seperator = true, callback = function(value)
+                notif_set("clip_distance", value)
+            end})
+
+            local notif_force = notif_section:toggle({type = "toggle", name = "force color", flag = "notif_force_color", default = false, callback = function(state)
+                notif_style.force = state
+            end})
+
+            local notif_pickers = {}
+            local notif_defaults = {main = rgb(14, 14, 16), accent = themes.preset.accent, outline = rgb(23, 23, 29), font = rgb(255, 255, 255)}
+
+            for _, key in ipairs({"main", "accent", "outline", "font"}) do
+                notif_style[key] = notif_defaults[key]
+                notif_pickers[key] = notif_force:colorpicker({name = key, flag = "notif_color_" .. key, color = notif_defaults[key], no_alpha = true, callback = function(color)
+                    notif_style[key] = color
+                end})
+            end
+
+            notif_section:button({name = "copy colors", seperator = true, callback = function()
+                local copy = {main = themes.preset.background, accent = themes.preset.accent, outline = themes.preset.outline, font = themes.preset.text}
+
+                for key, picker in pairs(notif_pickers) do
+                    if copy[key] and type(picker) == "table" and picker.set then
+                        pcall(picker.set, copy[key], picker.alpha)
+                    end
+                end
+            end})
+
+            notif_section:slider({name = "position x", flag = "notif_position_x", min = 0, max = 100, default = 50, suffix = "%", half = true, callback = function(value)
+                notif_set("x", value)
+            end})
+
+            notif_section:slider({name = "position y", flag = "notif_position_y", min = 0, max = 100, default = 60, suffix = "%", half = true, callback = function(value)
+                notif_set("y", value)
+            end})
+
+            notif_section:slider({name = "transparency", flag = "notif_transparency", min = 0, max = 100, default = 0, suffix = "%", callback = function(value)
+                notif_style.transparency = value
+            end})
+
+            notif_section:dropdown({name = "alignment", flag = "notif_alignment", width = 100, items = {"Left", "Right", "Center"}, multi = false, default = "Left", callback = function(state)
+                notif_style.align = state
+            end})
+
+            notif_section:dropdown({name = "bar side", flag = "notif_bar_side", width = 100, items = {"Left", "Right", "Top", "Bottom"}, multi = false, default = "Bottom", callback = function(state)
+                notif_style.bar = state
+            end})
+
+            notif_section:dropdown({name = "sort order", flag = "notif_sort_order", width = 100, items = {"Text Length", "Default"}, multi = false, default = "Default", seperator = true, callback = function(state)
+                notif_set("sort", state)
+            end})
+
+            notif_section:button({name = "send notification", callback = function()
+                notifications:create_notification({name = "sleepy.gg", info = "this is a test notification"})
+            end})
+
+            local backdrop = {parts = {}, open = not getgenv().silent_load_active}
+
+            library.backdrop = backdrop
+
+            backdrop.blur = Instance.new("BlurEffect")
+            backdrop.blur.Name = "\0"
+            backdrop.blur.Enabled = false
+            backdrop.color = Instance.new("ColorCorrectionEffect")
+            backdrop.color.Name = "\0"
+            backdrop.color.Enabled = false
+
+            function backdrop.refresh()
+                local active = backdrop.open and flags.menu_bg_enabled and true or false
+                local camera = workspace.CurrentCamera
+
+                if camera and backdrop.blur.Parent ~= camera then
+                    backdrop.blur.Parent = camera
+                    backdrop.color.Parent = camera
+                end
+
+                backdrop.blur.Size = tonumber(flags.menu_bg_blur) or 15
+                backdrop.blur.Enabled = active and backdrop.blur.Size > 0
+                backdrop.color.Contrast = tonumber(flags.menu_bg_contrast) or 0
+                backdrop.color.Saturation = tonumber(flags.menu_bg_saturation) or 0
+                backdrop.color.Brightness = tonumber(flags.menu_bg_brightness) or 0
+                backdrop.color.Enabled = active
+
+                if not backdrop.gui then return end
+
+                local back_color = flags.menu_bg_color
+                local item_color = flags.menu_bg_item_color
+                local material = Enum.Material[flags.menu_bg_material or "Neon"]
+
+                backdrop.gui.Enabled = active
+                backdrop.outer.BackgroundColor3 = type(back_color) == "table" and back_color.Color or rgb(0, 0, 0)
+                backdrop.outer.BackgroundTransparency = flags.menu_bg_dim == false and 1 or (tonumber(flags.menu_bg_transparency) or 0.7)
+                backdrop.inner.ImageColor3 = type(item_color) == "table" and item_color.Color or rgb(255, 255, 255)
+
+                for _, part in pairs(backdrop.parts) do
+                    part.Transparency = tonumber(flags.menu_bg_item_transparency) or 0
+                    part.Reflectance = tonumber(flags.menu_bg_item_reflectance) or 0
+                    part.Material = material
+                end
+            end
+
+            local function back_refresh()
+                pcall(backdrop.refresh)
+            end
+
+            local backdrop_toggle = window.toggle_menu
+
+            if type(backdrop_toggle) == "function" then
+                window.toggle_menu = function(bool, ...)
+                    backdrop.open = bool and true or false
+
+                    back_refresh()
+
+                    return backdrop_toggle(bool, ...)
+                end
+            end
+
+            task.spawn(function()
+                local ok, gui = pcall(function()
+                    return game:GetObjects("rbxassetid://93615626116769")[1]
+                end)
+
+                if not ok or typeof(gui) ~= "Instance" then
+                    ok, gui = pcall(function()
+                        return cloneref(game:GetService("InsertService")):LoadLocalAsset("rbxassetid://93615626116769")
+                    end)
+                end
+
+                if not ok or typeof(gui) ~= "Instance" then
+                    warn("[Sleepy.gg] background items failed to load: " .. tostring(gui))
+
+                    return
+                end
+
+                if not gui:IsA("ScreenGui") then
+                    gui = gui:FindFirstChildWhichIsA("ScreenGui", true) or gui
+                end
+
+                local outer = gui:FindFirstChild("ViewportFrame") or gui:FindFirstChildWhichIsA("ViewportFrame", true)
+                local inner = outer and (outer:FindFirstChild("ViewportFrame") or outer:FindFirstChildWhichIsA("ViewportFrame", true))
+
+                if not gui:IsA("ScreenGui") or not inner then
+                    warn("[Sleepy.gg] background items asset has an unexpected layout: " .. gui.ClassName .. " / " .. tostring(outer and outer.ClassName) .. " / " .. tostring(inner and inner.ClassName))
+
+                    gui:Destroy()
+
+                    return
+                end
+
+                for _, child in ipairs(inner:GetChildren()) do
+                    if child.Name == "Overlay V2" then
+                        child:Destroy()
+                    elseif child:IsA("BasePart") then
+                        child.Position = Vector3.new(0, 1000, 0)
+                        backdrop.parts[child.Name] = child
+                    end
+                end
+
+                if next(backdrop.parts) == nil then
+                    local found = {}
+
+                    for _, child in ipairs(inner:GetChildren()) do
+                        found[#found + 1] = child.Name .. ":" .. child.ClassName
+                    end
+
+                    warn("[Sleepy.gg] background items asset has no usable parts: " .. table.concat(found, ", "))
+                end
+
+                gui.Name = "\0"
+                gui.Enabled = false
+                gui.DisplayOrder = (library[ "items" ].DisplayOrder or 0) - 1
+                gui.Parent = library[ "items" ].Parent
+
+                backdrop.gui, backdrop.outer, backdrop.inner = gui, outer, inner
+
+                back_refresh()
+            end)
+
+            run_service.RenderStepped:Connect(function(dt)
+                if not (backdrop.gui and backdrop.gui.Enabled) then return end
+
+                local wanted = backdrop.parts[flags.menu_bg_item or ""]
+
+                if wanted ~= backdrop.current then
+                    if backdrop.current then backdrop.current.Position = Vector3.new(0, 1000, 0) end
+                    if wanted then wanted.Position = Vector3.new(0, 10, 10) end
+
+                    backdrop.current = wanted
+                end
+
+                if wanted then
+                    wanted.CFrame = wanted.CFrame * CFrame.Angles(0, (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60, 0)
+                end
+            end)
+
+            local back_section = menu_right:section({name = "background", size = 1, default = false, icon = GetImage("Settings.png")})
+
+            local back_toggle = back_section:toggle({type = "toggle", name = "enabled", flag = "menu_bg_enabled", default = false, callback = back_refresh})
+
+            back_toggle:colorpicker({name = "item color", flag = "menu_bg_item_color", color = rgb(255, 255, 255), no_alpha = true, callback = back_refresh})
+
+            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sword"})
+
+            back_section:slider({name = "transparency", flag = "menu_bg_item_transparency", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
+            back_section:slider({name = "reflectance", flag = "menu_bg_item_reflectance", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
+            back_section:slider({name = "speed", flag = "menu_bg_speed", min = 0.1, max = 1, decimal = 0.01, default = 0.15})
+
+            back_section:dropdown({name = "material", flag = "menu_bg_material", width = 100, items = {"ForceField", "Neon", "Plastic", "SmoothPlastic", "Wood", "WoodPlanks", "Marble", "Slate", "Concrete", "Granite", "Brick", "Pebble", "Cobblestone", "Rock", "Sandstone", "Basalt", "CrackedLava", "Limestone", "Pavement", "CorrodedMetal", "DiamondPlate", "Foil", "Metal", "Grass", "LeafyGrass", "Sand", "Fabric", "Snow", "Mud", "Ground", "Asphalt", "Salt", "Ice", "Glacier", "Glass"}, multi = false, default = "Neon", seperator = true, callback = back_refresh})
+
+            local back_dim = back_section:toggle({type = "toggle", name = "background color", flag = "menu_bg_dim", default = true, callback = back_refresh})
+
+            back_dim:colorpicker({name = "background color", flag = "menu_bg_color", color = rgb(0, 0, 0), no_alpha = true, callback = back_refresh})
+
+            back_section:slider({name = "transparency", flag = "menu_bg_transparency", min = 0, max = 1, decimal = 0.01, default = 0.7, half = true, callback = back_refresh})
+            back_section:slider({name = "blur", flag = "menu_bg_blur", min = 0, max = 50, default = 15, half = true, callback = back_refresh})
+            back_section:slider({name = "contrast", flag = "menu_bg_contrast", min = -10, max = 10, decimal = 0.1, default = 0, half = true, callback = back_refresh})
+            back_section:slider({name = "saturation", flag = "menu_bg_saturation", min = -10, max = 10, decimal = 0.1, default = 0, half = true, callback = back_refresh})
+            back_section:slider({name = "brightness", flag = "menu_bg_brightness", min = -1, max = 1, decimal = 0.1, default = 0, callback = back_refresh})
+
             local column = main:column({})
-            local section = column:section({name = "settings", side = "right", size = 1, default = true, icon = GetImage("Settings.png")})
+            local section = column:section({name = "config", side = "right", size = 1, default = true, icon = GetImage("Settings.png")})
             text = section:textbox({name = "config name:", flag = "config_name_text", tall = true,})
             section:button({name = "save", callback = function()
                 pcall(function()
@@ -11077,30 +12240,25 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 write_startup_data("silent_load", state)
             end})
 
-            section:textbox({name = "menu size %", flag = "menu_size", default = "50", placeholder = "50", callback = function(text)
+            menu_section:textbox({name = "menu size %", flag = "menu_size", default = "50", placeholder = "50", callback = function(text)
                 local value = tonumber(text)
                 if not value or not library.ui_scale then return end
                 library.ui_scale.Scale = math.clamp(value, 25, 100) / 100
             end})
 
-            section:dropdown({name = "notifications", flag = "notif_position", width = 100, items = {"Center", "Top Center", "Top Left", "Top Right", "Bottom Left", "Bottom Right"}, multi = false, default = "Center", callback = function(state)
-                library.notif_position = state
-                library.notifications:refresh_notifs()
-            end})
-
             library.theme_pickers = library.theme_pickers or {}
 
-            library.theme_pickers.accent = section:colorpicker({name = "menu accent", flag = "menu_accent_color", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
-            library.theme_pickers.background = section:colorpicker({name = "background", flag = "menu_background_color", callback = function(color) library:paint_theme("background", color) end, color = themes.preset.background})
-            library.theme_pickers.element = section:colorpicker({name = "elements", flag = "menu_element_color", callback = function(color) library:paint_theme("element", color) end, color = themes.preset.element})
-            library.theme_pickers.outline = section:colorpicker({name = "outlines", flag = "menu_outline_color", callback = function(color) library:paint_theme("outline", color) end, color = themes.preset.outline})
-            library.theme_pickers.text = section:colorpicker({name = "text", flag = "menu_text_color", callback = function(color) library:paint_theme("text", color) end, color = themes.preset.text})
-            library.theme_pickers.inactive = section:colorpicker({name = "inactive", flag = "menu_inactive_color", callback = function(color) library:paint_theme("inactive", color) end, color = themes.preset.inactive})
+            library.theme_pickers.accent = menu_section:colorpicker({name = "menu accent", flag = "menu_accent_color", callback = function(color, alpha) library:update_theme("accent", color) end, color = themes.preset.accent})
+            library.theme_pickers.background = menu_section:colorpicker({name = "background", flag = "menu_background_color", callback = function(color) library:paint_theme("background", color) end, color = themes.preset.background})
+            library.theme_pickers.element = menu_section:colorpicker({name = "elements", flag = "menu_element_color", callback = function(color) library:paint_theme("element", color) end, color = themes.preset.element})
+            library.theme_pickers.outline = menu_section:colorpicker({name = "outlines", flag = "menu_outline_color", callback = function(color) library:paint_theme("outline", color) end, color = themes.preset.outline})
+            library.theme_pickers.text = menu_section:colorpicker({name = "text", flag = "menu_text_color", callback = function(color) library:paint_theme("text", color) end, color = themes.preset.text})
+            library.theme_pickers.inactive = menu_section:colorpicker({name = "inactive", flag = "menu_inactive_color", callback = function(color) library:paint_theme("inactive", color) end, color = themes.preset.inactive})
 
-            section:dropdown({name = "theme preset", flag = "menu_theme_preset", width = 100, items = THEME_PRESET_NAMES, multi = false, default = "Sleepy", seperator = true, callback = function(state)
+            menu_section:dropdown({name = "theme preset", flag = "menu_theme_preset", width = 100, items = THEME_PRESET_NAMES, multi = false, default = "Sleepy", seperator = true, callback = function(state)
                 library:apply_theme_preset(state)
             end})
-            section:toggle({
+            menu_section:toggle({
                 type = "toggle",
                 name = "card outlines",
                 flag = "menu_edge_enabled",
@@ -11110,7 +12268,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 end
             })
 
-            section:slider({
+            menu_section:slider({
                 name = "outline opacity",
                 flag = "menu_edge_opacity",
                 min = 0,
@@ -11125,11 +12283,11 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             library:refresh_edges()
 
-            library.menu_bind = section:keybind({name = "menu bind", mode = "Toggle", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
+            library.menu_bind = menu_section:keybind({name = "menu bind", mode = "Toggle", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
 
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
 
-            section:button({name = "join lowest server", callback = function()
+            server_section:button({name = "join lowest server", callback = function()
                 local Servers = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", tostring(game.PlaceId))
 
                 local ListServers = function(cursor)
@@ -11155,7 +12313,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(game.PlaceId, Server.id)
             end})
 
-            section:button({name = "server hop", callback = function()
+            server_section:button({name = "server hop", callback = function()
                 local Servers = {}
                 local Request = _request({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", tostring(game.PlaceId))})
                 local Body = cloneref(game:GetService("HttpService")):JSONDecode(Request.Body)
@@ -11174,14 +12332,14 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 )
             end})
 
-            section:button({name = "rejoin", callback = function()
+            server_section:button({name = "rejoin", callback = function()
                 cloneref(game:GetService("TeleportService")):TeleportToPlaceInstance(
                     game.PlaceId,
                     game.JobId
                 )
             end})
 
-            section:button({name = "panic", callback = function()
+            server_section:button({name = "panic", callback = function()
                 if not library.default_config then return end
 
                 notifications:create_notification({
@@ -11192,10 +12350,26 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 library:load_config(library.default_config)
             end})
 
+            library.menu_flags = {}
+
+            for key in library.config_flags do
+                if not game_flags[key] then
+                    library.menu_flags[key] = true
+                end
+            end
+
             library.setup_complete = true
         end
 
         function notifications:anchor_for(mode)
+            if mode == "Custom" then
+                local style = library.notif_style or {}
+                local x = math.clamp((tonumber(style.x) or 50) / 100, 0, 1)
+                local y = math.clamp((tonumber(style.y) or 60) / 100, 0, 1)
+
+                return vec2(x, y), 0, 0, y > 0.5 and -1 or 1
+            end
+
             if mode == "Top Left" then return vec2(0, 0), 20, 20, 1 end
             if mode == "Top Right" then return vec2(1, 0), -20, 20, 1 end
             if mode == "Bottom Left" then return vec2(0, 1), 20, -20, -1 end
@@ -11207,13 +12381,27 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
         function notifications:refresh_notifs(instant)
             local mode = library.notif_position or "Center"
+            local style = library.notif_style or {}
             local anchor, pad_x, pad_y, direction = notifications:anchor_for(mode)
             local offset = pad_y
+            local ordered = {}
 
-            for _, v in notifications.notifs do
+            for index, v in notifications.notifs do
+                ordered[#ordered + 1] = {v, index}
+            end
+
+            if style.sort == "Text Length" then
+                table.sort(ordered, function(a, b) return a[1].AbsoluteSize.X > b[1].AbsoluteSize.X end)
+            else
+                table.sort(ordered, function(a, b) return a[2] < b[2] end)
+            end
+
+            for _, entry in ordered do
+                local v = entry[1]
                 local goal = dim2(anchor.X, pad_x, anchor.Y, offset)
 
                 v.AnchorPoint = anchor
+                v.Visible = not (style.clip ~= false and math.abs(offset - pad_y) > (tonumber(style.clip_distance) or 200))
 
                 if v == instant then
                     v.Position = goal
@@ -11228,7 +12416,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
         end
 
         function notifications:fade(path, is_fading, instant)
-            local fading = is_fading and 1 or 0
+            local fading = is_fading and 1 or math.clamp((tonumber((library.notif_style or {}).transparency) or 0) / 100, 0, 1)
 
             if instant then
                 path.BackgroundTransparency = fading
@@ -11255,7 +12443,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     else
                         library:tween(instance, {TextTransparency = fading})
                     end
-                elseif instance:IsA("Frame") then
+                elseif instance:IsA("Frame") and not instance:GetAttribute("fade_skip") then
                     local target = is_fading and 1 or 0.6
 
                     if instant then
@@ -11296,7 +12484,24 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     Scale = scale;
                 });
 
-                library:create( "UIStroke" , {
+                items[ "content" ] = library:create( "Frame" , {
+                    Parent = items[ "notification" ];
+                    Name = "\0";
+                    BackgroundTransparency = 1;
+                    BorderSizePixel = 0;
+                    AutomaticSize = Enum.AutomaticSize.XY;
+                    Size = dim2(0, 0, 0, 0)
+                });
+
+                items[ "content" ]:SetAttribute("fade_skip", true)
+
+                library:create( "UIListLayout" , {
+                    Parent = items[ "content" ];
+                    SortOrder = Enum.SortOrder.LayoutOrder;
+                    HorizontalAlignment = Enum.HorizontalAlignment[(library.notif_style or {}).align or "Left"] or Enum.HorizontalAlignment.Left
+                });
+
+                items[ "stroke" ] = library:create( "UIStroke" , {
                     Color = rgb(23, 23, 29);
                     Parent = items[ "notification" ];
                     Transparency = 1;
@@ -11308,7 +12513,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     TextColor3 = rgb(255, 255, 255);
                     BorderColor3 = rgb(0, 0, 0);
                     Text = cfg.name;
-                    Parent = items[ "notification" ];
+                    Parent = items[ "content" ];
                     Name = "\0";
                     BackgroundTransparency = 1;
                     Position = dim2(0, 0, 0, 0);
@@ -11329,7 +12534,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     TextColor3 = rgb(145, 145, 145);
                     BorderColor3 = rgb(0, 0, 0);
                     Text = cfg.info;
-                    Parent = items[ "notification" ];
+                    Parent = items[ "content" ];
                     Name = "\0";
                     Position = dim2(0, 0, 0, 15);
                     BorderSizePixel = 0;
@@ -11372,6 +12577,34 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 });
             end
 
+            local style = library.notif_style or {}
+            local align = Enum.TextXAlignment[style.align or "Left"] or Enum.TextXAlignment.Left
+            local bar_goal = dim2(1, 0, 0, 2)
+
+            items[ "title" ].LayoutOrder = 1
+            items[ "info" ].LayoutOrder = 2
+            items[ "title" ].TextXAlignment = align
+            items[ "info" ].TextXAlignment = align
+
+            if style.force then
+                items[ "notification" ].BackgroundColor3 = style.main or items[ "notification" ].BackgroundColor3
+                items[ "stroke" ].Color = style.outline or items[ "stroke" ].Color
+                items[ "title" ].TextColor3 = style.font or items[ "title" ].TextColor3
+                items[ "bar" ].BackgroundColor3 = style.accent or items[ "bar" ].BackgroundColor3
+            end
+
+            if style.bar == "Top" then
+                items[ "bar" ].AnchorPoint = vec2(0, 0)
+                items[ "bar" ].Position = dim2(0, 0, 0, 0)
+            elseif style.bar == "Left" or style.bar == "Right" then
+                local right = style.bar == "Right"
+
+                items[ "bar" ].AnchorPoint = vec2(right and 1 or 0, 1)
+                items[ "bar" ].Position = dim2(right and 1 or 0, right and 12 or -12, 1, 0)
+                items[ "bar" ].Size = dim2(0, 2, 0, 0)
+                bar_goal = dim2(0, 2, 1, 0)
+            end
+
             local index = #notifications.notifs + 1
             notifications.notifs[index] = items[ "notification" ]
 
@@ -11380,7 +12613,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
             task.defer(function()
                 notifications:refresh_notifs(items[ "notification" ])
             end)
-            library:tween(items[ "bar" ], {Size = dim2(1, 0, 0, 2)}, Enum.EasingStyle.Quad, cfg.lifetime)
+            library:tween(items[ "bar" ], {Size = bar_goal}, Enum.EasingStyle.Quad, cfg.lifetime)
 
             task.spawn(function()
                 task.wait(cfg.lifetime)
