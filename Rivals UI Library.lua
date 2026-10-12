@@ -6322,8 +6322,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 local paid = getgenv().Build == "Paid"
                 local loader = paid
-                    and "d39ae8d7a3f0a3b6a4a54d9e53f97c23"
-                    or "e35a387f84dfdf79459747b73c68a7bf"
+                    and "4d0c67e660690a3ca0ab38048bc35041"
 
                 if paid and not script_key then return end
 
@@ -12321,8 +12320,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 local paid = getgenv().Build == "Paid"
                 local loader = paid
-                    and "d39ae8d7a3f0a3b6a4a54d9e53f97c23"
-                    or "e35a387f84dfdf79459747b73c68a7bf"
+                    and "4d0c67e660690a3ca0ab38048bc35041"
 
                 if paid and not script_key then return end
 
