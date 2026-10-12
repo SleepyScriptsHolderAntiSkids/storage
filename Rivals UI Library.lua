@@ -367,7 +367,8 @@ getgenv().CONFIG_EXCLUDED = {
     antiaim_preset = true,
     hit_effect_preset = true,
     menu_theme_preset = true,
-    community_config_name = true
+    community_config_name = true,
+    menu_bind = true
 }
 
 getgenv().notifications_allowed = function()
@@ -414,6 +415,68 @@ getgenv().write_startup_data = LPH_JIT_MAX(function(key, value)
 
     pcall(writefile, DATA_PATH, data_http:JSONEncode(data))
 end)
+
+getgenv().MENU_BIND_PATH = library.directory .. "/data/menu_bind.json"
+
+getgenv().menu_bind_key = function(text)
+    if text == "NONE" then return "NONE" end
+
+    if type(text) ~= "string" or text:sub(1, 5) ~= "Enum." then return nil end
+
+    local ok, value = pcall(library.convert_enum, library, text)
+
+    return ok and typeof(value) == "EnumItem" and value or nil
+end
+
+getgenv().persist_menu_bind = function(bind)
+    if type(bind) ~= "table" or type(bind.set) ~= "function" then return end
+
+    local raw_set = bind.set
+
+    local function snapshot()
+        return tostring(bind.key or "NONE"), tostring(bind.mode or "Toggle")
+    end
+
+    local exists_ok, exists = pcall(isfile, MENU_BIND_PATH)
+
+    if exists_ok and exists then
+        local read_ok, raw = pcall(readfile, MENU_BIND_PATH)
+        local decode_ok, decoded = false, nil
+
+        if read_ok and type(raw) == "string" and raw ~= "" then
+            decode_ok, decoded = pcall(data_http.JSONDecode, data_http, raw)
+        end
+
+        if decode_ok and type(decoded) == "table" then
+            local key = menu_bind_key(decoded.key)
+            local mode = decoded.mode
+
+            if mode ~= "Toggle" and mode ~= "Hold" and mode ~= "Always" then
+                mode = bind.mode
+            end
+
+            local current_key, current_mode = snapshot()
+
+            if key ~= nil and (tostring(key) ~= current_key or mode ~= current_mode) then
+                pcall(raw_set, {key = key, mode = mode, active = bind.active})
+            end
+        end
+    end
+
+    local last_key, last_mode = snapshot()
+
+    bind.set = function(input)
+        raw_set(input)
+
+        local key, mode = snapshot()
+
+        if key == last_key and mode == last_mode then return end
+
+        last_key, last_mode = key, mode
+
+        pcall(writefile, MENU_BIND_PATH, data_http:JSONEncode({key = key, mode = mode}))
+    end
+end
 
 getgenv().silent_load_active = read_startup_data().silent_load
 getgenv().silent_load_block = getgenv().silent_load_active
@@ -6385,7 +6448,9 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             library:refresh_edges()
 
-            library.menu_bind = menu_section:keybind({name = "menu bind", key = Enum.KeyCode.Insert, mode = "Toggle", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
+            library.menu_bind = menu_section:keybind({name = "menu bind", flag = "menu_bind", key = Enum.KeyCode.Insert, mode = "Toggle", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
+
+            persist_menu_bind(library.menu_bind)
 
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
 
@@ -12383,7 +12448,9 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             library:refresh_edges()
 
-            library.menu_bind = menu_section:keybind({name = "menu bind", mode = "Toggle", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
+            library.menu_bind = menu_section:keybind({name = "menu bind", flag = "menu_bind", mode = "Toggle", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
+
+            persist_menu_bind(library.menu_bind)
 
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
 
