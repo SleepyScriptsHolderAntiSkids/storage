@@ -144,7 +144,8 @@ getgenv().library = {
         "/assets",
         "/autoload",
         "/unlockall",
-        "/data"
+        "/data",
+        "/Songs"
     },
     flags = {},
     config_flags = {},
