@@ -24,6 +24,10 @@ local SONGS_FOLDER = ROOT .. "/Songs"
 local DATA_FOLDER = ROOT .. "/data"
 local DATA_FILE = DATA_FOLDER .. "/music_player.json"
 local FOLDER_HINT = "workspace / " .. ROOT .. " / Songs"
+local COMMUNITY_API = type(options.community_api) == "string" and options.community_api or "https://api.github.com/repos/SleepyScriptsHolderAntiSkids/storage/contents/musics"
+local COMMUNITY_FOLDER = SONGS_FOLDER .. "/Community"
+local COMMUNITY_FILE = DATA_FOLDER .. "/community_songs.json"
+local COMMUNITY_LABEL = "Load Community Songs"
 local EXTENSIONS = {mp3 = true, ogg = true, wav = true, flac = true}
 local SCAN_DEPTH = 2
 local SCAN_INTERVAL = 2
@@ -116,6 +120,108 @@ local function asset_of(path)
     return ok and type(result) == "string" and result ~= "" and result or nil
 end
 
+local TRANSLIT = {
+    ["а"] = "a", ["б"] = "b", ["в"] = "v", ["г"] = "g", ["д"] = "d", ["е"] = "e", ["ё"] = "yo", ["ж"] = "zh", ["з"] = "z", ["и"] = "i", ["й"] = "y",
+    ["к"] = "k", ["л"] = "l", ["м"] = "m", ["н"] = "n", ["о"] = "o", ["п"] = "p", ["р"] = "r", ["с"] = "s", ["т"] = "t", ["у"] = "u", ["ф"] = "f",
+    ["х"] = "kh", ["ц"] = "ts", ["ч"] = "ch", ["ш"] = "sh", ["щ"] = "shch", ["ъ"] = "", ["ы"] = "y", ["ь"] = "", ["э"] = "e", ["ю"] = "yu", ["я"] = "ya",
+    ["і"] = "i", ["ї"] = "yi", ["є"] = "ye", ["ґ"] = "g",
+}
+
+local function ascii_name(text)
+    local ok, result = pcall(function()
+        local out = {}
+
+        for _, code in utf8.codes(text) do
+            if code < 128 then
+                out[#out + 1] = string.char(code)
+            else
+                local lower, upper = code, false
+
+                if code >= 0x400 and code <= 0x40F then
+                    lower, upper = code + 0x50, true
+                elseif code >= 0x410 and code <= 0x42F then
+                    lower, upper = code + 0x20, true
+                elseif code == 0x490 then
+                    lower, upper = 0x491, true
+                end
+
+                local latin = TRANSLIT[utf8.char(lower)]
+
+                if latin and latin ~= "" then
+                    out[#out + 1] = upper and (latin:sub(1, 1):upper() .. latin:sub(2)) or latin
+                end
+            end
+        end
+
+        return table.concat(out)
+    end)
+
+    if not ok or type(result) ~= "string" then
+        result = (text:gsub(".", function(char)
+            return char:byte() < 128 and char or ""
+        end))
+    end
+
+    result = result:gsub("[^A-Za-z0-9 %-_%.%(%)%[%]&',!]", ""):gsub(" +", " "):gsub("^ +", ""):gsub("[ %.]+$", "")
+
+    if not result:find("[A-Za-z0-9]") then
+        return ""
+    end
+
+    return result
+end
+
+local function community_file_name(remote, used)
+    local base, extension = remote:match("^(.*)%.([%w]+)$")
+
+    base = ascii_name(base or remote)
+    extension = (extension or "mp3"):lower()
+
+    if base == "" then
+        base = "song"
+    end
+
+    local name = base .. "." .. extension
+    local index = 2
+
+    while used[name:lower()] do
+        name = string.format("%s (%d).%s", base, index, extension)
+        index += 1
+    end
+
+    used[name:lower()] = true
+
+    return name
+end
+
+local function url_encode(url)
+    return (url:gsub("[^A-Za-z0-9%-%._~:/%%%?=&]", function(char)
+        return string.format("%%%02X", char:byte())
+    end))
+end
+
+local function http_get(url)
+    local ok, body = pcall(function()
+        return game:HttpGet(url)
+    end)
+
+    if ok and type(body) == "string" then
+        return body
+    end
+
+    local requester = (type(request) == "function" and request) or (type(http_request) == "function" and http_request) or (type(syn) == "table" and type(syn.request) == "function" and syn.request) or nil
+
+    if requester then
+        local sent, response = pcall(requester, {Url = url, Method = "GET"})
+
+        if sent and type(response) == "table" and type(response.Body) == "string" and (tonumber(response.StatusCode) or 200) < 400 then
+            return response.Body
+        end
+    end
+
+    return nil
+end
+
 ensure_folder(ROOT)
 ensure_folder(SONGS_FOLDER)
 ensure_folder(DATA_FOLDER)
@@ -174,6 +280,89 @@ local function save_state()
             write_state()
         end
     end)
+end
+
+local community = {busy = false, files = {}, reset_token = 0}
+
+do
+    local raw = read_file(COMMUNITY_FILE)
+    local ok, decoded = false, nil
+
+    if raw and raw ~= "" then
+        ok, decoded = pcall(http_service.JSONDecode, http_service, raw)
+    end
+
+    if ok and type(decoded) == "table" and type(decoded.files) == "table" then
+        for file, info in decoded.files do
+            if type(file) == "string" and type(info) == "table" and type(info.remote) == "string" then
+                community.files[file] = {remote = info.remote, sha = type(info.sha) == "string" and info.sha or "", size = tonumber(info.size)}
+            end
+        end
+    end
+end
+
+local function save_community()
+    local ok, encoded = pcall(http_service.JSONEncode, http_service, {files = community.files})
+
+    if ok then
+        write_file(COMMUNITY_FILE, encoded)
+    end
+end
+
+local song_cache = {folder = DATA_FOLDER .. "/song_cache", unsafe = "[#%%%?" .. string.char(128) .. "-" .. string.char(255) .. "]", slash = string.char(92)}
+
+function song_cache.name(path)
+    local hash = 5381
+
+    for index = 1, #path do
+        hash = (hash * 33 + path:byte(index)) % 4294967296
+    end
+
+    return string.format("s_%08x.%s", hash, (path:match("%.([%w]+)$") or "mp3"):lower())
+end
+
+function song_cache.resolve(path)
+    if not path:find(song_cache.unsafe) then
+        return is_file(path) and asset_of(path) or nil, false
+    end
+
+    local ok, data = try(readfile, path)
+
+    if not ok or type(data) ~= "string" or #data == 0 then
+        return nil, true
+    end
+
+    ensure_folder(song_cache.folder)
+
+    local copy = song_cache.folder .. "/" .. song_cache.name(path)
+
+    write_file(copy, data)
+
+    return is_file(copy) and asset_of(copy) or nil, false
+end
+
+function song_cache.prune(records)
+    local ok, entries = try(listfiles, song_cache.folder)
+
+    if not ok or type(entries) ~= "table" then return end
+
+    local wanted = {}
+
+    for _, record in records do
+        if record.path:find(song_cache.unsafe) then
+            wanted[song_cache.name(record.path)] = true
+        end
+    end
+
+    for _, entry in entries do
+        if type(entry) == "string" then
+            local name = entry:gsub(song_cache.slash, "/"):match("([^/]+)$")
+
+            if name and not wanted[name] then
+                try(delfile, entry)
+            end
+        end
+    end
 end
 
 local theme = {}
@@ -497,7 +686,18 @@ end
 ui.empty_title = empty_line("no songs yet", "text", 14, 1)
 ui.empty_text = empty_line("drag .mp3 files into the Songs folder", "muted", 13, 2)
 ui.empty_path = empty_line(FOLDER_HINT, "accent", 13, 3)
-ui.empty_foot = empty_line("new songs show up here by themselves", "inactive", 12, 4)
+ui.empty_foot = empty_line("or press " .. COMMUNITY_LABEL .. " below", "inactive", 12, 4)
+
+ui.community_button = new("TextButton", {AutoButtonColor = false, BackgroundColor3 = "element", BorderSizePixel = 0, ClipsDescendants = true, Size = UDim2.new(1, 0, 0, BUTTON_HEIGHT), Text = "", LayoutOrder = next_order(), Parent = ui.window})
+
+corner(ui.community_button, 5)
+outline(ui.community_button)
+
+ui.community_fill = new("Frame", {BackgroundColor3 = "accent", BackgroundTransparency = 0.7, BorderSizePixel = 0, Size = UDim2.fromScale(0, 1), Parent = ui.community_button})
+
+corner(ui.community_fill, 5)
+
+ui.community_text = new("TextLabel", {BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), FontFace = FONT_LIGHT, Text = COMMUNITY_LABEL, TextColor3 = "text", TextSize = 13, TextTruncate = Enum.TextTruncate.AtEnd, ZIndex = 2, Parent = ui.community_button})
 
 ui.hint = new("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, FontFace = FONT_LIGHT, RichText = true, Text = "", TextColor3 = "muted", TextSize = 12, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Left, LayoutOrder = next_order(), Parent = ui.window})
 
@@ -729,7 +929,7 @@ style_row = function(record)
     end
 
     if record.broken then
-        row.info.Text = "broken"
+        row.info.Text = record.unreadable and "rename" or "broken"
         row.info.TextColor3 = BROKEN_COLOR
     else
         local length = record.length or state.lengths[record.path]
@@ -1014,10 +1214,10 @@ play_song = function(record, direction, attempts)
     reveal(record)
 
     task.spawn(function()
-        local asset = record.asset
+        local asset, unreadable = record.asset, false
 
-        if not asset and is_file(record.path) then
-            asset = asset_of(record.path)
+        if not asset then
+            asset, unreadable = song_cache.resolve(record.path)
         end
 
         if destroyed or token ~= load_token then return end
@@ -1051,23 +1251,27 @@ play_song = function(record, direction, attempts)
         if not ready or sound.TimeLength <= 0 then
             loading = false
             record.broken = true
+            record.unreadable = unreadable
             record.asset = nil
 
             style_row(record)
 
+            local reason = unreadable and ("can't read " .. record.name .. ", rename it with english letters") or ("can't play " .. record.name .. ", skipping")
+
             if attempts + 1 < #queue then
-                set_note("can't play " .. record.name .. ", skipping", true, 3)
+                set_note(reason, true, unreadable and 5 or 3)
                 advance(direction, false, attempts + 1)
             else
                 playing = false
 
-                set_note("couldn't load any of your songs", true, 4)
+                set_note(unreadable and reason or "couldn't load any of your songs", true, 5)
             end
 
             return
         end
 
         record.broken = false
+        record.unreadable = nil
         record.length = sound.TimeLength
         state.lengths[record.path] = math.floor(sound.TimeLength * 10 + 0.5) / 10
         loading = false
@@ -1351,12 +1555,19 @@ local function rebuild(found)
                 local clean = path:gsub("\\", "/")
                 local name = clean:match("([^/]+)%.[%w]+$") or clean
                 local folder = clean:match("([^/]+)/[^/]+$")
+                local file_name = name
 
                 if folder and folder:lower() == "songs" then
                     folder = nil
                 end
 
-                record = {path = path, name = name, folder = folder, key = (name .. " " .. (folder or "")):lower()}
+                local info = folder and folder:lower() == "community" and community.files[clean:match("([^/]+)$") or ""]
+
+                if info then
+                    name = (info.remote:gsub("%.[%w]+$", ""))
+                end
+
+                record = {path = path, name = name, folder = folder, key = (name .. " " .. file_name .. " " .. (folder or "")):lower()}
             end
 
             lookup[path] = record
@@ -1405,6 +1616,7 @@ local function rebuild(found)
         style_row(current)
     end
 
+    song_cache.prune(songs)
     build_queue()
     apply_filter()
     refresh_now()
@@ -1437,6 +1649,161 @@ local function scan()
     signature = next_signature
 
     rebuild(found)
+end
+
+local function community_status(text, fraction)
+    ui.community_text.Text = text
+    ui.community_fill.Size = UDim2.fromScale(math.clamp(fraction or 0, 0, 1), 1)
+end
+
+local function community_finish(text, is_error)
+    community.busy = false
+    community.reset_token += 1
+
+    local token = community.reset_token
+
+    community_status(text, 0)
+    set_note(text, is_error, 4)
+
+    task.delay(4, function()
+        if destroyed or community.busy or token ~= community.reset_token then return end
+
+        community_status(COMMUNITY_LABEL, 0)
+    end)
+end
+
+local function community_run()
+    local body = http_get(COMMUNITY_API)
+
+    if destroyed then return end
+
+    local ok, listing = false, nil
+
+    if body then
+        ok, listing = pcall(http_service.JSONDecode, http_service, body)
+    end
+
+    if not ok or type(listing) ~= "table" or (listing[1] == nil and next(listing) ~= nil) then
+        return community_finish("couldn't reach github, try again later", true)
+    end
+
+    local wanted = {}
+
+    for _, item in listing do
+        if type(item) == "table" and item.type == "file" and type(item.name) == "string" and type(item.download_url) == "string" then
+            local extension = item.name:match("%.([%w]+)$")
+
+            if extension and EXTENSIONS[extension:lower()] then
+                wanted[#wanted + 1] = item
+            end
+        end
+    end
+
+    if #wanted == 0 then
+        return community_finish("no community songs right now", false)
+    end
+
+    ensure_folder(SONGS_FOLDER)
+    ensure_folder(COMMUNITY_FOLDER)
+
+    local by_remote, used = {}, {}
+
+    for file, info in community.files do
+        by_remote[info.remote] = file
+        used[file:lower()] = true
+    end
+
+    local jobs, present = {}, {}
+
+    for _, item in wanted do
+        local file = by_remote[item.name] or community_file_name(item.name, used)
+        local info = community.files[file]
+        local path = COMMUNITY_FOLDER .. "/" .. file
+
+        present[file] = true
+
+        if not (info and info.sha == tostring(item.sha or "") and is_file(path)) then
+            jobs[#jobs + 1] = {item = item, file = file, path = path}
+        end
+    end
+
+    local stale = {}
+
+    for file in community.files do
+        if not present[file] then
+            stale[#stale + 1] = file
+        end
+    end
+
+    for _, file in stale do
+        try(delfile, COMMUNITY_FOLDER .. "/" .. file)
+        community.files[file] = nil
+    end
+
+    if #stale > 0 then
+        save_community()
+    end
+
+    local added, failed = 0, 0
+
+    for index, job in jobs do
+        if destroyed then return end
+
+        community_status(string.format("downloading %d / %d", index, #jobs), (index - 1) / #jobs)
+
+        local data = http_get(url_encode(job.item.download_url))
+        local size = tonumber(job.item.size)
+
+        if destroyed then return end
+
+        if type(data) == "string" and #data > 1024 and (not size or #data == size) then
+            write_file(job.path, data)
+
+            if is_file(job.path) then
+                community.files[job.file] = {remote = job.item.name, sha = tostring(job.item.sha or ""), size = size}
+                added += 1
+
+                save_community()
+            else
+                failed += 1
+            end
+        else
+            failed += 1
+        end
+    end
+
+    community_status("finishing up...", 1)
+
+    signature = nil
+
+    pcall(scan)
+
+    if failed > 0 then
+        community_finish(string.format("added %d, %d failed to download", added, failed), true)
+    elseif added == 0 and #stale == 0 then
+        community_finish("community songs are up to date", false)
+    elseif added == 0 then
+        community_finish(string.format("removed %d old community song%s", #stale, #stale == 1 and "" or "s"), false)
+    else
+        community_finish(string.format("added %d community song%s", added, added == 1 and "" or "s"), false)
+    end
+end
+
+local function community_sync()
+    if destroyed or community.busy then return end
+
+    community.busy = true
+    community.reset_token += 1
+
+    community_status("checking github...", 0)
+
+    task.spawn(function()
+        local ok = pcall(community_run)
+
+        if not ok and not destroyed and community.busy then
+            community_finish("community download failed", true)
+        end
+    end)
 end
 
 local function update_marquee(dt)
@@ -1683,6 +2050,7 @@ hover(ui.next_button)
 hover(ui.play_button, "accent", "accent_hover")
 hover(ui.close_button)
 hover(ui.random_button)
+hover(ui.community_button)
 hover(ui.shuffle_button)
 hover(ui.repeat_button)
 hover(ui.bass_button)
@@ -1692,6 +2060,7 @@ ui.prev_button.Activated:Connect(previous_song)
 ui.play_button.Activated:Connect(toggle_play)
 ui.next_button.Activated:Connect(next_song)
 ui.random_button.Activated:Connect(random_song)
+ui.community_button.Activated:Connect(community_sync)
 
 ui.close_button.Activated:Connect(function()
     if options.embedded then
@@ -1962,6 +2331,10 @@ end
 
 function api.previous()
     if not destroyed then previous_song() end
+end
+
+function api.load_community()
+    community_sync()
 end
 
 function api.rescan()
