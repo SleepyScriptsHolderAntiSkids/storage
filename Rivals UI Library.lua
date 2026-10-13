@@ -1,4 +1,4 @@
-if LPH_OBFUSCATED == nil then
+ if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -6194,7 +6194,10 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     local camera = backdrop.inner and backdrop.inner.CurrentCamera
 
                     if camera then
-                        wanted.CFrame = CFrame.lookAt(wanted.Position, camera.CFrame.Position)
+                        local view = camera.CFrame
+
+                        backdrop.logo_angle = ((backdrop.logo_angle or 0) + (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60) % (math.pi * 2)
+                        wanted.CFrame = CFrame.lookAt(wanted.Position, wanted.Position - view.LookVector, view.UpVector) * CFrame.Angles(0, backdrop.logo_angle, 0)
                     end
                 elseif wanted then
                     wanted.CFrame = wanted.CFrame * CFrame.Angles(0, (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60, 0)
@@ -12281,7 +12284,10 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     local camera = backdrop.inner and backdrop.inner.CurrentCamera
 
                     if camera then
-                        wanted.CFrame = CFrame.lookAt(wanted.Position, camera.CFrame.Position)
+                        local view = camera.CFrame
+
+                        backdrop.logo_angle = ((backdrop.logo_angle or 0) + (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60) % (math.pi * 2)
+                        wanted.CFrame = CFrame.lookAt(wanted.Position, wanted.Position - view.LookVector, view.UpVector) * CFrame.Angles(0, backdrop.logo_angle, 0)
                     end
                 elseif wanted then
                     wanted.CFrame = wanted.CFrame * CFrame.Angles(0, (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60, 0)
