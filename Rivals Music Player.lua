@@ -37,6 +37,7 @@ local RESTART_AFTER = 3
 local TOAST_TIME = 3
 local MAX_VOLUME = 1
 local WIDTH = 340
+local MINI_WIDTH = 230
 local BARS = 10
 local BAR_MIN = 2
 local BAR_MAX = 40
@@ -226,7 +227,7 @@ ensure_folder(ROOT)
 ensure_folder(SONGS_FOLDER)
 ensure_folder(DATA_FOLDER)
 
-local state = {volume = 50, muted = false, repeat_mode = "all", shuffle = false, bass = false, speed = "normal", last = nil, x = 0, y = 0, lengths = {}}
+local state = {volume = 50, muted = false, repeat_mode = "all", shuffle = false, bass = false, speed = "normal", last = nil, x = 0, y = 0, minimized = false, lengths = {}}
 
 do
     local raw = read_file(DATA_FILE)
@@ -246,6 +247,7 @@ do
         state.last = type(decoded.last) == "string" and decoded.last or nil
         state.x = tonumber(decoded.x) or 0
         state.y = tonumber(decoded.y) or 0
+        state.minimized = decoded.minimized == true
 
         if type(decoded.lengths) == "table" then
             for path, length in decoded.lengths do
@@ -518,7 +520,7 @@ outline(ui.window)
 
 ui.window_scale = new("UIScale", {Parent = ui.window})
 
-new("UIPadding", {PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 12), PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12), Parent = ui.window})
+ui.window_padding = new("UIPadding", {PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 12), PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12), Parent = ui.window})
 new("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 8), Parent = ui.window})
 
 ui.header = new("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, HEADER_HEIGHT), LayoutOrder = next_order(), Parent = ui.window})
@@ -527,12 +529,14 @@ ui.live_dot = new("Frame", {BackgroundColor3 = "accent", BackgroundTransparency 
 
 corner(ui.live_dot, 3)
 
-new("TextLabel", {BackgroundTransparency = 1, Position = UDim2.fromOffset(14, 0), Size = UDim2.new(1, -150, 1, 0), FontFace = FONT, Text = "Music Player", TextColor3 = "text", TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 2, Parent = ui.header})
+ui.title = new("TextLabel", {BackgroundTransparency = 1, Position = UDim2.fromOffset(14, 0), Size = UDim2.new(1, -(HEADER_HEIGHT * 2 + 144), 1, 0), FontFace = FONT, Text = "Music Player", TextColor3 = "text", TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd, ZIndex = 2, Parent = ui.header})
 
-ui.count_label = new("TextLabel", {BackgroundTransparency = 1, AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -(HEADER_HEIGHT + 8), 0, 0), Size = UDim2.new(0, 110, 1, 0), FontFace = FONT_LIGHT, Text = "", TextColor3 = "muted", TextSize = 13, TextXAlignment = Enum.TextXAlignment.Right, ZIndex = 2, Parent = ui.header})
+ui.count_label = new("TextLabel", {BackgroundTransparency = 1, AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -(HEADER_HEIGHT * 2 + 14), 0, 0), Size = UDim2.new(0, 110, 1, 0), FontFace = FONT_LIGHT, Text = "", TextColor3 = "muted", TextSize = 13, TextXAlignment = Enum.TextXAlignment.Right, ZIndex = 2, Parent = ui.header})
 ui.close_button = new("TextButton", {AutoButtonColor = false, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(HEADER_HEIGHT, HEADER_HEIGHT), BackgroundColor3 = "element", Text = "×", FontFace = FONT_ICON, TextSize = 16, TextColor3 = "muted", ZIndex = 3, Parent = ui.header})
+ui.min_button = new("TextButton", {AutoButtonColor = false, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -(HEADER_HEIGHT + 6), 0.5, 0), Size = UDim2.fromOffset(HEADER_HEIGHT, HEADER_HEIGHT), BackgroundColor3 = "element", Text = "–", FontFace = FONT_ICON, TextSize = 16, TextColor3 = "muted", ZIndex = 3, Parent = ui.header})
 
 corner(ui.close_button, 5)
+corner(ui.min_button, 5)
 
 ui.divider = new("Frame", {BackgroundColor3 = "accent", BorderSizePixel = 0, Size = UDim2.new(1, 0, 0, 1), LayoutOrder = next_order(), Parent = ui.window})
 
@@ -853,6 +857,7 @@ refresh_now = function()
     local total = #songs
 
     ui.count_label.Text = total == 1 and "1 song" or (total .. " songs")
+    ui.title.Text = state.minimized and current and current.name or "Music Player"
 
     local name
 
@@ -1068,7 +1073,7 @@ local function fit()
     local view = camera and camera.ViewportSize or Vector2.new(1280, 720)
     local scale = ui.window_scale.Scale
 
-    if ui.window.AbsoluteSize.Y > 0 and scale > 0 then
+    if not state.minimized and ui.window.AbsoluteSize.Y > 0 and scale > 0 then
         natural_height = ui.window.AbsoluteSize.Y / scale
     end
 
@@ -1082,6 +1087,52 @@ local function fit()
     end
 
     window_place()
+end
+
+local function apply_minimized()
+    local minimized = state.minimized
+
+    for _, child in ui.window:GetChildren() do
+        if child ~= ui.header and child:IsA("GuiObject") then
+            child.Visible = not minimized
+        end
+    end
+
+    ui.window.Size = UDim2.fromOffset(minimized and MINI_WIDTH or WIDTH, 0)
+    ui.window_padding.PaddingBottom = UDim.new(0, minimized and 10 or 12)
+    ui.count_label.Visible = not minimized
+    ui.min_button.Text = minimized and "+" or "–"
+    ui.title.Size = UDim2.new(1, minimized and -(HEADER_HEIGHT * 2 + 28) or -(HEADER_HEIGHT * 2 + 144), 1, 0)
+
+    if minimized then
+        seeking = false
+        seek_input = nil
+        volume_input = nil
+
+        if ui.search_box:IsFocused() then
+            ui.search_box:ReleaseFocus()
+        end
+    end
+
+    refresh_now()
+end
+
+local function toggle_minimized()
+    local scale = math.max(ui.window_scale.Scale, 0.01)
+    local full = natural_height * scale
+    local mini = (20 + HEADER_HEIGHT) * scale
+
+    if full > mini then
+        local shift = (full - mini) / 2
+
+        state.y += (state.minimized and shift or -shift)
+    end
+
+    state.minimized = not state.minimized
+
+    apply_minimized()
+    window_place()
+    save_state()
 end
 
 reveal = function(record)
@@ -1854,6 +1905,18 @@ local function render(dt)
 
     clock += dt
 
+    if state.minimized then
+        local active = playing and current ~= nil and not loading and loaded_for(current) and sound.IsPlaying
+        local dot = active and math.floor((0.1 + 0.4 * (0.5 + 0.5 * math.sin(clock * 4))) * 50 + 0.5) / 50 or 0.7
+
+        if dot ~= last_dot then
+            last_dot = dot
+            ui.live_dot.BackgroundTransparency = dot
+        end
+
+        return
+    end
+
     local loaded = current ~= nil and not loading and loaded_for(current)
     local length = loaded and sound.TimeLength or 0
     local position = 0
@@ -2049,6 +2112,7 @@ hover(ui.prev_button)
 hover(ui.next_button)
 hover(ui.play_button, "accent", "accent_hover")
 hover(ui.close_button)
+hover(ui.min_button)
 hover(ui.random_button)
 hover(ui.community_button)
 hover(ui.shuffle_button)
@@ -2061,6 +2125,8 @@ ui.play_button.Activated:Connect(toggle_play)
 ui.next_button.Activated:Connect(next_song)
 ui.random_button.Activated:Connect(random_song)
 ui.community_button.Activated:Connect(community_sync)
+
+ui.min_button.Activated:Connect(toggle_minimized)
 
 ui.close_button.Activated:Connect(function()
     if options.embedded then
@@ -2395,6 +2461,7 @@ apply_effects()
 ui.hint.Text = hint_text()
 style_modes()
 style_volume()
+apply_minimized()
 pcall(scan)
 refresh_now()
 
