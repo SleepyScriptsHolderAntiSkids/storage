@@ -5308,7 +5308,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             function cfg.modify_mode_color(path)
                 for _, v in cfg.hold_instances do
-                    v.TextColor3 = rgb(72, 72, 72)
+                    v.TextColor3 = themes.preset.inactive or rgb(72, 72, 72)
                 end
 
                 local selected = cfg.hold_instances[path] or cfg.hold_instances["Always"]
@@ -5316,6 +5316,14 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 if selected then
                     selected.TextColor3 = themes.preset.accent
                 end
+            end
+
+            if library.on_theme then
+                library:on_theme(function(key)
+                    if key == "inactive" then
+                        cfg.modify_mode_color(cfg.mode)
+                    end
+                end)
             end
 
             function cfg.set_mode(mode)
@@ -11322,7 +11330,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             function cfg.modify_mode_color(path)
                 for _, v in cfg.hold_instances do
-                    v.TextColor3 = rgb(72, 72, 72)
+                    v.TextColor3 = themes.preset.inactive or rgb(72, 72, 72)
                 end
 
                 local selected = cfg.hold_instances[path] or cfg.hold_instances["Always"]
@@ -11330,6 +11338,14 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 if selected then
                     selected.TextColor3 = themes.preset.accent
                 end
+            end
+
+            if library.on_theme then
+                library:on_theme(function(key)
+                    if key == "inactive" then
+                        cfg.modify_mode_color(cfg.mode)
+                    end
+                end)
             end
 
             function cfg.set_mode(mode)
