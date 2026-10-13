@@ -155,7 +155,7 @@ getgenv().library = {
     current_open;
 }
 
-getgenv().Images = {"Character.png", "Rust.mp3", "TF2.mp3", "Quake.mp3", "Dyssodia.mp3", "Bubble.mp3", "MW2019.mp3", "Sparkle.mp3", "Impact.mp3","WhiteBeam.png", "ESP.png", "World.png", "Wrench.png", "Settings.png", "Node.png", "cursor.png", "Bullet.png", "Snapline.png", "Pistol.png", "folder.png", "UZI.png", "FieldOfView2.png", "Lock.png", "Aimlock.png", "Cash.png", "Wheatt.png", "Pickkaxe.png", "unlocked.png"}
+getgenv().Images = {"Character.png", "Rust.mp3", "TF2.mp3", "Quake.mp3", "Dyssodia.mp3", "Bubble.mp3", "MW2019.mp3", "Sparkle.mp3", "Impact.mp3","WhiteBeam.png", "ESP.png", "World.png", "Wrench.png", "Settings.png", "Node.png", "cursor.png", "Bullet.png", "Snapline.png", "Pistol.png", "folder.png", "UZI.png", "FieldOfView2.png", "Lock.png", "Aimlock.png", "Cash.png", "Wheatt.png", "Pickkaxe.png", "unlocked.png", "SleepyLogo.png"}
 
 for _, path in next, library.folders do
     makefolder(library.directory .. path)
@@ -181,6 +181,9 @@ do
                 elseif type(data) ~= "string" or #data == 0 then
                     missing[#missing + 1] = Value
                     warn("[Sleepy.gg] asset EMPTY on server: " .. Value .. " -- check the name is spelled and cased exactly as it is on GitHub")
+                elseif Value:sub(-4) == ".png" and data:sub(2, 4) ~= "PNG" then
+                    missing[#missing + 1] = Value
+                    warn("[Sleepy.gg] asset is not a png on server: " .. Value .. " -- upload it to the Images repo with this exact name")
                 else
                     local wrote, err = pcall(writefile, Location, data)
 
@@ -6056,9 +6059,17 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 backdrop.inner.ImageColor3 = type(item_color) == "table" and item_color.Color or rgb(255, 255, 255)
 
                 for _, part in pairs(backdrop.parts) do
-                    part.Transparency = tonumber(flags.menu_bg_item_transparency) or 0
-                    part.Reflectance = tonumber(flags.menu_bg_item_reflectance) or 0
-                    part.Material = material
+                    if part == backdrop.logo then
+                        for _, decal in ipairs(part:GetChildren()) do
+                            if decal:IsA("Decal") then
+                                decal.Transparency = tonumber(flags.menu_bg_item_transparency) or 0
+                            end
+                        end
+                    else
+                        part.Transparency = tonumber(flags.menu_bg_item_transparency) or 0
+                        part.Reflectance = tonumber(flags.menu_bg_item_reflectance) or 0
+                        part.Material = material
+                    end
                 end
             end
 
@@ -6134,6 +6145,34 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 gui.DisplayOrder = (library[ "items" ].DisplayOrder or 0) - 1
                 gui.Parent = library[ "items" ].Parent
 
+                local logo_image = GetImage("SleepyLogo.png")
+
+                if logo_image then
+                    local reference = backdrop.parts.Sword
+                    local span = reference and math.max(reference.Size.X, reference.Size.Y, reference.Size.Z) or 8
+                    local logo = Instance.new("Part")
+
+                    logo.Name = "Sleepy"
+                    logo.Anchored = true
+                    logo.CanCollide = false
+                    logo.CastShadow = false
+                    logo.Transparency = 1
+                    logo.Size = Vector3.new(span * 1.15, span * 1.15 / 3.144, 0.05)
+                    logo.Position = Vector3.new(0, 1000, 0)
+
+                    for _, face in ipairs({Enum.NormalId.Front, Enum.NormalId.Back}) do
+                        local decal = Instance.new("Decal")
+
+                        decal.Texture = logo_image
+                        decal.Face = face
+                        decal.Parent = logo
+                    end
+
+                    logo.Parent = inner
+                    backdrop.logo = logo
+                    backdrop.parts.Sleepy = logo
+                end
+
                 backdrop.gui, backdrop.outer, backdrop.inner = gui, outer, inner
 
                 back_refresh()
@@ -6162,7 +6201,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             back_toggle:colorpicker({name = "item color", flag = "menu_bg_item_color", color = rgb(255, 255, 255), no_alpha = true, callback = back_refresh})
 
-            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sword"})
+            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sleepy", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sword"})
 
             back_section:slider({name = "transparency", flag = "menu_bg_item_transparency", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
             back_section:slider({name = "reflectance", flag = "menu_bg_item_reflectance", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
@@ -12101,9 +12140,17 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 backdrop.inner.ImageColor3 = type(item_color) == "table" and item_color.Color or rgb(255, 255, 255)
 
                 for _, part in pairs(backdrop.parts) do
-                    part.Transparency = tonumber(flags.menu_bg_item_transparency) or 0
-                    part.Reflectance = tonumber(flags.menu_bg_item_reflectance) or 0
-                    part.Material = material
+                    if part == backdrop.logo then
+                        for _, decal in ipairs(part:GetChildren()) do
+                            if decal:IsA("Decal") then
+                                decal.Transparency = tonumber(flags.menu_bg_item_transparency) or 0
+                            end
+                        end
+                    else
+                        part.Transparency = tonumber(flags.menu_bg_item_transparency) or 0
+                        part.Reflectance = tonumber(flags.menu_bg_item_reflectance) or 0
+                        part.Material = material
+                    end
                 end
             end
 
@@ -12179,6 +12226,34 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 gui.DisplayOrder = (library[ "items" ].DisplayOrder or 0) - 1
                 gui.Parent = library[ "items" ].Parent
 
+                local logo_image = GetImage("SleepyLogo.png")
+
+                if logo_image then
+                    local reference = backdrop.parts.Sword
+                    local span = reference and math.max(reference.Size.X, reference.Size.Y, reference.Size.Z) or 8
+                    local logo = Instance.new("Part")
+
+                    logo.Name = "Sleepy"
+                    logo.Anchored = true
+                    logo.CanCollide = false
+                    logo.CastShadow = false
+                    logo.Transparency = 1
+                    logo.Size = Vector3.new(span * 1.15, span * 1.15 / 3.144, 0.05)
+                    logo.Position = Vector3.new(0, 1000, 0)
+
+                    for _, face in ipairs({Enum.NormalId.Front, Enum.NormalId.Back}) do
+                        local decal = Instance.new("Decal")
+
+                        decal.Texture = logo_image
+                        decal.Face = face
+                        decal.Parent = logo
+                    end
+
+                    logo.Parent = inner
+                    backdrop.logo = logo
+                    backdrop.parts.Sleepy = logo
+                end
+
                 backdrop.gui, backdrop.outer, backdrop.inner = gui, outer, inner
 
                 back_refresh()
@@ -12207,7 +12282,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             back_toggle:colorpicker({name = "item color", flag = "menu_bg_item_color", color = rgb(255, 255, 255), no_alpha = true, callback = back_refresh})
 
-            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sword"})
+            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sleepy", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sword"})
 
             back_section:slider({name = "transparency", flag = "menu_bg_item_transparency", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
             back_section:slider({name = "reflectance", flag = "menu_bg_item_reflectance", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
