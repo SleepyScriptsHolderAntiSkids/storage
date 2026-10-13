@@ -5260,7 +5260,6 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     for _, option in options do
                         local name = library:create( "TextButton" , {
                             FontFace = fonts.font;
-                            TextColor3 = rgb(72, 72, 73);
                             BorderColor3 = rgb(0, 0, 0);
                             Text = option;
                             Parent = items[ "inline" ];
@@ -5273,7 +5272,6 @@ if Mobile ~= Enum.PreferredInput.Touch then
                             TextSize = 14;
                             BackgroundColor3 = rgb(255, 255, 255)
                         }); cfg.hold_instances[option] = name
-                        library:apply_theme(name, "accent", "TextColor3")
 
                         cfg.y_size += name.AbsoluteSize.Y
 
@@ -5319,12 +5317,16 @@ if Mobile ~= Enum.PreferredInput.Touch then
             end
 
             if library.on_theme then
-                library:on_theme(function(key)
-                    if key == "inactive" then
-                        cfg.modify_mode_color(cfg.mode)
-                    end
+                library:on_theme(function()
+                    cfg.modify_mode_color(cfg.mode)
                 end)
             end
+
+            library.accent_refreshers = library.accent_refreshers or {}
+
+            insert(library.accent_refreshers, function()
+                cfg.modify_mode_color(cfg.mode)
+            end)
 
             function cfg.set_mode(mode)
                 cfg.mode = mode
@@ -5430,6 +5432,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 local size = bool and cfg.y_size or 0
 
                 if bool then
+                    cfg.modify_mode_color(cfg.mode)
                     items[ "dropdown" ].Visible = true
                 end
 
@@ -11282,7 +11285,6 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     for _, option in options do
                         local name = library:create( "TextButton" , {
                             FontFace = fonts.font;
-                            TextColor3 = rgb(72, 72, 73);
                             BorderColor3 = rgb(0, 0, 0);
                             Text = option;
                             Parent = items[ "inline" ];
@@ -11295,7 +11297,6 @@ if Mobile ~= Enum.PreferredInput.Touch then
                             TextSize = 14;
                             BackgroundColor3 = rgb(255, 255, 255)
                         }); cfg.hold_instances[option] = name
-                        library:apply_theme(name, "accent", "TextColor3")
 
                         cfg.y_size += name.AbsoluteSize.Y
 
@@ -11341,12 +11342,16 @@ if Mobile ~= Enum.PreferredInput.Touch then
             end
 
             if library.on_theme then
-                library:on_theme(function(key)
-                    if key == "inactive" then
-                        cfg.modify_mode_color(cfg.mode)
-                    end
+                library:on_theme(function()
+                    cfg.modify_mode_color(cfg.mode)
                 end)
             end
+
+            library.accent_refreshers = library.accent_refreshers or {}
+
+            insert(library.accent_refreshers, function()
+                cfg.modify_mode_color(cfg.mode)
+            end)
 
             function cfg.set_mode(mode)
                 cfg.mode = mode
@@ -11452,6 +11457,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 local size = bool and cfg.y_size or 0
 
                 if bool then
+                    cfg.modify_mode_color(cfg.mode)
                     items[ "dropdown" ].Visible = true
                 end
 
