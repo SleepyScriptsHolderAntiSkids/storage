@@ -6185,21 +6185,19 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 if wanted ~= backdrop.current then
                     if backdrop.current then backdrop.current.Position = Vector3.new(0, 1000, 0) end
-                    if wanted then wanted.Position = Vector3.new(0, 10, 10) end
+
+                    if wanted then
+                        wanted.Position = Vector3.new(0, 10, 10)
+
+                        if wanted == backdrop.logo then
+                            wanted.Rotation = Vector3.new(-40, 0, 0)
+                        end
+                    end
 
                     backdrop.current = wanted
                 end
 
-                if wanted and wanted == backdrop.logo then
-                    local camera = backdrop.inner and backdrop.inner.CurrentCamera
-
-                    if camera then
-                        local view = camera.CFrame
-
-                        backdrop.logo_angle = ((backdrop.logo_angle or 0) + (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60) % (math.pi * 2)
-                        wanted.CFrame = CFrame.lookAt(wanted.Position, wanted.Position - view.LookVector, view.UpVector) * CFrame.Angles(0, backdrop.logo_angle, 0)
-                    end
-                elseif wanted then
+                if wanted then
                     wanted.CFrame = wanted.CFrame * CFrame.Angles(0, (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60, 0)
                 end
             end)
@@ -12275,21 +12273,19 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
                 if wanted ~= backdrop.current then
                     if backdrop.current then backdrop.current.Position = Vector3.new(0, 1000, 0) end
-                    if wanted then wanted.Position = Vector3.new(0, 10, 10) end
+
+                    if wanted then
+                        wanted.Position = Vector3.new(0, 10, 10)
+
+                        if wanted == backdrop.logo then
+                            wanted.Rotation = Vector3.new(-40, 0, 0)
+                        end
+                    end
 
                     backdrop.current = wanted
                 end
 
-                if wanted and wanted == backdrop.logo then
-                    local camera = backdrop.inner and backdrop.inner.CurrentCamera
-
-                    if camera then
-                        local view = camera.CFrame
-
-                        backdrop.logo_angle = ((backdrop.logo_angle or 0) + (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60) % (math.pi * 2)
-                        wanted.CFrame = CFrame.lookAt(wanted.Position, wanted.Position - view.LookVector, view.UpVector) * CFrame.Angles(0, backdrop.logo_angle, 0)
-                    end
-                elseif wanted then
+                if wanted then
                     wanted.CFrame = wanted.CFrame * CFrame.Angles(0, (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60, 0)
                 end
             end)
