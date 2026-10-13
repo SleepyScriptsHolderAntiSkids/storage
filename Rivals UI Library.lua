@@ -6190,7 +6190,13 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     backdrop.current = wanted
                 end
 
-                if wanted then
+                if wanted and wanted == backdrop.logo then
+                    local camera = backdrop.inner and backdrop.inner.CurrentCamera
+
+                    if camera then
+                        wanted.CFrame = CFrame.lookAt(wanted.Position, camera.CFrame.Position)
+                    end
+                elseif wanted then
                     wanted.CFrame = wanted.CFrame * CFrame.Angles(0, (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60, 0)
                 end
             end)
@@ -12271,7 +12277,13 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     backdrop.current = wanted
                 end
 
-                if wanted then
+                if wanted and wanted == backdrop.logo then
+                    local camera = backdrop.inner and backdrop.inner.CurrentCamera
+
+                    if camera then
+                        wanted.CFrame = CFrame.lookAt(wanted.Position, camera.CFrame.Position)
+                    end
+                elseif wanted then
                     wanted.CFrame = wanted.CFrame * CFrame.Angles(0, (tonumber(flags.menu_bg_speed) or 0.15) / 10 * dt * 60, 0)
                 end
             end)
