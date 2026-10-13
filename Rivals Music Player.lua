@@ -33,6 +33,7 @@ local SCAN_DEPTH = 2
 local SCAN_INTERVAL = 2
 local LOAD_TIMEOUT = 10
 local SAVE_DELAY = 1
+local AUTOSAVE_INTERVAL = 5
 local RESTART_AFTER = 3
 local TOAST_TIME = 3
 local MAX_VOLUME = 1
@@ -231,7 +232,11 @@ ensure_folder(ROOT)
 ensure_folder(SONGS_FOLDER)
 ensure_folder(DATA_FOLDER)
 
-local state = {volume = 50, muted = false, repeat_mode = "all", shuffle = false, bass = false, speed = "normal", last = nil, x = 0, y = 0, minimized = false, lengths = {}}
+local function default_state()
+    return {volume = 50, muted = false, repeat_mode = "all", shuffle = false, bass = false, speed = "normal", last = nil, x = 0, y = 0, minimized = false, position = 0, playing = false, lengths = {}}
+end
+
+local state = default_state()
 
 do
     local raw = read_file(DATA_FILE)
@@ -252,6 +257,8 @@ do
         state.x = tonumber(decoded.x) or 0
         state.y = tonumber(decoded.y) or 0
         state.minimized = decoded.minimized == true
+        state.position = math.max(tonumber(decoded.position) or 0, 0)
+        state.playing = decoded.playing == true
 
         if type(decoded.lengths) == "table" then
             for path, length in decoded.lengths do
@@ -266,7 +273,14 @@ end
 local destroyed = false
 local save_pending = false
 
+local restore = {path = state.last, position = state.position, resume = state.playing}
+local capture = nil
+
 local function write_state()
+    if capture then
+        pcall(capture)
+    end
+
     local ok, encoded = pcall(http_service.JSONEncode, http_service, state)
 
     if ok then
@@ -860,6 +874,16 @@ local function loaded_for(record)
     return record ~= nil and record.asset ~= nil and sound.SoundId == record.asset and sound.IsLoaded
 end
 
+capture = function()
+    if current and not loading and loaded_for(current) then
+        state.position = math.floor(sound.TimePosition * 10 + 0.5) / 10
+    elseif not current then
+        state.position = 0
+    end
+
+    state.playing = (playing or restore.resume) and not finished
+end
+
 refresh_now = function()
     if destroyed then return end
 
@@ -1248,6 +1272,7 @@ play_song = function(record, direction, attempts)
     loading = true
     playing = true
     state.last = record.path
+    state.position = 0
 
     save_state()
 
@@ -1338,7 +1363,14 @@ play_song = function(record, direction, attempts)
 
         apply_effects()
 
-        sound.TimePosition = 0
+        local start = 0
+
+        if restore.path == record.path then
+            start = math.clamp(restore.position or 0, 0, math.max(sound.TimeLength - 1, 0))
+        end
+
+        restore.path = nil
+        sound.TimePosition = start
 
         if playing then
             play_clock = clock
@@ -1406,6 +1438,8 @@ pause = function()
     playing = false
     pause_token += 1
 
+    save_state()
+
     local token = pause_token
 
     if loading then
@@ -1456,6 +1490,8 @@ resume = function()
     pause_token += 1
     playing = true
     play_clock = clock
+
+    save_state()
 
     if sound.IsPaused then
         sound:Resume()
@@ -2303,6 +2339,8 @@ connect(user_input_service.InputEnded, function(input)
         if not loading and loaded_for(current) and sound.TimeLength > 0 then
             sound.TimePosition = math.clamp(seek_fraction * sound.TimeLength, 0, math.max(sound.TimeLength - 0.1, 0))
 
+            save_state()
+
             if finished then
                 finished = false
 
@@ -2370,6 +2408,8 @@ function api.set_enabled(value)
     enabled = value
 
     if not enabled then
+        restore.resume = playing
+
         if loading then
             stop_sound()
         elseif playing then
@@ -2378,6 +2418,13 @@ function api.set_enabled(value)
 
         hide_toast()
         refresh_now()
+        save_state()
+    elseif restore.resume then
+        restore.resume = false
+
+        if current then
+            resume()
+        end
     end
 
     update_shown()
@@ -2421,6 +2468,41 @@ end
 
 function api.load_community()
     community_sync()
+end
+
+function api.clear_settings()
+    if destroyed then return end
+
+    local previous = current
+    local lengths = state.lengths
+
+    stop_sound()
+
+    current = nil
+    finished = false
+    restore.path = nil
+    restore.resume = false
+
+    for key, value in default_state() do
+        state[key] = value
+    end
+
+    state.last = nil
+    state.lengths = lengths
+    ui.search_box.Text = ""
+
+    if previous then
+        style_row(previous)
+    end
+
+    build_queue()
+    apply_effects()
+    style_modes()
+    style_volume()
+    apply_minimized()
+    window_place()
+    refresh_now()
+    write_state()
 end
 
 function api.rescan()
@@ -2484,6 +2566,24 @@ style_volume()
 apply_minimized()
 pcall(scan)
 refresh_now()
+
+if enabled and restore.resume then
+    restore.resume = false
+
+    if current then
+        resume()
+    end
+end
+
+task.spawn(function()
+    while not destroyed do
+        task.wait(AUTOSAVE_INTERVAL)
+
+        if playing and not destroyed then
+            save_state()
+        end
+    end
+end)
 
 genv.SleepyMusicPlayer = api
 
