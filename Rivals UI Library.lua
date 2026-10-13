@@ -6204,11 +6204,11 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             local back_section = menu_right:section({name = "background", size = 1, default = false, icon = GetImage("Settings.png")})
 
-            local back_toggle = back_section:toggle({type = "toggle", name = "enabled", flag = "menu_bg_enabled", default = false, callback = back_refresh})
+            local back_toggle = back_section:toggle({type = "toggle", name = "enabled", flag = "menu_bg_enabled", default = true, callback = back_refresh})
 
             back_toggle:colorpicker({name = "item color", flag = "menu_bg_item_color", color = rgb(255, 255, 255), no_alpha = true, callback = back_refresh})
 
-            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sleepy", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sword"})
+            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sleepy", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sleepy"})
 
             back_section:slider({name = "transparency", flag = "menu_bg_item_transparency", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
             back_section:slider({name = "reflectance", flag = "menu_bg_item_reflectance", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
@@ -12292,11 +12292,11 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             local back_section = menu_right:section({name = "background", size = 1, default = false, icon = GetImage("Settings.png")})
 
-            local back_toggle = back_section:toggle({type = "toggle", name = "enabled", flag = "menu_bg_enabled", default = false, callback = back_refresh})
+            local back_toggle = back_section:toggle({type = "toggle", name = "enabled", flag = "menu_bg_enabled", default = true, callback = back_refresh})
 
             back_toggle:colorpicker({name = "item color", flag = "menu_bg_item_color", color = rgb(255, 255, 255), no_alpha = true, callback = back_refresh})
 
-            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sleepy", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sword"})
+            back_section:dropdown({name = "item", flag = "menu_bg_item", width = 100, items = {"None", "Sleepy", "Sword", "Cross", "Heart", "Catholic Cross", "Orthodox Cross"}, multi = false, default = "Sleepy"})
 
             back_section:slider({name = "transparency", flag = "menu_bg_item_transparency", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
             back_section:slider({name = "reflectance", flag = "menu_bg_item_reflectance", min = 0, max = 1, decimal = 0.01, default = 0, half = true, callback = back_refresh})
