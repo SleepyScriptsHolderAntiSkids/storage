@@ -46,6 +46,10 @@ local REPEAT_NAMES = {off = "no repeat", all = "repeat all", one = "repeat one"}
 local SPEED_ORDER = {"normal", "nightcore", "slowed"}
 local SPEEDS = {normal = 1, nightcore = 1.25, slowed = 0.8}
 local BROKEN_COLOR = Color3.fromRGB(255, 95, 95)
+local SCAN_BLOCKED = {
+    name = {note = "a song name has symbols your executor can't read", hint = "your executor can't open the Songs folder because one of your song names has symbols it doesn't support (emoji, other languages, special signs). rename that song using english letters and everything shows up again."},
+    list = {note = "your executor can't list files", hint = "your executor doesn't support listing files, so songs in the Songs folder can't load. community songs still work."},
+}
 local DEFAULT_THEME = {
     accent = Color3.fromRGB(0, 162, 255),
     background = Color3.fromRGB(14, 14, 16),
@@ -739,6 +743,7 @@ local scan_token = 0
 local toast_token = 0
 local note = nil
 local signature = nil
+local scan_blocked = false
 local query = ""
 local enabled = not options.embedded
 local menu_visible = true
@@ -824,6 +829,10 @@ local function fade(volume, duration, done)
 end
 
 local function hint_text()
+    if scan_blocked then
+        return string.format('<font color="#%s">%s</font>', BROKEN_COLOR:ToHex(), scan_blocked.hint)
+    end
+
     local hex = theme.accent:ToHex()
 
     return string.format('load songs by dragging <font color="#%s">.mp3</font> files into the <font color="#%s">Songs</font> folder\n%s', hex, hex, FOLDER_HINT)
@@ -1679,16 +1688,27 @@ local function scan()
     ensure_folder(SONGS_FOLDER)
 
     local found = {}
+    local blocked = false
 
     if not collect(SONGS_FOLDER, 0, found) then
-        if signature == nil then
-            signature = ""
+        blocked = type(listfiles) == "function" and SCAN_BLOCKED.name or SCAN_BLOCKED.list
 
-            apply_filter()
-            refresh_now()
+        for file in community.files do
+            local path = COMMUNITY_FOLDER .. "/" .. file
+
+            if is_file(path) then
+                found[#found + 1] = path
+            end
         end
+    end
 
-        return
+    if blocked ~= scan_blocked then
+        scan_blocked = blocked
+        ui.hint.Text = hint_text()
+
+        if blocked then
+            set_note(blocked.note, true, 6)
+        end
     end
 
     table.sort(found)
