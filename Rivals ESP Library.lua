@@ -1,4 +1,4 @@
- if LPH_OBFUSCATED == nil then
+  if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -367,10 +367,26 @@ local function esp_font(object, name)
     object.frame.FontFace = info.font
 end
 
+local esp_projector, esp_preview = nil, nil
+
 local function esp_project(position)
+    if esp_projector then
+        return esp_projector(position)
+    end
+
     local point, visible = esp.camera:WorldToViewportPoint(position)
 
     return vec2(point.X, point.Y), visible
+end
+
+local function esp_part_corners(part)
+    local half = part.Size / 2
+    local x, y, z = half.X, half.Y, half.Z
+
+    return {
+        CFrame.new(-x, -y, -z), CFrame.new(-x, -y, z), CFrame.new(-x, y, -z), CFrame.new(-x, y, z),
+        CFrame.new(x, -y, -z), CFrame.new(x, -y, z), CFrame.new(x, y, -z), CFrame.new(x, y, z),
+    }
 end
 
 local function esp_floor(vector)
@@ -1051,14 +1067,8 @@ local function esp_on_character(record, character)
             return
         end
 
-        local half = part.Size / 2
-        local x, y, z = half.X, half.Y, half.Z
-
         record.parts[name] = part
-        record.corners[part] = {
-            CFrame.new(-x, -y, -z), CFrame.new(-x, -y, z), CFrame.new(-x, y, -z), CFrame.new(-x, y, z),
-            CFrame.new(x, -y, -z), CFrame.new(x, -y, z), CFrame.new(x, y, -z), CFrame.new(x, y, z),
-        }
+        record.corners[part] = esp_part_corners(part)
     end
 
     task.wait()
@@ -1073,6 +1083,23 @@ local function esp_on_character(record, character)
 
     esp_appearance_change(record)
     esp_effects_refresh(record)
+end
+
+local function esp_release_drawings(record)
+    for kind, gradient in pairs(record.gradients) do
+        local list = esp.gradients[kind]
+        local index = list and table.find(list, gradient)
+
+        if index then
+            table.remove(list, index)
+        end
+    end
+
+    for _, object in ipairs(record.drawings) do
+        pcall(function()
+            object.frame:Destroy()
+        end)
+    end
 end
 
 local function esp_remove(player)
@@ -1092,21 +1119,7 @@ local function esp_remove(player)
 
     esp_drop_character(record)
 
-    for kind, gradient in pairs(record.gradients) do
-        local list = esp.gradients[kind]
-        local index = list and table.find(list, gradient)
-
-        if index then
-            table.remove(list, index)
-        end
-    end
-
-    for _, object in ipairs(record.drawings) do
-        pcall(function()
-            object.frame:Destroy()
-        end)
-    end
-
+    esp_release_drawings(record)
     esp_effects_destroy(record, "aura")
     esp_effects_destroy(record, "particle")
     esp_appearance_drop(record)
@@ -1122,11 +1135,7 @@ end
 
 esp.bridge_event = Instance.new("BindableEvent")
 
-local function esp_add(player, dueler)
-    if not player or player == local_player or esp.running[player] then
-        return
-    end
-
+local function esp_build_record(player, dueler)
     local s = esp_settings() or {}
     local record = {
         player = player,
@@ -1149,8 +1158,6 @@ local function esp_add(player, dueler)
         text_height = 12,
         flag_offset = Vector2.zero,
     }
-
-    esp.running[player] = record
 
     for index = 1, 26 do
         local outline = index > 13
@@ -1229,6 +1236,18 @@ local function esp_add(player, dueler)
     esp_register(record, "healthbar", bar_gradient)
 
     esp_style_record(record, s)
+
+    return record
+end
+
+local function esp_add(player, dueler)
+    if not player or player == local_player or esp.running[player] then
+        return
+    end
+
+    local record = esp_build_record(player, dueler)
+
+    esp.running[player] = record
 
     local fighter = dueler and rawget(dueler, "ClientFighter")
 
@@ -1505,6 +1524,139 @@ local function esp_step(record, s, camera_cframe)
     end
 end
 
+local ESP_PREVIEW_RATE = 0.1
+
+local function esp_preview_project(position)
+    local preview = esp_preview
+    local relative = preview.view:PointToObjectSpace(position)
+    local depth = -relative.Z
+
+    if depth <= 0.05 then
+        return vec2(), false
+    end
+
+    local size = preview.size
+
+    return vec2((relative.X / (depth * preview.tan * preview.aspect) * 0.5 + 0.5) * size.X, (0.5 - relative.Y / (depth * preview.tan) * 0.5) * size.Y), true
+end
+
+local function esp_preview_render()
+    local preview = esp_preview
+
+    if not preview then return end
+
+    local container, camera = preview.container, preview.camera
+
+    if not container.Parent or not camera.Parent then return end
+
+    local size = container.AbsoluteSize
+
+    if size.X < 2 or size.Y < 2 then return end
+
+    local record = preview.record
+
+    preview.size = size
+    preview.view = camera.CFrame
+    preview.tan = math.tan(math.rad(camera.FieldOfView) / 2)
+    preview.aspect = size.X / size.Y
+    preview.at = tick()
+    record.lerp = record.health / max(record.max_health, 1)
+
+    esp_projector = esp_preview_project
+
+    local ok = pcall(esp_step, record, esp_settings() or {}, camera.CFrame)
+
+    esp_projector = nil
+
+    if not ok then
+        esp_hide(record)
+    end
+
+    local source, highlight = esp.highlight, preview.highlight
+
+    highlight.Enabled = source.Enabled
+    highlight.FillColor = source.FillColor
+    highlight.FillTransparency = source.FillTransparency
+    highlight.OutlineColor = source.OutlineColor
+    highlight.OutlineTransparency = source.OutlineTransparency
+end
+
+local function esp_preview_restyle()
+    local preview = esp_preview
+
+    if not preview then return end
+
+    pcall(esp_style_record, preview.record, esp_settings() or {})
+    pcall(esp_appearance_change, preview.record)
+
+    esp_preview_render()
+end
+
+local function esp_preview_detach()
+    local preview = esp_preview
+
+    if not preview then return end
+
+    esp_preview = nil
+
+    esp_release_drawings(preview.record)
+    esp_appearance_drop(preview.record)
+
+    pcall(function()
+        preview.highlight:Destroy()
+    end)
+end
+
+local function esp_preview_attach(container, model, camera, weapon)
+    esp_preview_detach()
+
+    if typeof(container) ~= "Instance" or typeof(model) ~= "Instance" or typeof(camera) ~= "Instance" then
+        return false
+    end
+
+    local record = esp_build_record(local_player, nil)
+
+    for _, object in ipairs(record.drawings) do
+        object.frame.Parent = container
+    end
+
+    for _, name in ipairs(ESP_SKELETON_PARTS) do
+        local part = model:FindFirstChild(name)
+
+        if part and part:IsA("BasePart") then
+            record.parts[name] = part
+            record.corners[part] = esp_part_corners(part)
+        end
+    end
+
+    record.character = model
+    record.root = model:FindFirstChild("HumanoidRootPart")
+    record.humanoid = model:FindFirstChildOfClass("Humanoid")
+    record.health, record.max_health = 75, 100
+    record.texts[2].frame.Text = type(weapon) == "string" and weapon ~= "" and weapon or "none"
+
+    local highlight = Instance.new("Highlight")
+
+    highlight.Name = "\0"
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    highlight.Enabled = false
+    highlight.Adornee = model
+    highlight.Parent = model
+
+    esp_preview = {record = record, container = container, model = model, camera = camera, highlight = highlight, at = 0}
+
+    esp_preview_restyle()
+
+    return true
+end
+
+getgenv().SleepyESPPreview = {
+    attach = esp_preview_attach,
+    detach = esp_preview_detach,
+    render = esp_preview_render,
+    restyle = esp_preview_restyle,
+}
+
 local esp_item_library = nil
 
 pcall(function()
@@ -1768,6 +1920,8 @@ local function esp_refresh_all()
         for _, record in pairs(esp.running) do
             pcall(esp_style_record, record, s)
         end
+
+        esp_preview_restyle()
     end)
 end
 
@@ -1918,6 +2072,10 @@ run_service.RenderStepped:Connect(LPH_NO_VIRTUALIZE(function(delta)
         if not ok then
             esp_hide(record)
         end
+    end
+
+    if esp_preview and now - esp_preview.at >= ESP_PREVIEW_RATE then
+        esp_preview_render()
     end
 end))
 
