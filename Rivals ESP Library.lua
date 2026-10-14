@@ -1,4 +1,4 @@
-  if LPH_OBFUSCATED == nil then
+ if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -974,7 +974,7 @@ local function esp_style_record(record, s)
             pcall(function()
                 character.Parent = workspace
             end)
-        else
+        elseif not record.preview then
             pcall(function()
                 character.Parent = esp.chams_model
             end)
@@ -1615,6 +1615,8 @@ local function esp_preview_attach(container, model, camera, weapon)
     end
 
     local record = esp_build_record(local_player, nil)
+
+    record.preview = true
 
     for _, object in ipairs(record.drawings) do
         object.frame.Parent = container
