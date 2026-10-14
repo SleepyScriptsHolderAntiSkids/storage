@@ -883,6 +883,10 @@ local function esp_effects_refresh(record)
 end
 
 local function esp_display_name(player, s)
+    if type(s.name_spoof) == "string" and s.name_spoof ~= "" then
+        return s.name_spoof
+    end
+
     local key = s.name_type == "DisplayName" and "DisplayName" or "Name"
 
     return player[key]
