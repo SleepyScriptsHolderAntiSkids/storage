@@ -133,6 +133,73 @@ local TRANSLIT = {
     ["і"] = "i", ["ї"] = "yi", ["є"] = "ye", ["ґ"] = "g",
 }
 
+local search = {fold = {}, words = {}}
+
+for base, letters in pairs({
+    a = "àáâãäåāăąǎÀÁÂÃÄÅĀĂĄǍ", c = "çćĉċčÇĆĈĊČ", d = "ďđðĎĐÐ", e = "èéêëēĕėęěÈÉÊËĒĔĖĘĚ", g = "ĝğġģĜĞĠĢ", h = "ĥħĤĦ",
+    i = "ìíîïĩīĭįıÌÍÎÏĨĪĬĮİ", j = "ĵĴ", k = "ķĶ", l = "ĺļľŀłĹĻĽĿŁ", n = "ñńņňÑŃŅŇ", o = "òóôõöøōŏőÒÓÔÕÖØŌŎŐ",
+    r = "ŕŗřŔŖŘ", s = "śŝşšșŚŜŞŠȘ", t = "ţťŧțŢŤŦȚ", u = "ùúûüũūŭůűųÙÚÛÜŨŪŬŮŰŲ", w = "ŵŴ", y = "ýÿŷÝŸŶ", z = "źżžŹŻŽ",
+    ss = "ß", ae = "æÆ", oe = "œŒ", th = "þÞ",
+}) do
+    for _, code in utf8.codes(letters) do
+        search.fold[code] = base
+    end
+end
+
+function search.text(text)
+    local ok, result = pcall(function()
+        local out = {}
+
+        for _, code in utf8.codes(text) do
+            if code < 128 then
+                out[#out + 1] = string.char(code):lower()
+            elseif search.fold[code] then
+                out[#out + 1] = search.fold[code]
+            else
+                local lower = code
+
+                if code >= 0x400 and code <= 0x40F then
+                    lower = code + 0x50
+                elseif code >= 0x410 and code <= 0x42F then
+                    lower = code + 0x20
+                elseif code == 0x490 then
+                    lower = 0x491
+                end
+
+                local char = utf8.char(lower)
+
+                out[#out + 1] = TRANSLIT[char] or char
+            end
+        end
+
+        return table.concat(out)
+    end)
+
+    if not ok or type(result) ~= "string" then
+        result = text:lower()
+    end
+
+    return (result:gsub("[%s_%-%.,]+", " "))
+end
+
+function search.set(text)
+    table.clear(search.words)
+
+    for word in search.text(text):gmatch("%S+") do
+        search.words[#search.words + 1] = word
+    end
+end
+
+function search.match(key)
+    for _, word in search.words do
+        if not key:find(word, 1, true) then
+            return false
+        end
+    end
+
+    return true
+end
+
 local function ascii_name(text)
     local ok, result = pcall(function()
         local out = {}
@@ -1049,7 +1116,7 @@ apply_filter = function()
     local visible = 0
 
     for _, record in songs do
-        local show = query == "" or record.key:find(query, 1, true) ~= nil
+        local show = query == "" or search.match(record.key)
 
         if record.row then
             record.row.button.Visible = show
@@ -1663,7 +1730,7 @@ local function rebuild(found)
                     name = (info.remote:gsub("%.[%w]+$", ""))
                 end
 
-                record = {path = path, name = name, folder = folder, key = (name .. " " .. file_name .. " " .. (folder or "")):lower()}
+                record = {path = path, name = name, folder = folder, key = search.text(name .. " " .. file_name .. " " .. (folder or ""))}
             end
 
             lookup[path] = record
@@ -2253,6 +2320,7 @@ end)
 ui.search_box:GetPropertyChangedSignal("Text"):Connect(function()
     query = (ui.search_box.Text:lower():gsub("^%s+", ""):gsub("%s+$", ""))
 
+    search.set(query)
     apply_filter()
 end)
 
