@@ -6510,7 +6510,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             persist_menu_bind(library.menu_bind)
 
-            menu_section:toggle({type = "toggle", name = "keybind", flag = "keybind_list", default = false})
+            menu_section:toggle({type = "toggle", name = "keybind", flag = "keybind_list", default = true})
 
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
 
@@ -12566,7 +12566,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             persist_menu_bind(library.menu_bind)
 
-            menu_section:toggle({type = "toggle", name = "keybind", flag = "keybind_list", default = false})
+            menu_section:toggle({type = "toggle", name = "keybind", flag = "keybind_list", default = true})
 
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
 
