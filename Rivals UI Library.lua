@@ -1,4 +1,4 @@
- if LPH_OBFUSCATED == nil then
+if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
     local setfenv = setfenv
@@ -6510,6 +6510,8 @@ if Mobile ~= Enum.PreferredInput.Touch then
 
             persist_menu_bind(library.menu_bind)
 
+            menu_section:toggle({type = "toggle", name = "keybind", flag = "keybind_list", default = false})
+
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
 
             server_section:button({name = "join lowest server", callback = function()
@@ -12563,6 +12565,8 @@ if Mobile ~= Enum.PreferredInput.Touch then
             library.menu_bind = menu_section:keybind({name = "menu bind", flag = "menu_bind", mode = "Toggle", callback = function(bool) window.toggle_menu(bool) end, seperator = true, default = true})
 
             persist_menu_bind(library.menu_bind)
+
+            menu_section:toggle({type = "toggle", name = "keybind", flag = "keybind_list", default = false})
 
             local _request = (http_request and http_request) or (request and request) or (http and http.request)
 
