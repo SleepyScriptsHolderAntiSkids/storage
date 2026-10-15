@@ -384,8 +384,8 @@ local function esp_part_corners(part)
     local x, y, z = half.X, half.Y, half.Z
 
     return {
-        CFrame.new(-x, -y, -z), CFrame.new(-x, -y, z), CFrame.new(-x, y, -z), CFrame.new(-x, y, z),
-        CFrame.new(x, -y, -z), CFrame.new(x, -y, z), CFrame.new(x, y, -z), CFrame.new(x, y, z),
+        Vector3.new(-x, -y, -z), Vector3.new(-x, -y, z), Vector3.new(-x, y, -z), Vector3.new(-x, y, z),
+        Vector3.new(x, -y, -z), Vector3.new(x, -y, z), Vector3.new(x, y, -z), Vector3.new(x, y, z),
     }
 end
 
@@ -1297,12 +1297,20 @@ local function esp_bounds(record, position, s, camera_cframe)
 
         local min_x, min_y, max_x, max_y = huge, huge, -huge, -huge
         local any = false
+        local projector, camera = esp_projector, esp.camera
 
         for part, corners in pairs(record.corners) do
             local part_cframe = part.CFrame
 
             for index = 1, 8 do
-                local point, on_screen = esp_project((part_cframe * corners[index]).Position)
+                local world = part_cframe * corners[index]
+                local point, on_screen
+
+                if projector then
+                    point, on_screen = projector(world)
+                else
+                    point, on_screen = camera:WorldToViewportPoint(world)
+                end
 
                 if on_screen then
                     any = true
