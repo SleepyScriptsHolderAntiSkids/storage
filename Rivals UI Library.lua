@@ -1979,6 +1979,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     Position = dim2(0.5, -cfg.size.X.Offset / 2, 0.5, -cfg.size.Y.Offset / 2);
                     BorderColor3 = rgb(0, 0, 0);
                     BorderSizePixel = 0;
+                    Active = true;
                     BackgroundColor3 = rgb(14, 14, 16),
                 }); items[ "main" ].Position = dim2(0, items[ "main" ].AbsolutePosition.X, 0, items[ "main" ].AbsolutePosition.Y)
 
@@ -8063,6 +8064,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     Position = dim2(0.5, -cfg.size.X.Offset / 2, 0.5, -cfg.size.Y.Offset / 2);
                     BorderColor3 = rgb(0, 0, 0);
                     BorderSizePixel = 0;
+                    Active = true;
                     BackgroundColor3 = rgb(14, 14, 16);
                     Visible = not getgenv().silent_load_active
                 }); items[ "main" ].Position = dim2(0, items[ "main" ].AbsolutePosition.X, 0, items[ "main" ].AbsolutePosition.Y)
