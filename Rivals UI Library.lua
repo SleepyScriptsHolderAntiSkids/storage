@@ -6443,20 +6443,39 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 end
 
                 local paid = getgenv().Build == "Paid"
-                local loader = paid
-                    and "4d0c67e660690a3ca0ab38048bc35041"
 
-                if paid and not script_key then return end
+                if not paid or not script_key then return end
 
-                local source = "repeat task.wait() until game:IsLoaded()\n"
+                local loader = [==[
+local _0xA71C9E4B2D6F8A30C5E1B947D3F6082 = function()
+    local _0xF82D1A7C5E9B3046A2E8C1B759D4306F = {
+        {104,116,116,112,115,58,47,47},
+        {97,112,105,46,108,117,97,114,109,111,114,46,110,101,116},
+        {47,102,105,108,101,115,47,118,52,47,108,111,97,100,101,114,115,47},
+        {52,100,48,99,54,55,101,54,54,48,54,57,48,97,51,99,97,48,97,98,51,56,48,52,56,98,99,51,53,48,52,49,46,108,117,97}
+    }
 
-                if paid then
-                    source = source .. 'script_key = "' .. script_key .. '"\n'
-                end
+    local _0xC4E8B2197D5F603A6A1F835CB7E2D409 = {}
 
-                source = source .. 'loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/' .. loader .. '.lua"))()'
+    for _0xD91A6F3C8B2E7450E5C8137A2D9F604B, _0xB7E2D4096A1F835C963A7D1C5E8B204F in ipairs(_0xF82D1A7C5E9B3046A2E8C1B759D4306F) do
+        for _0xA2F6C9D1387E5B40E71D4A9C2B683F50, _0xE5C8137A2D9F604B963A7D1C5E8B204F in ipairs(_0xB7E2D4096A1F835C963A7D1C5E8B204F) do
+            _0xC4E8B2197D5F603A6A1F835CB7E2D409[#_0xC4E8B2197D5F603A6A1F835CB7E2D409 + 1] = string.char(_0xE5C8137A2D9F604B963A7D1C5E8B204F)
+        end
+    end
 
-                queue_on_teleport(source)
+    return table.concat(_0xC4E8B2197D5F603A6A1F835CB7E2D409)
+end
+
+local _0xE71D4A9C2B683F50B6F1D8A3C927E450 = _0xA71C9E4B2D6F8A30C5E1B947D3F6082()
+local _0xD3A7F5C182E9460BA71C9E4B2D6F8A30 = game:HttpGet(_0xE71D4A9C2B683F50B6F1D8A3C927E450)
+local _0x963A7D1C5E8B204FA2F6C9D1387E5B40 = loadstring(_0xD3A7F5C182E9460BA71C9E4B2D6F8A30)
+
+if _0x963A7D1C5E8B204FA2F6C9D1387E5B40 then
+    _0x963A7D1C5E8B204FA2F6C9D1387E5B40()
+end
+]==]
+
+                queue_on_teleport("repeat task.wait() until game:IsLoaded()\nscript_key=" .. string.format("%q", tostring(script_key)) .. ";\n" .. loader)
             end})
 
             section:toggle({type = "toggle", name = "silent load", flag = "silent_load", default = startup_data.silent_load, seperator = true, callback = function(state)
@@ -12500,20 +12519,39 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 end
 
                 local paid = getgenv().Build == "Paid"
-                local loader = paid
-                    and "4d0c67e660690a3ca0ab38048bc35041"
 
-                if paid and not script_key then return end
+                if not paid or not script_key then return end
 
-                local source = "repeat task.wait() until game:IsLoaded()\n"
+                local loader = [==[
+local _0xA71C9E4B2D6F8A30C5E1B947D3F6082 = function()
+    local _0xF82D1A7C5E9B3046A2E8C1B759D4306F = {
+        {104,116,116,112,115,58,47,47},
+        {97,112,105,46,108,117,97,114,109,111,114,46,110,101,116},
+        {47,102,105,108,101,115,47,118,52,47,108,111,97,100,101,114,115,47},
+        {52,100,48,99,54,55,101,54,54,48,54,57,48,97,51,99,97,48,97,98,51,56,48,52,56,98,99,51,53,48,52,49,46,108,117,97}
+    }
 
-                if paid then
-                    source = source .. 'script_key = "' .. script_key .. '"\n'
-                end
+    local _0xC4E8B2197D5F603A6A1F835CB7E2D409 = {}
 
-                source = source .. 'loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/' .. loader .. '.lua"))()'
+    for _0xD91A6F3C8B2E7450E5C8137A2D9F604B, _0xB7E2D4096A1F835C963A7D1C5E8B204F in ipairs(_0xF82D1A7C5E9B3046A2E8C1B759D4306F) do
+        for _0xA2F6C9D1387E5B40E71D4A9C2B683F50, _0xE5C8137A2D9F604B963A7D1C5E8B204F in ipairs(_0xB7E2D4096A1F835C963A7D1C5E8B204F) do
+            _0xC4E8B2197D5F603A6A1F835CB7E2D409[#_0xC4E8B2197D5F603A6A1F835CB7E2D409 + 1] = string.char(_0xE5C8137A2D9F604B963A7D1C5E8B204F)
+        end
+    end
 
-                queue_on_teleport(source)
+    return table.concat(_0xC4E8B2197D5F603A6A1F835CB7E2D409)
+end
+
+local _0xE71D4A9C2B683F50B6F1D8A3C927E450 = _0xA71C9E4B2D6F8A30C5E1B947D3F6082()
+local _0xD3A7F5C182E9460BA71C9E4B2D6F8A30 = game:HttpGet(_0xE71D4A9C2B683F50B6F1D8A3C927E450)
+local _0x963A7D1C5E8B204FA2F6C9D1387E5B40 = loadstring(_0xD3A7F5C182E9460BA71C9E4B2D6F8A30)
+
+if _0x963A7D1C5E8B204FA2F6C9D1387E5B40 then
+    _0x963A7D1C5E8B204FA2F6C9D1387E5B40()
+end
+]==]
+
+                queue_on_teleport("repeat task.wait() until game:IsLoaded()\nscript_key=" .. string.format("%q", tostring(script_key)) .. ";\n" .. loader)
             end})
 
             section:toggle({type = "toggle", name = "silent load", flag = "silent_load", default = startup_data.silent_load, seperator = true, callback = function(state)
