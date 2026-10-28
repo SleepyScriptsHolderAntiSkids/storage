@@ -155,7 +155,7 @@ getgenv().library = {
     current_open;
 }
 
-getgenv().Images = {"Character.png", "Rust.mp3", "TF2.mp3", "Quake.mp3", "Dyssodia.mp3", "Bubble.mp3", "MW2019.mp3", "Sparkle.mp3", "Impact.mp3","WhiteBeam.png", "ESP.png", "World.png", "Wrench.png", "Settings.png", "Node.png", "cursor.png", "Bullet.png", "Snapline.png", "Pistol.png", "folder.png", "UZI.png", "FieldOfView2.png", "Lock.png", "Aimlock.png", "Cash.png", "Wheatt.png", "Pickkaxe.png", "unlocked.png", "SleepyLogo.png"}
+getgenv().Images = {"Character.png", "Rust.mp3", "TF2.mp3", "Quake.mp3", "Dyssodia.mp3", "Bubble.mp3", "MW2019.mp3", "Sparkle.mp3", "Impact.mp3","WhiteBeam.png", "ESP.png", "World.png", "Wrench.png", "Settings.png", "Node.png", "cursor.png", "Bullet.png", "Snapline.png", "Pistol.png", "folder.png", "UZI.png", "FieldOfView2.png", "Lock.png", "Aimlock.png", "Cash.png", "Wheatt.png", "Pickkaxe.png", "unlocked.png", "SleepyLogo.png", "SleepyLogoSH.png"}
 
 for _, path in next, library.folders do
     makefolder(library.directory .. path)
@@ -6146,7 +6146,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 gui.DisplayOrder = (library[ "items" ].DisplayOrder or 0) - 1
                 gui.Parent = library[ "items" ].Parent
 
-                local logo_image = GetImage("SleepyLogo.png")
+                local logo_image = GetImage("SleepyLogoSH.png")
 
                 if logo_image then
                     local reference = backdrop.parts.Sword
@@ -6158,7 +6158,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                     logo.CanCollide = false
                     logo.CastShadow = false
                     logo.Transparency = 1
-                    logo.Size = Vector3.new(span * 1.15, span * 1.15 / 3.144, 0.05)
+                    logo.Size = Vector3.new(span * 1.15, span * 1.15 / 1.588, 0.05)
                     logo.Position = Vector3.new(0, 1000, 0)
 
                     for _, face in ipairs({Enum.NormalId.Front, Enum.NormalId.Back}) do
@@ -12256,7 +12256,7 @@ end
                 gui.DisplayOrder = (library[ "items" ].DisplayOrder or 0) - 1
                 gui.Parent = library[ "items" ].Parent
 
-                local logo_image = GetImage("SleepyLogo.png")
+                local logo_image = GetImage("SleepyLogoSH.png")
 
                 if logo_image then
                     local reference = backdrop.parts.Sword
@@ -12268,7 +12268,7 @@ end
                     logo.CanCollide = false
                     logo.CastShadow = false
                     logo.Transparency = 1
-                    logo.Size = Vector3.new(span * 1.15, span * 1.15 / 3.144, 0.05)
+                    logo.Size = Vector3.new(span * 1.15, span * 1.15 / 1.588, 0.05)
                     logo.Position = Vector3.new(0, 1000, 0)
 
                     for _, face in ipairs({Enum.NormalId.Front, Enum.NormalId.Back}) do
