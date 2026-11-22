@@ -1,3 +1,5 @@
+local sleepy_mute = function() end
+
 if LPH_OBFUSCATED == nil then
     local assert = assert
     local type = type
@@ -177,22 +179,22 @@ do
 
                 if not ok then
                     missing[#missing + 1] = Value
-                    warn("[Sleepy.gg] asset DOWNLOAD failed: " .. Value .. " -- " .. tostring(data))
+                    sleepy_mute("[Sleepy.gg] asset DOWNLOAD failed: " .. Value .. " -- " .. tostring(data))
                 elseif type(data) ~= "string" or #data == 0 then
                     missing[#missing + 1] = Value
-                    warn("[Sleepy.gg] asset EMPTY on server: " .. Value .. " -- check the name is spelled and cased exactly as it is on GitHub")
+                    sleepy_mute("[Sleepy.gg] asset EMPTY on server: " .. Value .. " -- check the name is spelled and cased exactly as it is on GitHub")
                 elseif Value:sub(-4) == ".png" and data:sub(2, 4) ~= "PNG" then
                     missing[#missing + 1] = Value
-                    warn("[Sleepy.gg] asset is not a png on server: " .. Value .. " -- upload it to the Images repo with this exact name")
+                    sleepy_mute("[Sleepy.gg] asset is not a png on server: " .. Value .. " -- upload it to the Images repo with this exact name")
                 else
                     local wrote, err = pcall(writefile, Location, data)
 
                     if not wrote then
                         missing[#missing + 1] = Value
-                        warn("[Sleepy.gg] asset WRITE failed: " .. Location .. " -- " .. tostring(err))
+                        sleepy_mute("[Sleepy.gg] asset WRITE failed: " .. Location .. " -- " .. tostring(err))
                     elseif not isfile(Location) then
                         missing[#missing + 1] = Value
-                        warn("[Sleepy.gg] asset MISSING after write: " .. Location)
+                        sleepy_mute("[Sleepy.gg] asset MISSING after write: " .. Location)
                     end
                 end
 
@@ -204,7 +206,7 @@ do
     while pending > 0 do task.wait() end
 
     if #missing > 0 then
-        warn("[Sleepy.gg] " .. #missing .. " asset(s) unavailable, their icons will be blank: " .. table.concat(missing, ", "))
+        sleepy_mute("[Sleepy.gg] " .. #missing .. " asset(s) unavailable, their icons will be blank: " .. table.concat(missing, ", "))
     end
 end
 
@@ -219,7 +221,7 @@ getgenv().GetImage = LPH_JIT_MAX(function(Name)
 
     if not MissingAssets[Name] then
         MissingAssets[Name] = true
-        warn("[Sleepy.gg] GetImage(\"" .. tostring(Name) .. "\") -- no such file in " .. library.directory .. "/assets, icon will be blank. Check spelling, capitalisation, and that it is listed in getgenv().Images")
+        sleepy_mute("[Sleepy.gg] GetImage(\"" .. tostring(Name) .. "\") -- no such file in " .. library.directory .. "/assets, icon will be blank. Check spelling, capitalisation, and that it is listed in getgenv().Images")
     end
 end)
 
@@ -334,7 +336,7 @@ end)
     Fonts["Minecraftia"] = Font.new(Minecraftia, Enum.FontWeight.Regular, Enum.FontStyle.Normal);
     Fonts["Verdana"] = Font.new(Verdana, Enum.FontWeight.Regular, Enum.FontStyle.Normal);
 end
-print(tostring(math.random(1,10)))
+sleepy_mute(tostring(math.random(1,10)))
 COMMUNITY_CONFIG_DATA = {
 
     ["[LEGIT; AGGRESSIVE] Magma"] = [==[{"movement_maul_slam":false,"AimbotFilledFov_Color1":{"Color":"f1d983","Transparency":0.94},"AimbotFilledFov_Color2":{"Color":"f1d983","Transparency":0.85},"AimbotFilledFov_Color3":{"Color":"f1d983","Transparency":0.94},"AntiAim_enabled":false,"AntiFlash":true,"AntiSmoke":false,"FakePosition":false,"FakePositionPanic":false,"FakePositionWalk":false,"FilledFov_Color1":{"Color":"f1d983","Transparency":0.94},"FilledFov_Color2":{"Color":"f1d983","Transparency":0.85},"FilledFov_Color3":{"Color":"f1d983","Transparency":0.94},"HideHead_enabled":false,"InfiniteJump":false,"IsInvincible":true,"NoBobbing":false,"Noclip":false,"RapidBody_enabled":false,"SilentaimDropdown_":[],"TriggerbotDropdown_":["no delay between targets","anti katana"],"VelocitySpeedEnabled":false,"aim_lock_range":150,"aimbot_closest_part":false,"aimbot_closest_position":false,"aimbot_delay_position":false,"aimbot_enabled":true,"aimbot_fov_lerp":25,"aimbot_fov_moving_rotation":false,"aimbot_fov_outline":true,"aimbot_fov_outline_color":{"Color":"f1d983","Transparency":0.84},"aimbot_fov_outline_color2":{"Color":"fbe186","Transparency":0.7},"aimbot_fov_outline_color3":{"Color":"fbe186","Transparency":0.25},"aimbot_fov_settings":[],"aimbot_jump_smooth":10,"aimbot_range_color":{"Color":"ffffff","Transparency":0},"aimbot_range_color2":{"Color":"fbe186","Transparency":0},"aimbot_range_color3":{"Color":"f1d983","Transparency":0},"aimbot_smoothing":30,"aimbot_visualise_filled_range":false,"aimbot_visualise_range":false,"aimbot_x_smooth":4,"aimbot_y_smooth":4,"aimlock_trigger":"Aiming","anti_aim_enabled":false,"anti_flash_keep_sound":true,"arm_override_appearance":false,"camera_fov_amount":95,"camera_fov_enabled":true,"crosshair_bounce":0,"crosshair_bounce_speed":2.9,"crosshair_color_1":{"Color":"e3ca71","Transparency":0},"crosshair_color_2":{"Color":"dfc053","Transparency":0},"crosshair_color_3":{"Color":"ddbb43","Transparency":0},"crosshair_color_4":{"Color":"dbb634","Transparency":0},"crosshair_enabled":true,"crosshair_length":8,"crosshair_lerp":0.25,"crosshair_offset":2,"crosshair_outline":true,"crosshair_outline_color_1":{"Color":"000000","Transparency":0},"crosshair_outline_color_2":{"Color":"000000","Transparency":0},"crosshair_outline_color_3":{"Color":"000000","Transparency":0},"crosshair_outline_color_4":{"Color":"000000","Transparency":0},"crosshair_rotation":45,"crosshair_rotation_speed":0,"crosshair_settings":[],"crosshair_thickness":2,"custom_tracer_color":{"Color":"f1d983","Transparency":0},"custom_tracer_color2":{"Color":"dab329","Transparency":0},"custom_tracer_emission":1,"custom_tracer_enabled":true,"custom_tracer_fade":1,"custom_tracer_glow":5,"custom_tracer_length":4,"custom_tracer_lifetime":1,"custom_tracer_outline":false,"custom_tracer_position_lerp":0.5,"custom_tracer_selected":"drawing","custom_tracer_speed":2,"custom_tracer_width":0.2,"esp_body_color":false,"esp_bounds_type":"dynamic","esp_bounds_width_scale":100,"esp_box":false,"esp_chams":true,"esp_chams_alpha_fill":-1,"esp_chams_alpha_outline":1,"esp_chams_color":{"Color":"000000","Transparency":0},"esp_chams_color2":{"Color":"dab329","Transparency":0},"esp_chams_settings":[],"esp_distance":true,"esp_distance_color1":{"Color":"ffffff","Transparency":0},"esp_distance_color2":{"Color":"ffffff","Transparency":0},"esp_distance_color3":{"Color":"ffffff","Transparency":0},"esp_effects_aura":false,"esp_effects_particle":true,"esp_effects_particle_color1":{"Color":"f1d983","Transparency":0},"esp_effects_particle_color2":{"Color":"dab329","Transparency":0},"esp_effects_particle_color3":{"Color":"e5c248","Transparency":0},"esp_effects_particle_value":["glowing"],"esp_fill":false,"esp_flag_health_text":false,"esp_flag_staring_text":false,"esp_font":"proggy tiny","esp_healthbar":true,"esp_healthbar_color_end":{"Color":"8a6a0c","Transparency":0},"esp_healthbar_color_middle":{"Color":"e5c248","Transparency":0},"esp_healthbar_color_start":{"Color":"fbe186","Transparency":0},"esp_healthbar_health_lerp":0.05,"esp_healthbar_moving":false,"esp_healthbar_resize":false,"esp_healthbar_type":"gradient","esp_material":false,"esp_name":true,"esp_name_color1":{"Color":"ffffff","Transparency":0},"esp_name_color2":{"Color":"fbe186","Transparency":0},"esp_name_color3":{"Color":"f1d983","Transparency":0},"esp_name_font":"default","esp_name_type":"Name","esp_override_appearance":false,"esp_round_only":true,"esp_show_team":false,"esp_skeleton":true,"esp_skeleton_color1":{"Color":"ffffff","Transparency":0},"esp_skeleton_color2":{"Color":"ffffff","Transparency":0},"esp_skeleton_color3":{"Color":"ffffff","Transparency":0},"esp_skeleton_outline":false,"esp_skeleton_thickness":1,"esp_weapon":true,"esp_weapon_color1":{"Color":"ffffff","Transparency":0},"esp_weapon_color2":{"Color":"ffffff","Transparency":0},"esp_weapon_color3":{"Color":"ffffff","Transparency":0},"esp_world_distance":true,"esp_world_distance_color":{"Color":"f1d983","Transparency":0},"esp_world_font":"proggy tiny","esp_world_image":true,"esp_world_name":true,"esp_world_name_color":{"Color":"ffffff","Transparency":0},"esp_world_object_scale":75,"esp_world_whitelist":["Flashbang","Smoke Grenade","Satchel","Subspace Tripmine","Molotov","Grenade"],"exploits_always_backstab":false,"faster_reload":false,"fly_enabled":false,"fov_fill_speed":100,"fov_fill_style":"Inner Fade","fov_lerp":25,"fov_moving_rotation":true,"fov_outline":true,"fov_outline_color":{"Color":"f1d983","Transparency":0.84},"fov_outline_color2":{"Color":"fbe186","Transparency":0.7},"fov_outline_color3":{"Color":"fbe186","Transparency":0.25},"fov_outline_thickness":2,"fov_position":"position on screen","fov_rotation":0,"fov_rotation_speed":10,"full_auto_enabled":true,"game_crosshair":true,"grenade_options":["explode on impact"],"hit_effects_col_1":{"Color":"ffffff","Transparency":0},"hit_effects_col_2":{"Color":"f1d983","Transparency":0},"hit_effects_col_3":{"Color":"dab329","Transparency":0},"hit_effects_disable_marker":true,"hit_effects_disable_numbers":true,"hit_effects_enabled":true,"hit_effects_material":"ForceField","hit_effects_selected":["slashes","phantom forces"],"hit_effects_settings":["stack damage together"],"hit_effects_weld":false,"hit_notifications_enabled":false,"hit_sounds_disable":true,"hit_sounds_enabled":true,"hit_sounds_selected":"impact","hit_sounds_volume":0.9,"hitmarker_enabled":false,"indicator_ammo":true,"indicator_ammo_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_divider_color":{"Color":"e3ca71","Transparency":0},"indicator_ammo_max_color":{"Color":"ffffff","Transparency":0},"indicator_ammo_style":["ammo","max ammo","reserve","\"out of ammo\" if empty"],"indicator_empty_color":{"Color":"ff5f5f","Transparency":0},"indicator_font":"proggy tiny","indicator_lerp":0.25,"indicator_manipulated":false,"indicator_manipulated_color":{"Color":"e3ca71","Transparency":0},"indicator_offset_x":0,"indicator_offset_y":25,"indicator_ragebot":false,"indicator_ragebot_status_color":{"Color":"ffffff","Transparency":0},"indicator_ragebot_style":["text","status"],"indicator_ragebot_text_color":{"Color":"e3ca71","Transparency":0},"indicator_reserve_color":{"Color":"f1d983","Transparency":0},"indicator_settings":[],"indicator_text_style":"lower","instant_aim_enabled":false,"item_remove_vignette":true,"item_status_enabled":true,"item_status_override":"Prime","manipulation_enabled":false,"movement_double_jump":false,"movement_slideboost":true,"movement_slideboost_value":1.1,"no_fire_sound":false,"no_muzzle_flash":false,"no_recoil_enabled":false,"no_spread_enabled":false,"quickequip":false,"ragebot_enabled":false,"shoot_sound_change":true,"shoot_sound_change_value":"bow","shoot_sound_speed":1,"shoot_sound_start":0,"shoot_sound_volume":0.3,"silent_aim_enabled":true,"silent_aim_range":110,"silent_aim_range_color":{"Color":"ffffff","Transparency":0},"silent_aim_range_color2":{"Color":"fbe186","Transparency":0},"silent_aim_range_color3":{"Color":"f1d983","Transparency":0},"silent_aim_target_mode":"FOV - Closest","silent_aim_visualise_filled_range":true,"silent_aim_visualise_range":true,"silent_closest_part":true,"silent_hitchance":35,"silent_visualize":true,"silent_wallbang":false,"stretch_enabled":false,"target_highlight":false,"target_highlight_fill":{"Color":"dab329","Transparency":0.6},"target_highlight_outline":{"Color":"f1d983","Transparency":0},"target_highlight_type":"AlwaysOnTop","target_tracer":false,"target_tracer_customization":{"Color":"dab329","Transparency":0},"target_ui_enabled":true,"target_ui_item_scale":170,"target_ui_position_x":50,"target_ui_position_y":72,"target_ui_scale":150,"targeting_ignore_protected_settings":["blocked by riot shield","katana deflecting"],"targeting_limitdistance":false,"targeting_part":"Head","third_person_enabled":false,"trigger_distance":250,"trigger_enabled":true,"trigger_forget_time":1.5,"trigger_part_blacklist":[],"trigger_reaction":25,"trigger_reaction_offset":5,"trigger_scoped":["Sniper","Crossbow"],"trigger_shoot_delay":0,"viewmodel_chams":true,"viewmodel_chams_alpha_fill":-0.6,"viewmodel_chams_alpha_outline":1,"viewmodel_chams_color":{"Color":"000000","Transparency":0},"viewmodel_chams_color2":{"Color":"ffe7a3","Transparency":0},"viewmodel_chams_settings":["through walls"],"viewmodel_frames_override":false,"viewmodel_offset":true,"viewmodel_offset_x":0,"viewmodel_offset_y":0,"viewmodel_offset_z":-0.5,"viewmodel_options":["sway","bobbing","muzzle flash","idle animation","jump animation","slide animation","sprint animation","shoot animation"],"viewmodel_override_appearance":false,"viewmodel_recoil":0,"viewmodel_scale_enabled":false,"viewmodel_wire_enabled":false,"voidspam_enabled":false,"wallbang_method":"Classic V1","world_ambience_enabled":false,"world_ambience_type":"Rain","world_ambience_volume":35,"world_atm_decay":{"Color":"7a3c12","Transparency":0},"world_atm_density":0.35,"world_atm_enabled":true,"world_atm_glare":2.5,"world_atm_haze":1.5,"world_atm_offset":0.4,"world_atm_tint":{"Color":"ffb35c","Transparency":0},"world_bloom_enabled":true,"world_bloom_intensity":1.3,"world_bloom_size":40,"world_bloom_threshold":0.9,"world_blur_enabled":false,"world_cc_brightness":-0.05,"world_cc_contrast":0.1,"world_cc_enabled":true,"world_cc_saturation":0.15,"world_cc_tint":{"Color":"ffe9a8","Transparency":0},"world_dof_enabled":false,"world_env_enabled":false,"world_ltg_ambient":true,"world_ltg_ambient_color":{"Color":"ffffff","Transparency":0},"world_ltg_brightness":true,"world_ltg_brightness_val":1.7,"world_ltg_clock":true,"world_ltg_clock_val":17.6,"world_ltg_colorshift_bottom":true,"world_ltg_colorshift_bottom_color":{"Color":"ffffff","Transparency":0},"world_ltg_colorshift_top":true,"world_ltg_colorshift_top_color":{"Color":"f1d983","Transparency":0},"world_ltg_exposure":true,"world_ltg_exposure_val":-1.1,"world_ltg_fog_color_enabled":false,"world_ltg_fog_end":false,"world_ltg_fog_start":false,"world_ltg_shadows":true,"world_marker_enabled":false,"world_shadow_soft_enabled":true,"world_shadow_soft_val":25,"world_sky_autorotate":false,"world_sky_celestial":false,"world_skybox_disable":[],"world_skybox_enabled":true,"world_skybox_mode":"SunSet","world_sunrays_enabled":true,"world_sunrays_intensity":0.2,"world_sunrays_spread":1,"world_weather_color":{"Color":"ffcf4a","Transparency":0},"world_weather_color_end":{"Color":"5a2a0a","Transparency":0},"world_weather_color_mid":{"Color":"ff8a1f","Transparency":0},"world_weather_density":35,"world_weather_enabled":true,"world_weather_lifetime":100,"world_weather_opacity":80,"world_weather_size":100,"world_weather_speed":100,"world_weather_timescale":1,"world_weather_type":"Ash","AimLock_Key":{"active":false,"key":"Enum.UserInputType.MouseButton2","mode":"Hold"},"trigger_key":{"active":false,"key":"Enum.UserInputType.MouseButton2","mode":"Hold"},"targeting_disableflash":true}]==],
@@ -6102,7 +6104,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 end
 
                 if not ok or typeof(gui) ~= "Instance" then
-                    warn("[Sleepy.gg] background items failed to load: " .. tostring(gui))
+                    sleepy_mute("[Sleepy.gg] background items failed to load: " .. tostring(gui))
 
                     return
                 end
@@ -6115,7 +6117,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                 local inner = outer and (outer:FindFirstChild("ViewportFrame") or outer:FindFirstChildWhichIsA("ViewportFrame", true))
 
                 if not gui:IsA("ScreenGui") or not inner then
-                    warn("[Sleepy.gg] background items asset has an unexpected layout: " .. gui.ClassName .. " / " .. tostring(outer and outer.ClassName) .. " / " .. tostring(inner and inner.ClassName))
+                    sleepy_mute("[Sleepy.gg] background items asset has an unexpected layout: " .. gui.ClassName .. " / " .. tostring(outer and outer.ClassName) .. " / " .. tostring(inner and inner.ClassName))
 
                     gui:Destroy()
 
@@ -6138,7 +6140,7 @@ if Mobile ~= Enum.PreferredInput.Touch then
                         found[#found + 1] = child.Name .. ":" .. child.ClassName
                     end
 
-                    warn("[Sleepy.gg] background items asset has no usable parts: " .. table.concat(found, ", "))
+                    sleepy_mute("[Sleepy.gg] background items asset has no usable parts: " .. table.concat(found, ", "))
                 end
 
                 gui.Name = "\0"
@@ -12212,7 +12214,7 @@ end
                 end
 
                 if not ok or typeof(gui) ~= "Instance" then
-                    warn("[Sleepy.gg] background items failed to load: " .. tostring(gui))
+                    sleepy_mute("[Sleepy.gg] background items failed to load: " .. tostring(gui))
 
                     return
                 end
@@ -12225,7 +12227,7 @@ end
                 local inner = outer and (outer:FindFirstChild("ViewportFrame") or outer:FindFirstChildWhichIsA("ViewportFrame", true))
 
                 if not gui:IsA("ScreenGui") or not inner then
-                    warn("[Sleepy.gg] background items asset has an unexpected layout: " .. gui.ClassName .. " / " .. tostring(outer and outer.ClassName) .. " / " .. tostring(inner and inner.ClassName))
+                    sleepy_mute("[Sleepy.gg] background items asset has an unexpected layout: " .. gui.ClassName .. " / " .. tostring(outer and outer.ClassName) .. " / " .. tostring(inner and inner.ClassName))
 
                     gui:Destroy()
 
@@ -12248,7 +12250,7 @@ end
                         found[#found + 1] = child.Name .. ":" .. child.ClassName
                     end
 
-                    warn("[Sleepy.gg] background items asset has no usable parts: " .. table.concat(found, ", "))
+                    sleepy_mute("[Sleepy.gg] background items asset has no usable parts: " .. table.concat(found, ", "))
                 end
 
                 gui.Name = "\0"
