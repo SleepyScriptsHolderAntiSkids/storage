@@ -65,12 +65,6 @@ local collection_service = cloneref(game.GetService(game, "CollectionService"));
 local log_service = cloneref(game.GetService(game, "LogService"));
 local game_settings = cloneref(UserSettings().GetService(UserSettings(), "UserGameSettings"));
 
-task.spawn(function()
-    pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/SleepyScriptsHolderAntiSkids/storage/refs/heads/main/luraphsdk"))();
-    end)
-end)
-
 Players, players = cloneref(game:GetService("Players")), cloneref(game:GetService("Players"))
 LocalPlayer = cloneref(game:GetService("Players")).LocalPlayer
 
